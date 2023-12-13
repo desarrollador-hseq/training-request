@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+enum Role {
+  ADMIN
+  COMPANY
+}
+
+model Company {
+  id       String     @id @default(uuid())
+  name     String?
+  email    String  @unique
+  password String?
+  isValid  Boolean @default(false)
+
+  role   Role    @default(COMPANY)
+  groups Group[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Group {
+  id       String     @id @default(uuid())
+  tentativeDate DateTime
+  isConfirm     Boolean  @default(false)
+
+  companyId String
+  company   Company        @relation(fields: [companyId], references: [id])
+  members   Collaborator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([companyId])
+}
+
+model Collaborator {
+  id       String     @id @default(uuid())
+  fullname String
+  numDoc   String  @unique
+  email    String?
+  phone    String?
+
+  groupId String
+  group   Group @relation(fields: [groupId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([groupId])
+}
+
+
+
+model CourseLine {
+   id       String     @id @default(uuid())
+
+  name String?
+ 
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([courseId])
+}
+
+model Course {
+  id       String     @id @default(uuid())
+
+  name String?
+  courseLines   CourseLine[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+

@@ -24,7 +24,7 @@ export default function RootLayout({
     <ClientCookiesProvider value={cookies().getAll()}>
       <NextAuthProvider>
         <html lang="es">
-          <body className={cn(inter.className, "bg-blue-100/50")} >
+          <body className={cn(inter.className, "bg-blue-100/40")} >
             <Toaster richColors />
             {children}
             <footer className="footer h-10 w-full bg-primary flex items-center">

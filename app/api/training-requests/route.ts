@@ -11,7 +11,7 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
     try {
 
         const companyId = session.user.id
-        console.log({companyId, values})
+        console.log({msj: "comapny server",companyId, values})
 
 
         const request = await db.trainingRequest.create({

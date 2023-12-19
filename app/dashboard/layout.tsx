@@ -15,8 +15,8 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
   return (
     <main className="relative flex flex-col h-full min-h-screen m-0 p-0 mx-auto">
       <DashboardNavbar />
-      <div className="mt-0 md:ml-56 min-h-screen w-full max-w-[1500px] mx-auto">
-        {children}
+      <div className="mt-1 md:ml-56 min-h-screen max-w-[1500px] pl-4 w-auto">
+        <div className="mx-1">{children}</div>
       </div>
       <ScrollUp />
     </main>

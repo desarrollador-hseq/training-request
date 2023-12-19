@@ -17,6 +17,7 @@ declare module 'next-auth' {
 
     interface Session {
         user: {
+            id?: string;
             role?: string;
         } & DefaultSession['user'];
     }
@@ -28,7 +29,6 @@ export const authOptions: AuthOptions = {
         // ...add more providers here
         CredentialsProvider({
             name: "Credentials",
-
             credentials: {
                 email: {
                     label: "email",
@@ -95,7 +95,6 @@ export const authOptions: AuthOptions = {
                 return decodedToken
             }
         }
-
     },
     session: {
         strategy: "jwt",
@@ -104,7 +103,6 @@ export const authOptions: AuthOptions = {
         
     },
     callbacks: {
-
         async jwt({ token, account, user }) {
             // console.log({ token, account, user });
 
@@ -122,7 +120,6 @@ export const authOptions: AuthOptions = {
             return token;
         },
 
-
         async session({ session, token, user }) {
             // console.log({ session, token, user });
 
@@ -131,11 +128,7 @@ export const authOptions: AuthOptions = {
 
             return session;
         }
-
-
     }
-
-
 }
 const handler = NextAuth(authOptions)
 

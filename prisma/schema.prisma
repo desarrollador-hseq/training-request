@@ -17,13 +17,13 @@ enum Role {
 }
 
 model Company {
-  id       String     @id @default(uuid())
+  id       String  @id @default(uuid())
   name     String?
   email    String  @unique
   password String?
   isValid  Boolean @default(false)
 
-  role   Role    @default(COMPANY)
+  role   Role              @default(COMPANY)
   groups TrainingRequest[]
 
   createdAt DateTime @default(now())
@@ -31,21 +31,23 @@ model Company {
 }
 
 model TrainingRequest {
-  id            String     @id @default(uuid())
+  id String @id @default(uuid())
 
-  courseId String
-      
-  state        RequestStatus @default(PENDING)
-  companyId     String
-  company       Company    @relation(fields: [companyId], references: [id])
-  members       Collaborator[]
+  courseId String?
+  course   Course? @relation(fields: [courseId], references: [id])
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  @@index([companyId])
+  state     RequestTrainingStatus  @default(PENDING)
+  companyId String
+  company   Company        @relation(fields: [companyId], references: [id])
+  members   Collaborator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, courseId])
 }
 
-enum RequestStatus {
+enum RequestTrainingStatus {
   PENDING
   ACTIVE
   EXECUTED
@@ -54,65 +56,60 @@ enum RequestStatus {
 }
 
 model Collaborator {
-  id       String     @id @default(uuid())
+  id       String  @id @default(uuid())
   fullname String
-  numDoc   String  
+  numDoc   String
   email    String?
   phone    String?
 
-  requestTrainingId String
-  requestTraining   TrainingRequest @relation(fields: [requestTrainingId], references: [id])
-
+  requestTrainingId String?
+  requestTraining   TrainingRequest? @relation(fields: [requestTrainingId], references: [id])
 
   courseLevelId String
   courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@index([requestTrainingId, courseLevelId])
 }
 
 model Certificate {
-  id       String     @id @default(uuid())
+  id String @id @default(uuid())
 
   collaboratorId String
-  date DateTime?
-  fileUrl String?
+  date           DateTime?
+  fileUrl        String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-
-
 model CourseLevel {
-   id       String     @id @default(uuid())
+  id String @id @default(uuid())
 
   name String?
- 
+
   courseId String
   course   Course @relation(fields: [courseId], references: [id])
 
-  collaborator   Collaborator[]
-
+  collaborator Collaborator[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@index([courseId])
 }
 
-
 model Course {
-  id       String     @id @default(uuid())
+  id String @id @default(uuid())
 
-  name String?
-  courseLevels   CourseLevel[]
+  name            String?
+  courseLevels    CourseLevel[]
+  trainingRequest TrainingRequest[]
 
   active Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-
-

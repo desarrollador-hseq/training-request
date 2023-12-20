@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { DashboardSidebar } from "./dashboard-sidebar";
 import { Button } from "@/components/ui/button";
 
-
 export const DashboardNavbar = () => {
   const pathname = usePathname();
 
@@ -21,7 +20,6 @@ export const DashboardNavbar = () => {
             {/* <LogoClaro goRoot className="flex" /> */}
           </div>
 
-        
           <Link href="/logout" className="w-fit h-full flex items-center">
             <Button variant="ghost" className="bg-slate-500 gap-2">
               Salir

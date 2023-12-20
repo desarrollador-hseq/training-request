@@ -7,8 +7,9 @@ import { DashboardSidebarContent } from "./dashboard-sidebar-content";
 
 const routes = [
   { icon: Clipboard, label: "Inicio", href: "/dashboard" },
-  { icon: Users, label: "Crear", href: "/dashboard/entrenamiento/crear" },
-  { icon: ClipboardCheck, label: "Consultar", href: "/admin/entrenamiento/" },
+  { icon: ClipboardCheck, label: "Solicitudes", href: "/dashboard/entrenamiento/solicitudes" },
+  { icon: Users, label: "Certificados", href: "/dashboard/entrenamiento/certificados" },
+  { icon: ClipboardCheck, label: "Colaboradores", href: "/dashboard/entrenamiento/colaboradores" },
 ];
 
 export const DashboardSidebar = () => {

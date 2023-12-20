@@ -26,6 +26,9 @@ model Company {
   role   Role              @default(COMPANY)
   groups TrainingRequest[]
 
+
+  collaborators   Collaborator[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -68,10 +71,13 @@ model Collaborator {
   courseLevelId String
   courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])
 
+  companyId String?
+  company   Company?        @relation(fields: [companyId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([requestTrainingId, courseLevelId])
+  @@index([requestTrainingId, courseLevelId, companyId])
 }
 
 model Certificate {

@@ -3,7 +3,6 @@ import { Collaborator, CourseLevel } from "@prisma/client";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -21,19 +20,21 @@ import { MoreHorizontal, Trash } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-interface TrainingListCollaboratorsProps {
+interface CollaboratorsSimpleTableProps {
   collaborators: Collaborator & { courseLevel?: CourseLevel | null }[];
-  trainingRequestId: string
+  trainingRequestId: string;
 }
 
-export const TrainingListCollaborators = ({
+export const CollaboratorsSimpleTable = ({
   collaborators,
   trainingRequestId,
-}: TrainingListCollaboratorsProps) => {
-    const router = useRouter();
+}: CollaboratorsSimpleTableProps) => {
+  const router = useRouter();
   const handleRemove = async (id: string) => {
     try {
-      const { data } = await axios.delete(`/api/training-requests/${trainingRequestId}/members/${id}`);
+      const { data } = await axios.delete(
+        `/api/training-requests/${trainingRequestId}/members/${id}`
+      );
       toast.success("Colaborador removido de la solicitud");
       router.refresh();
     } catch (error) {
@@ -63,7 +64,7 @@ export const TrainingListCollaborators = ({
             <TableCell>{collaborator.email}</TableCell>
             <TableCell>{collaborator?.numDoc}</TableCell>
             <TableCell>{collaborator?.courseLevel?.name}</TableCell>
-            <TableCell>
+            <TableCell className="flex justify-end">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="h-4 w-8 p-0">
@@ -71,15 +72,14 @@ export const TrainingListCollaborators = ({
                     <MoreHorizontal />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="hover:bg-slate-100">
                   <Button
                     variant="ghost"
                     onClick={() => handleRemove(collaborator.id)}
+                    className="hover:bg-slate-300"
                   >
-                    <DropdownMenuItem>
                       <Trash className="w-4 h-4 mr-2 text-red-500" />
                       Quitar de la lista
-                    </DropdownMenuItem>
                   </Button>
                 </DropdownMenuContent>
               </DropdownMenu>

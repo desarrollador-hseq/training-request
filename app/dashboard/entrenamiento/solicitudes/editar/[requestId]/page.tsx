@@ -6,8 +6,8 @@ import { TitleOnPage } from "@/components/title-on-page";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { TrainingCollaborators } from "./_components/training-collaborators";
 import { Banner } from "@/components/banner";
+import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-table";
 
 const TrainingRequestPage = async ({
   params,
@@ -17,7 +17,7 @@ const TrainingRequestPage = async ({
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user?.role) {
-    redirect("/");
+    return redirect("/dashboard");
   }
 
   const isAdmin = session.user.role === "ADMIN";
@@ -85,7 +85,7 @@ const TrainingRequestPage = async ({
             <SubtitleSeparator text="Datos de Colaboradores" />
           </CardHeader>
           <CardContent>
-            <TrainingCollaborators collaborators={trainingRequest.members} trainingRequestId={trainingRequest.id} />
+            <CollaboratorsSimpleTable collaborators={trainingRequest.members} trainingRequestId={trainingRequest.id} />
           </CardContent>
         </Card>
       </div>

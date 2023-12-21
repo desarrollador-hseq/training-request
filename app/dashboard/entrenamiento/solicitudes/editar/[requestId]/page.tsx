@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Banner } from "@/components/banner";
 import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-table";
+import { Button } from "@/components/ui/button";
+import { SelectTrainingLevel } from "./_components/select-traininglevel";
 
 const TrainingRequestPage = async ({
   params,
@@ -30,8 +32,8 @@ const TrainingRequestPage = async ({
       course: true,
       members: {
         include: {
-          courseLevel: true
-        }
+          courseLevel: true,
+        },
       },
     },
   });
@@ -43,6 +45,11 @@ const TrainingRequestPage = async ({
   const courseLevels = await db.courseLevel.findMany({
     where: {
       courseId: trainingRequest.courseId!,
+    },
+  });
+  const collaborators = await db.collaborator.findMany({
+    where: {
+      companyId: session.user.id,
     },
   });
 
@@ -57,15 +64,26 @@ const TrainingRequestPage = async ({
   const completionText = `(${completedFields}/${totalFields})`;
 
   const isComplete = requiredFields.every(Boolean);
+
+  const handleModal = () => {
+    console.log("holaa");
+  };
+
   return (
     <div className="">
       {trainingRequest.state === "PENDING" && (
         <Banner label="Solicitud no enviada" />
       )}
-      <TitleOnPage text={`Editar solicitud de entrenamiento `} />
-      <span className="text-slte-300">
-        complete todos los item {completionText}{" "}
-      </span>
+
+      <div className="flex justify-between items-center">
+        <div>
+          <TitleOnPage text={`Editar solicitud de entrenamiento `} />
+          <span className="text-slte-300">
+            complete todos los item {completionText}{" "}
+          </span>
+        </div>
+        <Button>Enviar</Button>
+      </div>
       <div className="flex flex-col gap-3">
         <Card className="p-0 overflow-hidden rounded-md">
           <CardHeader className="p-0">
@@ -85,7 +103,12 @@ const TrainingRequestPage = async ({
             <SubtitleSeparator text="Datos de Colaboradores" />
           </CardHeader>
           <CardContent>
-            <CollaboratorsSimpleTable collaborators={trainingRequest.members} trainingRequestId={trainingRequest.id} />
+            <SelectTrainingLevel courseLevels={courseLevels} collaborators={collaborators} />
+
+            <CollaboratorsSimpleTable
+              collaborators={trainingRequest.members}
+              trainingRequestId={trainingRequest.id}
+            />
           </CardContent>
         </Card>
       </div>

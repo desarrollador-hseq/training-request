@@ -1,14 +1,15 @@
+import Link from "next/link";
+import { Pencil } from "lucide-react";
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { RequestsTable } from "./_components/requests-table";
 import { columnsRequestTable } from "./_components/requests-table-columns";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { TitleOnPage } from "@/components/title-on-page";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
-import Link from "next/link";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const RequestTrainingPage = async () => {
   const session = await getServerSession(authOptions);
@@ -37,7 +38,7 @@ const RequestTrainingPage = async () => {
       <div className="flex items-center">
         <TitleOnPage text="Listado de solicitudes" />
         <div>
-          <Button className="bg-accent">Crear</Button>
+          <Link  href="/dashboard/entrenamiento/solicitudes/crear" className={cn(buttonVariants())} >Crear</Link>
         </div>
       </div>
 

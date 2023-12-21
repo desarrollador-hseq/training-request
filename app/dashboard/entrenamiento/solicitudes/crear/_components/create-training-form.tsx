@@ -64,7 +64,7 @@ export const CreateTrainingForm = ({ courses }: { courses?: Course[] }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const { data } = await axios.post("/api/training-requests", values);
-      router.push(`/dashboard/entrenamiento/editar/${data.id}`);
+      router.push(`/dashboard/entrenamiento/solicitudes/editar/${data.id}`);
       toast.success("Solicitud creada");
     } catch {
       console.log(

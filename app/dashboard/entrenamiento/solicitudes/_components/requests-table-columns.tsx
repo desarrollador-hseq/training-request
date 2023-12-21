@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const stateEsp = {
-  PENDING: { text: "Pendiente", icon: "🕒" },
+  PENDING: { text: "No enviada", icon: "🕒" },
   ACTIVE: { text: "Activo", icon: "✅" },
   EXECUTED: { text: "Ejecutado", icon: "✔️" },
   PROGRAMMED: { text: "Programado", icon: "📅" },

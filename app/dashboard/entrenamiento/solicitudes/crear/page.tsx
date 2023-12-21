@@ -2,8 +2,8 @@
 
 
 import React from 'react'
-import { CreateTrainingForm } from './_components/create-training-form'
 import { db } from '@/lib/db'
+import { CreateTrainingForm } from './_components/create-training-form'
 
 const CreateTrainingPage = async () => {
 

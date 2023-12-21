@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,6 +12,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  
 } from "@tanstack/react-table";
 import {
   ChevronDown,
@@ -43,15 +44,18 @@ import { CollapsibleContentTable } from "@/components/collapsible-content-table"
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTablePagination } from "@/components/datatable-pagination";
+import { Collaborator } from "@prisma/client";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  setCollaboratorsSelected: Dispatch<SetStateAction<Collaborator[] | null | undefined>>
 }
 
 export function CollaboratorsTable<TData, TValue>({
   data,
   columns,
+  setCollaboratorsSelected
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -77,6 +81,11 @@ export function CollaboratorsTable<TData, TValue>({
       rowSelection,
     },
   });
+
+  useEffect(() => {
+   setCollaboratorsSelected(table.getSelectedRowModel().flatRows.map(m => m.original))
+  }, [table.getSelectedRowModel()])
+  
 
   const handleCollapsible = (idOpen: string) => {
     if (idOpenCollapsible === idOpen) {

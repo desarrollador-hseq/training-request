@@ -62,7 +62,7 @@ export const CollaboratorsSimpleTable = ({
             <TableCell>{collaborator.fullname}</TableCell>
             <TableCell>{collaborator.numDoc}</TableCell>
             <TableCell>{collaborator.email}</TableCell>
-            <TableCell>{collaborator?.numDoc}</TableCell>
+            <TableCell>{collaborator?.phone}</TableCell>
             <TableCell>{collaborator?.courseLevel?.name}</TableCell>
             <TableCell className="flex justify-end">
               <DropdownMenu>

@@ -68,6 +68,8 @@ model Collaborator {
   requestTrainingId String?
   requestTraining   TrainingRequest? @relation(fields: [requestTrainingId], references: [id])
 
+  courseId String?
+
   courseLevelId String
   courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])
 

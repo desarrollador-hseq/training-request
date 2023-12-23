@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
+  RowSelectionState,
   SortingState,
   VisibilityState,
   flexRender,
@@ -12,7 +13,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  
+
 } from "@tanstack/react-table";
 import {
   ChevronDown,
@@ -44,24 +45,32 @@ import { CollapsibleContentTable } from "@/components/collapsible-content-table"
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTablePagination } from "@/components/datatable-pagination";
-import { Collaborator } from "@prisma/client";
+import { Collaborator, CourseLevel } from "@prisma/client";
+import axios from "axios";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   setCollaboratorsSelected: Dispatch<SetStateAction<Collaborator[] | null | undefined>>
+  collaboratorsSelected: Collaborator[] | null | undefined
+  allLevelsByCourse?: CourseLevel[] | null | undefined
 }
 
 export function CollaboratorsTable<TData, TValue>({
-  data,
+  data: initialData,
   columns,
-  setCollaboratorsSelected
+  collaboratorsSelected,
+  setCollaboratorsSelected,
+  allLevelsByCourse
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [idOpenCollapsible, setIdOpenCollapsible] = useState("");
+  const [data, setData] = useState(initialData);
+  const [levelsCourse, setLevelCourses] = useState();
+
 
   const table = useReactTable({
     data,
@@ -74,6 +83,15 @@ export function CollaboratorsTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    meta: {
+      updateData: (rowIndex: any, columnId: any, value: any) => setData(
+        prev => prev.map((row, index) => index === rowIndex ? {
+          ...prev[rowIndex],
+          [columnId]: value
+        } : row)
+      )
+    },
+    enableRowSelection: true,
     state: {
       sorting,
       columnFilters,
@@ -83,8 +101,15 @@ export function CollaboratorsTable<TData, TValue>({
   });
 
   useEffect(() => {
-   setCollaboratorsSelected(table.getSelectedRowModel().flatRows.map(m => m.original))
-  }, [table.getSelectedRowModel()])
+   
+    if(allLevelsByCourse) {
+      const getCourseLevel = async () => {
+        const res = await axios.get(`/api/courses/${data[0].course.id}`)
+        setLevelCourses(res.data)
+      }
+      getCourseLevel()
+    }
+  }, [])
   
 
   const handleCollapsible = (idOpen: string) => {
@@ -134,7 +159,7 @@ export function CollaboratorsTable<TData, TValue>({
         </DropdownMenu>
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

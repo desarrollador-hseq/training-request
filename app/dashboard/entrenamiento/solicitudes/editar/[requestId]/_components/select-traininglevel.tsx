@@ -84,7 +84,7 @@ export const SelectTrainingLevel = ({ courseLevels, collaborators }: SelectTrain
               </SheetDescription>
             </SheetHeader>
             <div className="grid gap-4 py-4">
-              <CollaboratorsTable columns={columnsCollaboratorTable} data={collaborators} setCollaboratorsSelected={setCollaboratorsSelected} />
+              <CollaboratorsTable  collaboratorsSelected={collaboratorsSelected} columns={columnsCollaboratorTable} data={collaborators} setCollaboratorsSelected={setCollaboratorsSelected} />
             </div>
             <SheetFooter>
               <SheetClose onClick={() => handleLevelSelected(null)} asChild>

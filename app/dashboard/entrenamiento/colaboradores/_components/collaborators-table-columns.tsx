@@ -4,6 +4,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Collaborator } from "@prisma/client";
+import { CollaboratorCourseLevel } from "./collaborators-courselevel";
+
+
 
 export const columnsCollaboratorTable: ColumnDef<Collaborator>[] = [
   {
@@ -59,4 +62,17 @@ export const columnsCollaboratorTable: ColumnDef<Collaborator>[] = [
       <div className="lowercase">{row.getValue("numDoc")}</div>
     ),
   },
+  {
+    id: "courseLevel",
+    accessorKey: "courseLevel",
+    header: () => <div className="">Nivel de curso</div>,
+    cell: ({ column, row , table}) => {
+
+      const courseId = row.original.courseId;
+
+      return <CollaboratorCourseLevel courseId={courseId} column={column} row={row} table={table} />;
+    },
+    accessorFn: (value) => value.courseLevel.name,
+  },
+  
 ];

@@ -209,10 +209,10 @@ export function RequestsTable<TData, TValue>({
                             />
                           </CardHeader>
                           <CardContent className="bg-slate-200">
-                            {row.original?.members && (
+                            {row.original?.collaborators && (
                               <CollaboratorsSimpleTable
-                                trainingRequestId={row.id}
-                                collaborators={row.original?.members}
+                                trainingRequestId={row.original.id}
+                                collaborators={row.original?.collaborators}
                               />
                             )}
                           </CardContent>

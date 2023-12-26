@@ -24,21 +24,27 @@ const RequestTrainingPage = async () => {
     },
     include: {
       course: true,
-      members: {
+      collaborators: {
         include: {
-            courseLevel: true
-        }
+          collaborator: true,
+          courseLevel: true
+        },
       },
-      
     },
   });
+
 
   return (
     <div>
       <div className="flex items-center">
         <TitleOnPage text="Listado de solicitudes" />
         <div>
-          <Link  href="/dashboard/entrenamiento/solicitudes/crear" className={cn(buttonVariants())} >Crear</Link>
+          <Link
+            href="/dashboard/entrenamiento/solicitudes/crear"
+            className={cn(buttonVariants())}
+          >
+            Crear
+          </Link>
         </div>
       </div>
 
@@ -48,7 +54,6 @@ const RequestTrainingPage = async () => {
             data={trainingRequests}
             columns={columnsRequestTable}
           />
-          
         </CardContent>
       </Card>
     </div>

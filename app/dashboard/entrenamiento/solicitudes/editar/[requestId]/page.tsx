@@ -30,9 +30,10 @@ const TrainingRequestPage = async ({
     },
     include: {
       course: true,
-      members: {
+      collaborators: {
         include: {
-          courseLevel: true,
+          collaborator: true,
+          courseLevel: true
         },
       },
     },
@@ -42,6 +43,9 @@ const TrainingRequestPage = async ({
     return redirect("/dashboard/entrenamiento");
   }
 
+
+
+
   const courseLevels = await db.courseLevel.findMany({
     where: {
       courseId: trainingRequest.courseId!,
@@ -50,12 +54,14 @@ const TrainingRequestPage = async ({
   const collaborators = await db.collaborator.findMany({
     where: {
       companyId: session.user.id,
+      active: true
     },
   });
 
+
   const requiredFields = [
     trainingRequest.courseId,
-    trainingRequest.members.length,
+    trainingRequest.collaborators.length,
   ];
 
   const totalFields = requiredFields.length;
@@ -64,10 +70,6 @@ const TrainingRequestPage = async ({
   const completionText = `(${completedFields}/${totalFields})`;
 
   const isComplete = requiredFields.every(Boolean);
-
-  const handleModal = () => {
-    console.log("holaa");
-  };
 
   return (
     <div className="">
@@ -103,10 +105,9 @@ const TrainingRequestPage = async ({
             <SubtitleSeparator text="Datos de Colaboradores" />
           </CardHeader>
           <CardContent>
-            <SelectTrainingLevel courseLevels={courseLevels} collaborators={collaborators} />
-
+            <SelectTrainingLevel trainingRequestId={trainingRequest.id} collaborators={collaborators} collaboratorSelected={trainingRequest.collaborators.map(col => col.collaborator)} />
             <CollaboratorsSimpleTable
-              collaborators={trainingRequest.members}
+              collaborators={trainingRequest.collaborators}
               trainingRequestId={trainingRequest.id}
             />
           </CardContent>

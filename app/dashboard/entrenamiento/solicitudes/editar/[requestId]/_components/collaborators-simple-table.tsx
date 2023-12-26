@@ -1,5 +1,13 @@
 "use client";
-import { Collaborator, CourseLevel } from "@prisma/client";
+import {
+  Collaborator,
+  CourseLevel,
+  TrainingRequestCollaborator,
+} from "@prisma/client";
+import { MoreHorizontal, Trash } from "lucide-react";
+import axios from "axios";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -16,12 +24,14 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Trash } from "lucide-react";
-import axios from "axios";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 interface CollaboratorsSimpleTableProps {
-  collaborators: Collaborator & { courseLevel?: CourseLevel | null }[];
+  collaborators:
+    | (TrainingRequestCollaborator &
+        {
+          collaborators: { collaborator: Collaborator | null | undefined }[];
+        }[])
+    | null
+    | undefined;
   trainingRequestId: string;
 }
 
@@ -43,6 +53,7 @@ export const CollaboratorsSimpleTable = ({
     }
   };
 
+
   return (
     <Table>
       {/* <TableCaption>A list </TableCaption> */}
@@ -57,13 +68,16 @@ export const CollaboratorsSimpleTable = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {collaborators?.map((collaborator) => (
-          <TableRow key={collaborator.id} className="font-semibold">
+        {collaborators?.map(({ collaborator, courseLevel }: any) => (
+          <TableRow
+            key={collaborator.id}
+            className="font-semibold"
+          >
             <TableCell>{collaborator.fullname}</TableCell>
             <TableCell>{collaborator.numDoc}</TableCell>
             <TableCell>{collaborator.email}</TableCell>
-            <TableCell>{collaborator?.phone}</TableCell>
-            <TableCell>{collaborator?.courseLevel?.name}</TableCell>
+            <TableCell>{collaborator.phone}</TableCell>
+            <TableCell>{courseLevel?.name}</TableCell>
             <TableCell className="flex justify-end">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -78,8 +92,8 @@ export const CollaboratorsSimpleTable = ({
                     onClick={() => handleRemove(collaborator.id)}
                     className="hover:bg-slate-300"
                   >
-                      <Trash className="w-4 h-4 mr-2 text-red-500" />
-                      Quitar de la lista
+                    <Trash className="w-4 h-4 mr-2 text-red-500" />
+                    Quitar de la lista
                   </Button>
                 </DropdownMenuContent>
               </DropdownMenu>

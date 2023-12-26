@@ -18,17 +18,22 @@ import {
 } from "@/components/ui/sheet";
 import { CollaboratorsTable } from "@/app/dashboard/entrenamiento/colaboradores/_components/collaborators-table";
 import { columnsCollaboratorTable } from "@/app/dashboard/entrenamiento/colaboradores/_components/collaborators-table-columns";
-
+import axios from "axios";
+import { toast } from "sonner";
 
 interface SelectTrainingLevel {
-  courseLevels: CourseLevel[];
+  // courseLevels: CourseLevel[];
   collaborators: Collaborator[];
+  collaboratorSelected: Collaborator[];
+  trainingRequestId: string;
 }
 
-export const SelectTrainingLevel = ({ courseLevels, collaborators }: SelectTrainingLevel) => {
+export const SelectTrainingLevel = ({ collaborators, collaboratorSelected, trainingRequestId }: SelectTrainingLevel) => {
   const [levelSelected, setLevelSelected] = useState<string | null>();
   const [openSheet, setOpenSheet] = useState<boolean>(false);
-  const [collaboratorsSelected, setCollaboratorsSelected] = useState<Collaborator[] | null | undefined>();
+  const [collaboratorsSelected, setCollaboratorsSelected] = useState<
+    Collaborator[] | null | undefined
+  >();
 
   useEffect(() => {
     setOpenSheet(!!levelSelected);
@@ -40,18 +45,26 @@ export const SelectTrainingLevel = ({ courseLevels, collaborators }: SelectTrain
     setOpenSheet(true);
   };
 
-
   useEffect(() => {
-    console.log({collaboratorsSelected})
-  }, [collaboratorsSelected])
-  
+    setCollaboratorsSelected(collaboratorSelected)
+  }, [collaboratorSelected]);
 
 
-
+  const handleUpdateCollaborators = async () => {
+    
+    try {
+      const actualizar = await axios.post(`/api/training-requests/${trainingRequestId}/`, {
+        trainingRequests: collaboratorsSelected
+      })
+      toast.success("actualizados correctamente")
+    } catch (error) {
+      console.log({error})
+    }
+  }
 
   return (
     <div>
-      <SimpleModal textBtn="Añadir" title="Selecciona un nivel de curso">
+      {/* <SimpleModal textBtn="Añadir" title="Selecciona un nivel de curso">
         <div className="grid place-content-center">
           {courseLevels.map((clevel) => (
             <Button
@@ -68,10 +81,10 @@ export const SelectTrainingLevel = ({ courseLevels, collaborators }: SelectTrain
             </Button>
           ))}
         </div>
-      </SimpleModal>
+      </SimpleModal> */}
 
       <div className="grid grid-cols-2 gap-2">
-        <Sheet open={openSheet} onOpenChange={() => handleLevelSelected(null)}>
+        <Sheet open={openSheet} onOpenChange={setOpenSheet}>
           <SheetTrigger asChild>
             <Button variant="outline">abrir</Button>
           </SheetTrigger>
@@ -84,11 +97,16 @@ export const SelectTrainingLevel = ({ courseLevels, collaborators }: SelectTrain
               </SheetDescription>
             </SheetHeader>
             <div className="grid gap-4 py-4">
-              <CollaboratorsTable  collaboratorsSelected={collaboratorsSelected} columns={columnsCollaboratorTable} data={collaborators} setCollaboratorsSelected={setCollaboratorsSelected} />
+              <CollaboratorsTable
+                collaboratorsSelected={collaboratorsSelected}
+                columns={columnsCollaboratorTable}
+                data={collaborators}
+                setCollaboratorsSelected={setCollaboratorsSelected}
+              />
             </div>
             <SheetFooter>
               <SheetClose onClick={() => handleLevelSelected(null)} asChild>
-                <Button type="submit">Save changes</Button>
+                <Button onClick={handleUpdateCollaborators} type="submit">Save changes</Button>
               </SheetClose>
             </SheetFooter>
           </SheetContent>

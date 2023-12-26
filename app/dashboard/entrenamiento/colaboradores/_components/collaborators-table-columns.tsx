@@ -20,14 +20,14 @@ export const columnsCollaboratorTable: ColumnDef<Collaborator>[] = [
         onCheckedChange={(value: any) =>
           table.toggleAllPageRowsSelected(!!value)
         }
-        aria-label="Select all"
+        aria-label="Seleccionar todo"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value: any) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label="Seleccionar fila"
       />
     ),
     enableSorting: false,
@@ -62,17 +62,17 @@ export const columnsCollaboratorTable: ColumnDef<Collaborator>[] = [
       <div className="lowercase">{row.getValue("numDoc")}</div>
     ),
   },
-  {
-    id: "courseLevel",
-    accessorKey: "courseLevel",
-    header: () => <div className="">Nivel de curso</div>,
-    cell: ({ column, row , table}) => {
+  // {
+  //   id: "courseLevel",
+  //   accessorKey: "courseLevel",
+  //   header: () => <div className="">Nivel de curso</div>,
+  //   cell: ({ column, row , table}) => {
 
-      const courseId = row.original.courseId;
+  //     const courseId = row.original.courseId;
 
-      return <CollaboratorCourseLevel courseId={courseId} column={column} row={row} table={table} />;
-    },
-    accessorFn: (value) => value.courseLevel.name,
-  },
+  //     return <CollaboratorCourseLevel courseId={courseId} column={column} row={row} table={table} />;
+  //   },
+  //   accessorFn: (value) => value.courseLevel.name,
+  // },
   
 ];

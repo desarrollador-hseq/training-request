@@ -26,8 +26,7 @@ model Company {
   role   Role              @default(COMPANY)
   groups TrainingRequest[]
 
-
-  collaborators   Collaborator[]
+  collaborators Collaborator[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -36,13 +35,14 @@ model Company {
 model TrainingRequest {
   id String @id @default(uuid())
 
-  courseId String?
-  course   Course? @relation(fields: [courseId], references: [id])
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
 
-  state     RequestTrainingStatus  @default(PENDING)
+  state     RequestTrainingStatus @default(PENDING)
   companyId String
-  company   Company        @relation(fields: [companyId], references: [id])
-  members   Collaborator[]
+  company   Company               @relation(fields: [companyId], references: [id])
+
+  collaborators TrainingRequestCollaborator[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -58,6 +58,7 @@ enum RequestTrainingStatus {
   CANCELLED
 }
 
+
 model Collaborator {
   id       String  @id @default(uuid())
   fullname String
@@ -65,21 +66,35 @@ model Collaborator {
   email    String?
   phone    String?
 
-  requestTrainingId String?
-  requestTraining   TrainingRequest? @relation(fields: [requestTrainingId], references: [id])
-
-  courseId String?
-
-  courseLevelId String
-  courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])
-
   companyId String?
-  company   Company?        @relation(fields: [companyId], references: [id])
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  trainingRequestsCollaborators TrainingRequestCollaborator[]
+
+  active Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([requestTrainingId, courseLevelId, companyId])
+  @@index([companyId])
+}
+
+model TrainingRequestCollaborator {
+  // id String @id @default(uuid())
+
+  collaboratorId String
+  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
+
+  trainingRequestId String
+  trainingRequest   TrainingRequest @relation(fields: [trainingRequestId], references: [id])
+
+  courseLevelId String?
+  courseLevel   CourseLevel? @relation(fields: [courseLevelId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([collaboratorId, trainingRequestId])
 }
 
 model Certificate {
@@ -100,11 +115,12 @@ model CourseLevel {
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id])
+  
+  active Boolean @default(true)
 
-  collaborator Collaborator[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt                   DateTime                      @default(now())
+  updatedAt                   DateTime                      @updatedAt
+  TrainingRequestCollaborator TrainingRequestCollaborator[]
 
   @@index([courseId])
 }

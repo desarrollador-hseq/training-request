@@ -22,14 +22,15 @@ const ListPage = async () => {
     where: {
         companyId: session.user.id
     },
-    include: {
-      courseLevel: true,
-      // requestTraining: {
-      //   include: {
-      //     certificate
-      //   }
-      // }
-    }
+    // include: {
+      
+    //   // courseLevel: true,
+    //   // requestTraining: {
+    //   //   include: {
+    //   //     certificate
+    //   //   }
+    //   // }
+    // }
   })
 
 

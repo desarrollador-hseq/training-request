@@ -18,7 +18,7 @@ const stateEsp = {
 };
 
 export const columnsRequestTable: ColumnDef<
-  TrainingRequest & { course?: Course | null; members?: Collaborator[] | null }
+  TrainingRequest & { course?: Course | null; collaborators?: Collaborator[] | null }
 >[] = [
   {
     accessorKey: "courseId",
@@ -86,7 +86,7 @@ export const columnsRequestTable: ColumnDef<
     id: "numCollaborators",
     header: "# Colaboradores",
     cell: ({ row }) => {
-      const numCol = row.original.members?.length;
+      const numCol = row.original.collaborators?.length;
 
       return <span className="font-semibold">{numCol}</span>
     },

@@ -16,21 +16,25 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { CollaboratorsTable } from "@/app/dashboard/entrenamiento/colaboradores/_components/collaborators-table";
+import { CollaboratorsTable } from "@/app/dashboard/entrenamiento/colaboradores/_components/collaborators-nivel";
 import { columnsCollaboratorTable } from "@/app/dashboard/entrenamiento/colaboradores/_components/collaborators-table-columns";
 import axios from "axios";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { CollaboratorsSimpleTable } from "./collaborators-simple-table";
 
-interface SelectTrainingLevel {
+interface SelectCollaboratorsProps {
   // courseLevels: CourseLevel[];
   collaborators: Collaborator[];
   collaboratorSelected: Collaborator[];
   trainingRequestId: string;
 }
 
-export const SelectTrainingLevel = ({ collaborators, collaboratorSelected, trainingRequestId }: SelectTrainingLevel) => {
+export const SelectCollaborators = ({ collaborators, collaboratorSelected, trainingRequestId }: SelectCollaboratorsProps) => {
+  const router = useRouter()
   const [levelSelected, setLevelSelected] = useState<string | null>();
   const [openSheet, setOpenSheet] = useState<boolean>(false);
+  
   const [collaboratorsSelected, setCollaboratorsSelected] = useState<
     Collaborator[] | null | undefined
   >();
@@ -47,20 +51,24 @@ export const SelectTrainingLevel = ({ collaborators, collaboratorSelected, train
 
   useEffect(() => {
     setCollaboratorsSelected(collaboratorSelected)
+
+    console.log({collaboratorSelected})
   }, [collaboratorSelected]);
 
 
   const handleUpdateCollaborators = async () => {
-    
+    console.log({collaboratorSelected})
     try {
       const actualizar = await axios.post(`/api/training-requests/${trainingRequestId}/`, {
         trainingRequests: collaboratorsSelected
       })
       toast.success("actualizados correctamente")
+      router.refresh()
     } catch (error) {
       console.log({error})
     }
   }
+
 
   return (
     <div>
@@ -83,17 +91,17 @@ export const SelectTrainingLevel = ({ collaborators, collaboratorSelected, train
         </div>
       </SimpleModal> */}
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="">
         <Sheet open={openSheet} onOpenChange={setOpenSheet}>
           <SheetTrigger asChild>
-            <Button variant="outline">abrir</Button>
+            <Button variant="primary">Agregar</Button>
           </SheetTrigger>
           <SheetContent side="bottom">
             <SheetHeader>
-              <SheetTitle>Edit profile</SheetTitle>
+              <SheetTitle>Seleccionar los colaboradores</SheetTitle>
               <SheetDescription>
                 Make changes to your profile here. Click save when you're done.
-                {levelSelected}
+               
               </SheetDescription>
             </SheetHeader>
             <div className="grid gap-4 py-4">
@@ -102,11 +110,12 @@ export const SelectTrainingLevel = ({ collaborators, collaboratorSelected, train
                 columns={columnsCollaboratorTable}
                 data={collaborators}
                 setCollaboratorsSelected={setCollaboratorsSelected}
+                
               />
             </div>
             <SheetFooter>
               <SheetClose onClick={() => handleLevelSelected(null)} asChild>
-                <Button onClick={handleUpdateCollaborators} type="submit">Save changes</Button>
+                <Button onClick={handleUpdateCollaborators} type="submit">Guardar</Button>
               </SheetClose>
             </SheetFooter>
           </SheetContent>

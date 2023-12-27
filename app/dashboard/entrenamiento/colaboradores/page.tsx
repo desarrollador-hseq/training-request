@@ -1,5 +1,5 @@
 import React from "react";
-import { CollaboratorsTable } from "./_components/collaborators-table";
+import { CollaboratorsNivel, CollaboratorsTable } from "./_components/collaborators-nivel";
 import { Card, CardContent } from "@/components/ui/card";
 import { columnsCollaboratorTable } from "./_components/collaborators-table-columns";
 import { db } from "@/lib/db";
@@ -39,7 +39,8 @@ const ListPage = async () => {
       <TitleOnPage text="Listado de colaboradores" />
       <Card className="min-h-screen">
         <CardContent>
-          <CollaboratorsTable columns={columnsCollaboratorTable} data={collaborators} />
+          {/* <CollaboratorsTable columns={columnsCollaboratorTable} data={collaborators} /> */}
+          <CollaboratorsNivel columns={columnsCollaboratorNivel} data={collaborators} />
 
         </CardContent>
       </Card>

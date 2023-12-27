@@ -7,8 +7,6 @@ import {
   MenubarContent,
   MenubarItem,
   MenubarMenu,
-  MenubarSeparator,
-  MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import axios from "axios";
@@ -20,7 +18,7 @@ interface CollaboratorCourseLevelProps {
   column: any;
   table: any;
   courseLevels: any;
-  courseId: string | null;
+  courseId: string;
 }
 
 export const CollaboratorCourseLevel = ({
@@ -40,7 +38,6 @@ export const CollaboratorCourseLevel = ({
         setLevelCourses(res.data);
       };
       getCourseLevel();
-      console.log({ row });
     }
   }, []);
 
@@ -51,11 +48,10 @@ export const CollaboratorCourseLevel = ({
       })
       .map((map) => map.name);
     setName(name);
-    console.log(name);
   }, [levelsCourse]);
 
   const { updateData } = table.options.meta;
-  const [selectedCourseLevel, setSelectedCourseLevel] = useState();
+  const [selectedCourseLevel, setSelectedCourseLevel] = useState<CourseLevel | null>();
 
   return (
     <Menubar>
@@ -67,7 +63,7 @@ export const CollaboratorCourseLevel = ({
               <MenubarItem
                 onClick={() => {
                   setSelectedCourseLevel(courseLevel);
-                  updateData(row.index, column.id, courseLevel);
+                  updateData(column.id, courseLevel);
                 }}
                 key={courseLevel.id}
               >

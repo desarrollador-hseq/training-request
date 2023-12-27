@@ -24,3 +24,5 @@ export async function PATCH(req: Request, { params }: { params: { courseId: stri
         return new NextResponse("Internal Errorr", { status: 500 })
     }
   }
+
+

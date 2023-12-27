@@ -44,6 +44,7 @@ export async function PATCH(req: Request, { params }: { params: { trainingReques
 }
 
 
+
 export async function DELETE(req: Request, { params }: { params: { trainingRequestId: string, memberId: string } }) {
   try {
     const session = await getServerSession(authOptions)
@@ -53,19 +54,21 @@ export async function DELETE(req: Request, { params }: { params: { trainingReque
     if (!trainingRequestId || !memberId) return new NextResponse("Not Found", { status: 404 })
 
 
-    const trcollaborator = await db.trainingRequestCollaborator.findFirst({
-      where: {
-        trainingRequestId: trainingRequestId,
-        collaboratorId: memberId,
-      }
-    })
-    console.log({ trainingRequestId, memberId, trcollaborator })
+    // const trcollaborator = await db.trainingRequestCollaborator.findFirst({
+    //   where: {
+    //     trainingRequestId: trainingRequestId,
+    //     collaboratorId: memberId,
+    //   }
+    // })
+    // console.log({ trainingRequestId, memberId, trcollaborator })
 
-    if (!trcollaborator) return new NextResponse("Not found", { status: 404 })
+    // if (!trcollaborator) return new NextResponse("Not found", { status: 404 })
 
     const memberRemoved = await db.trainingRequestCollaborator.delete({
       where: {
-        id: trcollaborator.id,
+        collaboratorId_trainingRequestId: {
+          trainingRequestId: trainingRequestId, collaboratorId: memberId
+        }
       },
 
     });

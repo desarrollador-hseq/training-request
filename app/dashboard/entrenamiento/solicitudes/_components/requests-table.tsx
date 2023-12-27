@@ -17,7 +17,6 @@ import {
   ChevronDown,
   ChevronDownSquare,
   ChevronUpSquare,
-  Pencil,
 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -42,10 +41,6 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
-import { CollaboratorsTable } from "../../colaboradores/_components/collaborators-table";
-import { columnsCollaboratorTable } from "../../colaboradores/_components/collaborators-table-columns";
-import { Collaborator, Course, TrainingRequest } from "@prisma/client";
-import Link from "next/link";
 import { CollaboratorsSimpleTable } from "../editar/[requestId]/_components/collaborators-simple-table";
 
 interface DataTableProps<TData, TValue> {

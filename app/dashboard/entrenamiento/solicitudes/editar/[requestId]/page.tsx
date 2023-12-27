@@ -9,7 +9,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Banner } from "@/components/banner";
 import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-table";
 import { Button } from "@/components/ui/button";
-import { SelectTrainingLevel } from "./_components/select-traininglevel";
+import { SelectCollaborators } from "./_components/select-collaborators";
 
 const TrainingRequestPage = async ({
   params,
@@ -22,8 +22,6 @@ const TrainingRequestPage = async ({
     return redirect("/dashboard");
   }
 
-  const isAdmin = session.user.role === "ADMIN";
-
   const trainingRequest = await db.trainingRequest.findUnique({
     where: {
       id: params.requestId,
@@ -33,7 +31,7 @@ const TrainingRequestPage = async ({
       collaborators: {
         include: {
           collaborator: true,
-          courseLevel: true
+          courseLevel: true,
         },
       },
     },
@@ -43,9 +41,6 @@ const TrainingRequestPage = async ({
     return redirect("/dashboard/entrenamiento");
   }
 
-
-
-
   const courseLevels = await db.courseLevel.findMany({
     where: {
       courseId: trainingRequest.courseId!,
@@ -54,14 +49,16 @@ const TrainingRequestPage = async ({
   const collaborators = await db.collaborator.findMany({
     where: {
       companyId: session.user.id,
-      active: true
+      active: true,
     },
   });
+  const hasCourseLevelIds = trainingRequest.collaborators.every(col => col.courseLevelId);
 
 
   const requiredFields = [
     trainingRequest.courseId,
     trainingRequest.collaborators.length,
+    hasCourseLevelIds,
   ];
 
   const totalFields = requiredFields.length;
@@ -84,32 +81,45 @@ const TrainingRequestPage = async ({
             complete todos los item {completionText}{" "}
           </span>
         </div>
-        <Button>Enviar</Button>
+        <Button disabled={!isComplete}  >Enviar</Button>
       </div>
       <div className="flex flex-col gap-3">
-        <Card className="p-0 overflow-hidden rounded-md">
-          <CardHeader className="p-0">
-            <SubtitleSeparator text="Datos de creación" />
+        <Card>
+          <CardHeader className="mb-3">
+            <div className="p-0 overflow-hidden rounded-md bg-blue-50">
+              <div className="p-0">
+                <SubtitleSeparator text="Datos de creación" />
+              </div>
+              <div>
+                <TrainingCreationData
+                  trainingRequest={trainingRequest}
+                  courseLevels={courseLevels}
+                />
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <TrainingCreationData
-              trainingRequest={trainingRequest}
-              courseLevels={courseLevels}
-              isAdmin={isAdmin}
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="p-0 overflow-hidden">
-          <CardHeader className="p-0">
-            <SubtitleSeparator text="Datos de Colaboradores" />
-          </CardHeader>
-          <CardContent>
-            <SelectTrainingLevel trainingRequestId={trainingRequest.id} collaborators={collaborators} collaboratorSelected={trainingRequest.collaborators.map(col => col.collaborator)} />
-            <CollaboratorsSimpleTable
-              collaborators={trainingRequest.collaborators}
-              trainingRequestId={trainingRequest.id}
-            />
+          <CardContent className="">
+            <div className="p-0 overflow-hidden rounded-md bg-blue-50">
+              <div className="p-0">
+                <SubtitleSeparator text="Datos de Colaboradores" >
+                <SelectCollaborators
+                  trainingRequestId={trainingRequest.id}
+                  collaborators={collaborators}
+                  collaboratorSelected={trainingRequest.collaborators.map(
+                    (col) => col.collaborator
+                  )}
+                />
+                </SubtitleSeparator>
+              </div>
+              <div className="p-2">
+                <CollaboratorsSimpleTable
+                  collaborators={trainingRequest.collaborators}
+                  trainingRequestId={trainingRequest.id}
+                  courseId={trainingRequest.courseId}
+                  coursesLevel={courseLevels}
+                />
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

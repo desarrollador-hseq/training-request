@@ -116,7 +116,14 @@ export function CollaboratorsTable<TData, TValue>({
     setSelectedRows(
       table.getGroupedSelectedRowModel().rows.map((ma) => ma.original)
     );
+
+   
   }, [table.getGroupedSelectedRowModel().rows]);
+
+  useEffect(() => {
+    setCollaboratorsSelected(table.getGroupedSelectedRowModel().rows.map((ma) => ma.original))
+  }, [  table.getGroupedSelectedRowModel().rows])
+  
 
   const initialSelection = collaboratorsSelected?.reduce(
     (acc: any, row: any) => {

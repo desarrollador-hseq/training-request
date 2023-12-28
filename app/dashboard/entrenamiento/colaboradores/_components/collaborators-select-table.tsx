@@ -61,7 +61,7 @@ interface DataTableProps<TData, TValue> {
   };
 }
 
-export function CollaboratorsTable<TData, TValue>({
+export function CollaboratorsSelectTable<TData, TValue>({
   data: initialData,
   columns,
   collaboratorsSelected,
@@ -89,7 +89,7 @@ export function CollaboratorsTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    getRowId: (row) => row.id,
+    getRowId: (row: any) => row.id,
     meta: {
       updateData: (rowIndex: any, columnId: any, value: any) =>
         setData((prev) =>
@@ -243,10 +243,6 @@ export function CollaboratorsTable<TData, TValue>({
                         </td>
                       </CollapsibleTrigger>
                     </TableRow>
-
-                    {/* {
-                      row.original.certificate
-                    } */}
                     <CollapsibleContentTable
                       colSpan={5}
                       openCollapsible={idOpenCollapsible === row.id}

@@ -26,7 +26,7 @@ export default function RootLayout({
       <NextAuthProvider>
         <html lang="es">
           <LoadingProvider>
-            <Toaster richColors />
+            <Toaster richColors position="top-right" />
             {children}
             <footer className="footer h-10 w-full bg-primary flex items-center">
               <div className="w-[70%] mx-auto flex justify-center gap-1 text-white text-sm">

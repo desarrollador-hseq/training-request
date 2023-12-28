@@ -58,18 +58,19 @@ enum RequestTrainingStatus {
   CANCELLED
 }
 
-
 model Collaborator {
   id       String  @id @default(uuid())
   fullname String
   numDoc   String
   email    String?
   phone    String?
+  docType                       DocType                       @default(CC)
 
-  companyId String?
-  company   Company? @relation(fields: [companyId], references: [id])
-
+  companyId                     String?
+  company                       Company?                      @relation(fields: [companyId], references: [id])
   trainingRequestsCollaborators TrainingRequestCollaborator[]
+
+  certificates Certificate[]
 
   active Boolean @default(true)
 
@@ -77,6 +78,12 @@ model Collaborator {
   updatedAt DateTime @updatedAt
 
   @@index([companyId])
+}
+
+enum DocType {
+  CC
+  TI
+  CE
 }
 
 model TrainingRequestCollaborator {
@@ -101,11 +108,17 @@ model Certificate {
   id String @id @default(uuid())
 
   collaboratorId String
+  Collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
+
+  courseLevelId String
+  courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])
+
   date           DateTime?
   fileUrl        String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@index([collaboratorId, courseLevelId])
 }
 
 model CourseLevel {
@@ -115,7 +128,10 @@ model CourseLevel {
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id])
-  
+
+
+  certificates Certificate[]
+
   active Boolean @default(true)
 
   createdAt                   DateTime                      @default(now())

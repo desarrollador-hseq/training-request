@@ -8,7 +8,7 @@ import { CollaboratorCourseLevel } from "./collaborators-courselevel";
 
 
 
-export const columnsCollaboratorTable: ColumnDef<Collaborator>[] = [
+export const columnsCollaboratorSelectTable: ColumnDef<Collaborator>[] = [
   {
     id: "select",
     header: ({ table }) => (

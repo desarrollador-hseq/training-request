@@ -92,7 +92,7 @@ const TrainingRequestPage = async ({
               </div>
               <div>
                 <TrainingCreationData
-                  trainingRequest={trainingRequest}
+                  trainingRequest={trainingRequest!}
                   courseLevels={courseLevels}
                 />
               </div>

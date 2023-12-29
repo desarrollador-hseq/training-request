@@ -103,7 +103,7 @@ export function CollaboratorsTable<TData, TValue>({
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Buscar por documento"
+          placeholder="Buscar en todas las columnas"
           value={filtering}
           onChange={(e) => setFiltering(e.target.value)}
           className="max-w-sm"
@@ -135,31 +135,34 @@ export function CollaboratorsTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
+      <div className="rounded-md border border-input overflow-hidden">
+        <Table className="">
+          <TableHeader className="bg-secondary">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="bg-secondary hover:bg-secondary">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+              
+                    <TableHead key={header.id}  className="py-2 text-secondary-foreground">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
+                          header.column.columnDef.header,
+                          header.getContext()
                           )}
                       {header.column.getCanFilter() ? (
-                        <div>
+                        <div className=" flex flex-col justify-around">
                           <TableColumnFiltering
                             column={header.column}
                             table={table}
-                          />
+                            />
                         </div>
-                      ) : null}
+                      ) : <div className="h-6"></div> }
                     </TableHead>
-                  );
-                })}
+                   
+                   );
+                  })}
+                  <TableHead />
               </TableRow>
             ))}
           </TableHeader>
@@ -180,7 +183,7 @@ export function CollaboratorsTable<TData, TValue>({
                       )}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
+                        <TableCell key={cell.id} >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
@@ -193,7 +196,7 @@ export function CollaboratorsTable<TData, TValue>({
                           onClick={() => handleCollapsible(row.id)}
                           asChild
                         >
-                          <td className="flex justify-center items-center">
+                          <td className="h-full p-1">
                             <Button variant="ghost">
                               {idOpenCollapsible !== row.id ? (
                                 <ChevronDownSquare />

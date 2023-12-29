@@ -19,6 +19,7 @@ export const columnsCollaboratorTable: ColumnDef<Collaborator>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-secondary/30 hover:text-secondary-foreground"
         >
           Nombre completo
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -83,9 +84,7 @@ export const columnsCollaboratorTable: ColumnDef<Collaborator>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("phone")}</div>
-    ),
+    cell: ({ row }) => <div className="lowercase">{row.getValue("phone")}</div>,
   },
   {
     id: "actions",
@@ -101,7 +100,7 @@ export const columnsCollaboratorTable: ColumnDef<Collaborator>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="flex flex-col">
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
               <Link
                 className="flex justify-center"
                 href={`/dashboard/entrenamiento/colaboradores/${id}`}

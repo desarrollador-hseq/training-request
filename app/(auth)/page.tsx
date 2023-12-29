@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { RegisterForm } from "./_components/register-form";
 export default async function LoginPage() {
   const session = await getServerSession(authOptions);
 
@@ -36,7 +37,7 @@ export default async function LoginPage() {
         </div>
       </div>
       <div className="container w-full flex items-start justify-center pt-14 h-fit">
-        <Tabs defaultValue="login" className="w-[400px]">
+        <Tabs defaultValue="login" className="w-[800px]">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
             <TabsTrigger value="register">Registrar Empresa</TabsTrigger>
@@ -56,26 +57,15 @@ export default async function LoginPage() {
           </TabsContent>
           {/* --------register-------- */}
           <TabsContent value="register">
-            <Card>
+            <Card className="">
               <CardHeader>
-                <CardTitle  className="text-2xl font-bold leading-tight tracking-tight text-slate-500 text-center">Registrar empresa</CardTitle>
-                <CardDescription>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae, aspernatur?
-                </CardDescription>
+                <CardTitle className="text-2xl font-bold leading-tight tracking-tight text-slate-500 text-center">
+                  Ingresar
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="space-y-1">
-                  <Label htmlFor="current">Current password</Label>
-                  <Input id="current" type="password" />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="new">New password</Label>
-                  <Input id="new" type="password" />
-                </div>
+              <CardContent className="space-y-1 md:space-y-1">
+                <RegisterForm />
               </CardContent>
-              <CardFooter>
-                <Button>Save password</Button>
-              </CardFooter>
             </Card>
           </TabsContent>
         </Tabs>

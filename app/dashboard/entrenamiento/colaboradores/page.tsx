@@ -7,6 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { columnsCollaboratorTable } from "./_components/table-collaborator-page/collaborators-table-columns";
 import { TitleOnPage } from "@/components/title-on-page";
 import { CollaboratorsTable } from "./_components/table-collaborator-page/collaborators-table";
+import { Button, buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 
 const ListCollaboratorsPage = async () => {
   const session = await getServerSession(authOptions);
@@ -29,7 +31,12 @@ const ListCollaboratorsPage = async () => {
 
   return (
     <div>
-      <TitleOnPage text="Listado de colaboradores" />
+     <div className="flex justify-between items-center">
+     <TitleOnPage text="Listado de colaboradores" />
+    <Link className={buttonVariants()} href="/dashboard/entrenamiento/colaboradores/crear" >
+      Registrar
+    </Link>
+     </div>
       <Card className="min-h-screen">
         <CardContent>
           <CollaboratorsTable

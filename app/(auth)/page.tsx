@@ -25,7 +25,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="bg-slate-50 h-screen">
+    <div className="bg-slate-50 min-h-[calc(100vh-40px)]">
       <div className="relative p-1 border-b h-[55px] max-h-[70px] w-full bg-primary shadow-sm flex items-center">
         <div className="mx-auto w-full max-w-[1500px] mt-1">
           <div className="mx-3 flex items-center justify-between">
@@ -60,7 +60,7 @@ export default async function LoginPage() {
             <Card className="">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold leading-tight tracking-tight text-slate-500 text-center">
-                  Ingresar
+                  Registrar Empresa
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-1 md:space-y-1">

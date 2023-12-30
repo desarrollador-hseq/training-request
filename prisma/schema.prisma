@@ -24,7 +24,7 @@ model Company {
   sector SectorCompany?
 
   nameContact String?
-  PhoneContact    String? 
+  phoneContact    String? 
   email    String  @unique
   password String?
   isValid  Boolean @default(false)

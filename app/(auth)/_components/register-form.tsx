@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import * as z from "zod";
@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,14 +18,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Checkbox } from "@/components/ui/checkbox";
+import PdfFullscreen from "@/components/pdf-fullscreen";
+import { InputForm } from "@/components/input-form";
+import { SelectForm } from "@/components/select-form";
+import { TooltipInfo } from "@/components/tooltip-info";
 
 const formSchema = z
   .object({
@@ -37,19 +34,26 @@ const formSchema = z
       message: "Nit es requerido",
     }),
     sector: z.string().min(1, {
-      message: "Nit es requerido",
+      message: "Sector es requerido",
     }),
     nameContact: z.string().min(1, {
-      message: "Nit es requerido",
+      message: "Nombre del contacto es requerido",
     }),
-    email: z.string().min(1, {
-      message: "Correo Electrónico es requerido",
+    email: z
+      .string()
+      .email({
+        message: "Ingrese un correo válido",
+      })
+      .optional()
+      .or(z.literal("")),
+    phoneContact: z.string().min(5, {
+      message: "digite al menos 5 caracteres",
     }),
     password: z.string().min(5, {
       message: "digite al menos 5 caracteres",
     }),
     repeatPassword: z.string().min(5, {
-      message: "repita la contraseña",
+      message: "digite al menos 5 caracteres",
     }),
     acceptTerms: z.literal<boolean>(true),
   })
@@ -62,7 +66,7 @@ const formSchema = z
     }
   });
 
-const SectorsItem = [
+const sectorsItem = [
   { value: "AGROPECUARIO", label: "Agropecuario" },
   { value: "SERVICIOS", label: "Servicios" },
   { value: "INDUSTRIAL", label: "Industrial" },
@@ -78,13 +82,21 @@ const SectorsItem = [
 export const RegisterForm = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [viewPass, setViewPass] = useState(false);
-
   const router = useRouter();
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: {
+      businessName: "",
+      nit: "",
+      sector: "",
+      nameContact: "",
+      email: "",
+      phoneContact: "",
+      password: "",
+      repeatPassword: "",
+    },
   });
   const { isSubmitting, isValid } = form.formState;
   const { watch } = form;
@@ -92,6 +104,7 @@ export const RegisterForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsEditing(true);
     setViewPass(false);
+    console.log({ values });
     try {
       const signInResponse = await signIn("credentials", {
         email: values.email,
@@ -120,140 +133,78 @@ export const RegisterForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-          <div className="space-y-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-8">
+          <div className="bg-teal-50/30 border-2 border-teal-100  p-3 flex flex-col rounded-sm">
+            <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
+              Datos de la empresa
+            </h4>
+            {/* businessName */}
             <div>
-              <FormField
+              <InputForm
                 control={form.control}
+                isSubmitting={isSubmitting}
+                label="Nombre Comercial"
                 name="businessName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className="font-bold text-primary"
-                      htmlFor="businessName"
-                    >
-                      Nombre de la empresa
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        id="businessName"
-                        disabled={isSubmitting}
-                        placeholder="Empresa S.A"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
               />
             </div>
+            {/* nit */}
             <div>
-              <FormField
+              <InputForm
                 control={form.control}
+                isSubmitting={isSubmitting}
+                label="Nit"
                 name="nit"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold text-primary" htmlFor="nit">
-                      Nit
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        id="nit"
-                        disabled={isSubmitting}
-                        placeholder="123456789-0"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
               />
             </div>
             <div>
-              <FormField
+              <SelectForm
                 control={form.control}
+                isSubmitting={isSubmitting}
+                label="Sector"
                 name="sector"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sector</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="bg-slate-100 border-slate-300">
-                          <SelectValue
-                            className="text-red-500"
-                            placeholder="Selecciona el sector de la empresa"
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {SectorsItem.map((sector) => (
-                          <SelectItem value={sector.value}>
-                            {sector.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="ml-6 text-[0.8rem] text-red-500 font-medium" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div>
-              <FormField
-                control={form.control}
-                name="nameContact"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className="font-bold text-primary"
-                      htmlFor="nameContact"
-                    >
-                      Nombre de la persona de contacto
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        id="nameContact"
-                        disabled={isSubmitting}
-                        placeholder=""
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                options={sectorsItem}
               />
             </div>
           </div>
-          <div className="space-y-1">
+          <div className="bg-blue-50/30 border-2 border-blue-100  p-3 flex flex-col rounded-sm">
+            <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
+              Datos de persona de contacto
+            </h4>
+            {/* nameContact */}
             <div>
-              <FormField
+              <InputForm
                 control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className="font-bold text-primary"
-                      htmlFor="email"
-                    >
-                      Correo de la persona de contacto
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        id="email"
-                        disabled={isSubmitting}
-                        placeholder=""
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                isSubmitting={isSubmitting}
+                label="Nombre completo"
+                name="nameContact"
               />
             </div>
+            {/* phoneContact */}
+            <div>
+              <InputForm
+                control={form.control}
+                isSubmitting={isSubmitting}
+                label="Teléfono"
+                name="phoneContact"
+              />
+            </div>
+            <div className="space-y-1">
+              {/* email */}
+              <div>
+                <InputForm
+                  control={form.control}
+                  isSubmitting={isSubmitting}
+                  label="Correo electrónico"
+                  name="email"
+                />
+              </div>
+            </div>
+          </div>
 
+          <div className="bg-slate-50/30 border-2 border-slate-100 p-3 flex flex-col rounded-sm">
+            <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
+              Credenciales de inicio de sesión
+            </h4>
             {/* -----------password----------- */}
             <div>
               <FormField
@@ -261,7 +212,9 @@ export const RegisterForm = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem className="relative">
-                    <FormLabel htmlFor="password">Contraseña</FormLabel>
+                    <FormLabel className="font-semibold" htmlFor="password">
+                      Contraseña
+                    </FormLabel>
 
                     <FormControl>
                       <Input
@@ -289,37 +242,24 @@ export const RegisterForm = () => {
                 )}
               />
             </div>
-            {/* -----------repeatpassword----------- */}
-            <div>
-              <FormField
-                control={form.control}
-                name="repeatPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="repeat-password">
-                      Repetir Contraseña
-                    </FormLabel>
 
-                    <FormControl>
-                      <Input
-                        id="repeat-password"
-                        type="password"
-                        disabled={isSubmitting}
-                        placeholder="•••••••••"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+            {/* repeatpassword */}
+            <div>
+              <InputForm
+                control={form.control}
+                isSubmitting={isSubmitting}
+                label="Repetir contraseña"
+                name="repeatPassword"
+                type="password"
               />
             </div>
           </div>
         </div>
+
         <div className="w-full flex flex-col items-center justify-center ">
-          <div className="w-full flex flex-col gap-3">
+          <div className="w-full flex flex-col gap-3 mt-2">
             {/* -----------accept terms----------- */}
-            <div >
+            <div>
               <FormField
                 control={form.control}
                 name="acceptTerms"
@@ -329,13 +269,18 @@ export const RegisterForm = () => {
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        className="accent-red-700"
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel>Aceptar terminos y condiciones</FormLabel>
-                      <FormDescription className="">
+                      <FormDescription className="text-sm font-normal text-slate-400 ">
                         ver terminos y condiciones{" "}
-                        <Button className="text-sky-500">aquí.</Button>
+                        <PdfFullscreen
+                          fileUrl=""
+                          icon="aquí"
+                          btnClass="p-0 font-normal text-sm hover:bg-ihnerit text-blue-400"
+                        />
                       </FormDescription>
                     </div>
                   </FormItem>
@@ -343,10 +288,14 @@ export const RegisterForm = () => {
               />
             </div>
 
-            <Button disabled={!isValid || isSubmitting} className="w-full">
-              {isEditing && <Loader2 className="w-4 h-4 animate-spin" />}
-              Entrar
-            </Button>
+            <TooltipInfo text="Rellena todo el formulario para continuar">
+              <div className="w-full h-fit">
+                <Button disabled={!isValid || isSubmitting} className="w-full">
+                  {isEditing && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Registrarse
+                </Button>
+              </div>
+            </TooltipInfo>
           </div>
         </div>
       </form>

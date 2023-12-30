@@ -45,7 +45,7 @@ export const LoadingProvider = ({ children }: Props) => {
         )}
       >
         {loadingApp && (
-          <div className="backdrop-blur-sm bg-white/30 absolute top-0 left-0 w-full h-screen overflow-hidden z-40 bg-white flex justify-center items-center">
+          <div className="backdrop-blur-sm bg-white/30 absolute top-0 left-0 w-full min-h-screen overflow-hidden z-40 bg-white flex justify-center items-center">
             <Loader2 className="w-12 h-12 animate-spin" />
           </div>
         )}

@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,9 @@ import PdfFullscreen from "@/components/pdf-fullscreen";
 import { InputForm } from "@/components/input-form";
 import { SelectForm } from "@/components/select-form";
 import { TooltipInfo } from "@/components/tooltip-info";
+import { useLoading } from "@/components/providers/loading-provider";
+import { ModalWaitValidation } from "./modal-wait-validation";
+import { Company } from "@prisma/client";
 
 const formSchema = z
   .object({
@@ -79,10 +83,19 @@ const sectorsItem = [
   { value: "OTRO", label: "Otro" },
 ];
 
-export const RegisterForm = () => {
+export const RegisterForm = ({
+  setTabSelected,
+  setShowModal,
+}: {
+  setTabSelected: Dispatch<SetStateAction<string>>;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const router = useRouter();
+  const { setLoadingApp } = useLoading();
   const [isEditing, setIsEditing] = useState(false);
   const [viewPass, setViewPass] = useState(false);
-  const router = useRouter();
+  const [datas, setDatas] = useState<Company | null>(null);
+
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -99,42 +112,65 @@ export const RegisterForm = () => {
     },
   });
   const { isSubmitting, isValid } = form.formState;
-  const { watch } = form;
+  const { watch, setError } = form;
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmitRegister = async (values: z.infer<typeof formSchema>) => {
     setIsEditing(true);
     setViewPass(false);
-    console.log({ values });
+    setLoadingApp(true);
+
     try {
-      const signInResponse = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false,
+      const { data } = await axios.post(`/api/auth/register`, {
+        ...values,
       });
 
-      if (!signInResponse || signInResponse.ok !== true) {
-        return toast.error("Correo Electrónico y/o Contraseña incorrectos", {
-          description: "Por favor revisa los datos ingresados",
-          position: "top-right",
-        });
+      try {
+        const res = await axios.post(`/api/mail/company-registered`, data);
+      } catch (error) {
+        console.log("[404] email notification sent");
       }
-
-      router.refresh();
-      toast.success("Bienvenido");
+  
       toggleEdit();
+      router.refresh();
+      setTabSelected("login");
+      setShowModal(true)
     } catch (error) {
-      toast.error("Something went wrong");
-      console.log("errorr", error);
+      if (axios.isAxiosError(error)) {
+        const serverResponse = error.response;
+        if (serverResponse && serverResponse.status === 400) {
+          const errorMessage = serverResponse.data;
+          if (
+            typeof errorMessage === "string" &&
+            errorMessage.includes("Nit de empresa ya se encuentra registrado")
+          ) {
+            setError("nit", {
+              type: "manual",
+              message: "Nit de empresa ya se encuentra registrado",
+            });
+          } else {
+            toast.error(errorMessage);
+          }
+        } else {
+          toast.error("Ocurrió un error inesperado");
+        }
+      } else {
+        console.error(error);
+        toast.error("Ocurrió un error inesperado");
+      }
     } finally {
       setIsEditing(false);
+      setLoadingApp(false);
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
+      <form
+        onSubmit={form.handleSubmit(onSubmitRegister)}
+        className="space-y-1"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-8">
-          <div className="bg-teal-50/30 border-2 border-teal-100  p-3 flex flex-col rounded-sm">
+          <div className="bg-green-50/30 border-2 border-green-100 p-3 flex flex-col">
             <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
               Datos de la empresa
             </h4>
@@ -166,7 +202,7 @@ export const RegisterForm = () => {
               />
             </div>
           </div>
-          <div className="bg-blue-50/30 border-2 border-blue-100  p-3 flex flex-col rounded-sm">
+          <div className="bg-blue-50/30 border-2 border-blue-100  p-3 flex flex-col">
             <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
               Datos de persona de contacto
             </h4>
@@ -201,7 +237,7 @@ export const RegisterForm = () => {
             </div>
           </div>
 
-          <div className="bg-slate-50/30 border-2 border-slate-100 p-3 flex flex-col rounded-sm">
+          <div className="bg-slate-50/30 border-2 border-slate-100 p-3 flex flex-col">
             <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
               Credenciales de inicio de sesión
             </h4>

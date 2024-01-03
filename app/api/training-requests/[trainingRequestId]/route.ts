@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
-import { Collaborator } from "@prisma/client"
+import { Collaborator } from '@prisma/client';
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { db } from "@/lib/db"
 
@@ -67,3 +67,31 @@ export async function POST(req: Request, { params }: { params: { trainingRequest
     return new NextResponse("Internal Errorr", { status: 500 })
   }
 }
+
+export async function PATCH(req: Request, { params }: { params: { trainingRequestId: string } }) {
+  const session = await getServerSession(authOptions)
+  if (!session) return new NextResponse("Unauthorized", { status: 401 })
+  const values = await req.json()
+
+  const {state} = values
+  if (!state) return new NextResponse("Bad request", { status: 400 })
+
+  try {
+      const request = await db.trainingRequest.update({
+          where: {
+            id: params.trainingRequestId,
+          },
+          data: {
+            state: state
+          }
+
+      })
+
+      return NextResponse.json(request)
+
+  } catch (error) {
+      console.log("[TRAINING-REQUEST-UPDATED]", error)
+      return new NextResponse("Internal Errorr", { status: 500 })
+  }
+}
+

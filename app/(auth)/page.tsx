@@ -1,28 +1,31 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoginForm } from "./_components/login-form";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 // import { LogoGrupoHseq } from "@/components/logo-grupo-hseq";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { RegisterForm } from "./_components/register-form";
-export default async function LoginPage() {
-  const session = await getServerSession(authOptions);
+import { ModalWaitValidation } from "./_components/modal-wait-validation";
+export default function LoginPage() {
+  const { data: session, status } = useSession();
+  const [tabSelected, setTabSelected] = useState("login");
+  const [showModal, setShowModal] = useState(false);
 
-  if (session && session.user?.role) {
-    redirect("/dashboard");
-  }
+  useEffect(() => {
+    if (status === "authenticated") {
+      if (session) {
+        if (session.user.role === "ADMIN") {
+          redirect("/admin");
+        } else if (session.user.role === "COMPANY") {
+          redirect("/dashboard");
+        }
+      }
+    }
+  }, [status, session]);
 
   return (
     <div className="bg-slate-50 min-h-[calc(100vh-40px)]">
@@ -37,7 +40,11 @@ export default async function LoginPage() {
         </div>
       </div>
       <div className="container w-full flex items-start justify-center pt-14 h-fit">
-        <Tabs defaultValue="login" className="w-[800px]">
+        <Tabs
+          value={tabSelected}
+          onValueChange={setTabSelected}
+          className="w-[800px]"
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
             <TabsTrigger value="register">Registrar Empresa</TabsTrigger>
@@ -64,12 +71,16 @@ export default async function LoginPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-1 md:space-y-1">
-                <RegisterForm />
+                <RegisterForm
+                  setTabSelected={setTabSelected}
+                  setShowModal={setShowModal}
+                />
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
+      {showModal && <ModalWaitValidation />}
     </div>
   );
 }

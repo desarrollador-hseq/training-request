@@ -55,6 +55,9 @@ export const authOptions: AuthOptions = {
                 if (!company) {
                     return null
                 }
+                // if (!company || !company.isValid) {
+                //     return null
+                // }
 
                 const userPassword = company.password
                 const isValidPassword = bcrypt.compareSync(password, userPassword!)
@@ -65,7 +68,7 @@ export const authOptions: AuthOptions = {
 
                 const { password: pass, ...userWithoutPass } = company;
 
-                return userWithoutPass
+                return {...userWithoutPass,  isValid: company.isValid}
             }
         })
     ],

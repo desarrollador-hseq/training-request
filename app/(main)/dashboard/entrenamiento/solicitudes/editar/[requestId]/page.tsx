@@ -8,8 +8,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Banner } from "@/components/banner";
 import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-table";
-import { Button } from "@/components/ui/button";
 import { SelectCollaborators } from "./_components/select-collaborators";
+import { SendTraining } from "./_components/send-training";
+
 
 const TrainingRequestPage = async ({
   params,
@@ -54,7 +55,6 @@ const TrainingRequestPage = async ({
   });
   const hasCourseLevelIds = trainingRequest.collaborators.every(col => col.courseLevelId);
 
-
   const requiredFields = [
     trainingRequest.courseId,
     trainingRequest.collaborators.length,
@@ -67,6 +67,7 @@ const TrainingRequestPage = async ({
   const completionText = `(${completedFields}/${totalFields})`;
 
   const isComplete = requiredFields.every(Boolean);
+  const isPending = trainingRequest.state === "PENDING"
 
   return (
     <div className="">
@@ -81,7 +82,7 @@ const TrainingRequestPage = async ({
             complete todos los item {completionText}{" "}
           </span>
         </div>
-        <Button disabled={!isComplete}  >Enviar</Button>
+      <SendTraining trainingRequestId={params.requestId} disabled={isComplete} isPending={isPending}  />
       </div>
       <div className="flex flex-col gap-3">
         <Card>
@@ -103,6 +104,7 @@ const TrainingRequestPage = async ({
               <div className="p-0">
                 <SubtitleSeparator text="Datos de Colaboradores" >
                 <SelectCollaborators
+                  isPending={isPending}
                   trainingRequestId={trainingRequest.id}
                   collaborators={collaborators}
                   collaboratorSelected={trainingRequest.collaborators.map(
@@ -117,6 +119,7 @@ const TrainingRequestPage = async ({
                   trainingRequestId={trainingRequest.id}
                   courseId={trainingRequest.courseId}
                   coursesLevel={courseLevels}
+                  isPending={isPending}
                 />
               </div>
             </div>

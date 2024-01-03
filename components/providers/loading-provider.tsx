@@ -1,8 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
-import { Inter } from "next/font/google";
 import React, {
   Dispatch,
   ReactNode,
@@ -12,6 +9,9 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { Loader2 } from "lucide-react";
+import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"] });
 
 interface LoadingProps {
@@ -32,7 +32,13 @@ export const LoadingProvider = ({ children }: Props) => {
   const [loadingApp, setLoadingApp] = useState<boolean | undefined>(true);
 
   useEffect(() => {
-    setLoadingApp(false);
+    try {
+      setLoadingApp(false);
+    } catch (error) {
+      setLoadingApp(false);
+    }finally {
+      setLoadingApp(false);
+    }
   }, []);
 
   return (

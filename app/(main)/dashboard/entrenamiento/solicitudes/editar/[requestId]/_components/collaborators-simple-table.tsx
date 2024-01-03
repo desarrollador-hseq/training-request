@@ -1,7 +1,6 @@
 "use client";
 import {
   Collaborator,
-  Course,
   CourseLevel,
   TrainingRequestCollaborator,
 } from "@prisma/client";
@@ -22,20 +21,17 @@ import {
   DropdownMenuContent,
   DropdownMenu,
   DropdownMenuTrigger,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Suspense, useEffect, useState } from "react";
 import { useLoading } from "@/components/providers/loading-provider";
+import { cn } from "@/lib/utils";
 
 interface CollaboratorsSimpleTableProps {
   collaborators:
@@ -47,17 +43,20 @@ interface CollaboratorsSimpleTableProps {
     | undefined;
   trainingRequestId: string;
   coursesLevel: CourseLevel[] | null;
+  isPending: boolean;
 }
 
 export const CollaboratorsSimpleTable = ({
   collaborators,
   trainingRequestId,
   coursesLevel,
+  isPending,
 }: CollaboratorsSimpleTableProps) => {
   const router = useRouter();
-  const {setLoadingApp} = useLoading()
+  const { setLoadingApp } = useLoading();
 
   const handleRemove = async (id: string) => {
+    setLoadingApp(true);
     try {
       const { data } = await axios.delete(
         `/api/training-requests/${trainingRequestId}/members/${id}`
@@ -67,28 +66,32 @@ export const CollaboratorsSimpleTable = ({
     } catch (error) {
       console.error(error);
       toast.error("Ocurrió un error inesperado");
+    } finally {
+      setLoadingApp(false);
     }
   };
 
   const onChange = async (courseLevelId: any, id: string) => {
-    setLoadingApp(true)
-    try {
-      const { data } = await axios.patch(
-        `/api/training-requests/${trainingRequestId}/members/${id}`,
-        { courseLevelId }
-      );
-      toast.success("Colaborador actualizado");
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      toast.error("Ocurrió un error inesperado");
-    }finally {
-    setLoadingApp(false)
+    if (isPending) {
+      setLoadingApp(true);
+      try {
+        const { data } = await axios.patch(
+          `/api/training-requests/${trainingRequestId}/members/${id}`,
+          { courseLevelId }
+        );
+        toast.success("Colaborador actualizado");
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+        toast.error("Ocurrió un error inesperado");
+      } finally {
+        setLoadingApp(false);
+      }
     }
   };
 
   return (
-    <Table className="bg-blue-100">
+    <Table className={cn("bg-blue-100", !isPending && "opacity-70")}>
       {/* <TableCaption>A list </TableCaption> */}
       <TableHeader>
         <TableRow className="bg-slate-600 hover:bg-slate-600">
@@ -97,12 +100,17 @@ export const CollaboratorsSimpleTable = ({
           <TableHead className="text-white">Correo electrónico</TableHead>
           <TableHead className="text-white">Teléfono</TableHead>
           <TableHead className="text-white">Nivel</TableHead>
-          <TableHead className="text-right text-white">Acción</TableHead>
+          {isPending && (
+            <TableHead className="text-right text-white">Acción</TableHead>
+          )}
         </TableRow>
       </TableHeader>
       <TableBody>
         {collaborators?.map(({ collaborator, courseLevel }: any) => (
-          <TableRow key={collaborator.id} className="font-semibold">
+          <TableRow
+            key={collaborator.id}
+            className={cn("font-semibold", !isPending && "opacity-60")}
+          >
             <TableCell>{collaborator.fullname}</TableCell>
             <TableCell>{collaborator.numDoc}</TableCell>
             <TableCell>{collaborator.email}</TableCell>
@@ -113,51 +121,55 @@ export const CollaboratorsSimpleTable = ({
               <Select
                 defaultValue={courseLevel ? courseLevel.id : ""}
                 onValueChange={(e) => onChange(e, collaborator.id)}
+                disabled={!isPending}
               >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="🔴 Sin definir" />
                 </SelectTrigger>
                 <SelectContent>
-                 
-                    {coursesLevel?.map((level) => (
-                      <SelectItem key={level.id} value={level.id}>
-                        {level.name}
-                      </SelectItem>
-                    ))}
-              
+                  {coursesLevel?.map((level) => (
+                    <SelectItem key={level.id} value={level.id}>
+                      {level.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </TableCell>
 
-            <TableCell className="flex justify-end">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-4 w-8 p-0">
-                    <span className="sr-only">Abrir menu</span>
-                    <MoreHorizontal />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="center"
-                  className="hover:bg-slate-100"
-                >
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleRemove(collaborator.id)}
-                    className="hover:bg-slate-300"
+            {isPending && (
+              <TableCell className="flex justify-end">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-4 w-8 p-0">
+                      <span className="sr-only">Abrir menu</span>
+                      <MoreHorizontal />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="center"
+                    className="hover:bg-slate-100"
                   >
-                    <Trash className="w-4 h-4 mr-2 text-red-500" />
-                    Quitar de la lista
-                  </Button>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
+                    <Button
+                      variant="ghost"
+                      onClick={() => handleRemove(collaborator.id)}
+                      className="hover:bg-slate-300"
+                    >
+                      <Trash className="w-4 h-4 mr-2 text-red-500" />
+                      Quitar de la lista
+                    </Button>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>
       <TableFooter className="w-full">
         <TableRow className="w-full">
-          <TableCell colSpan={5} className="bg-blue-400/20"></TableCell>
+          <TableCell
+            colSpan={isPending ? 5 : 4}
+            className="bg-blue-400/20"
+          ></TableCell>
           <TableCell className="text-right bg-blue-400/20">
             Total colaboradores:{" "}
             <span className="font-bold max-h-[5px]">

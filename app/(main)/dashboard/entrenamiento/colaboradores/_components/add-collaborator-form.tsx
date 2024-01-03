@@ -1,26 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Collaborator } from "@prisma/client";
-import {
-  CalendarIcon,
-  Loader2,
-  ThumbsUp,
-  UserCog,
-  UserPlus,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { addDays, format } from "date-fns";
-import { es } from "date-fns/locale";
-import { DateRange } from "react-day-picker";
-import { cn, phoneRegex } from "@/lib/utils";
+import { phoneRegex } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 
 import {
   Form,
@@ -30,13 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -44,7 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TitleOnPage } from "@/components/title-on-page";
 // import { DeleteCollaborator } from "./delete-collaborator";
 
 interface AddCollaboratorFormProps {
@@ -222,7 +205,12 @@ export const AddCollaboratorForm = ({
                         Número de documento
                       </FormLabel>
                       <FormControl>
-                        <Input id="numDoc" disabled={isSubmitting} {...field} />
+                        <Input
+                          id="numDoc"
+                          disabled={isSubmitting}
+                          {...field}
+                          className="text-primary"
+                        />
                       </FormControl>
 
                       <FormMessage className="ml-6 text-[0.8rem] text-red-500 font-medium" />

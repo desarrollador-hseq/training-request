@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 
 export const DashboardNavbar = () => {
   const { status, data: session } = useSession();
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     if (status !== "loading") {
       if (status === "authenticated") {
@@ -31,11 +31,7 @@ export const DashboardNavbar = () => {
             {/* <LogoClaro goRoot className="flex" /> */}
           </div>
 
-          {
-            isAdmin && (
-              <span>Admin</span>
-            )
-          }
+          {isAdmin && <span>Admin</span>}
 
           <Link href="/logout" className="w-fit h-full flex items-center">
             <Button variant="ghost" className="bg-slate-500 gap-2">

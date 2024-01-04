@@ -1,8 +1,9 @@
+"use server";
 import { ReactNode } from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { Ban } from "lucide-react";
-import { DashboardNavbar } from "./admin/_components/navbar/dashboard-navbar";
+import { DashboardNavbar } from "./_components/navbar/dashboard-navbar";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { ScrollUp } from "@/components/scroll-up";
 
@@ -25,6 +26,7 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
     </main>
   );
 };
+
 const NotValidCompany = () => {
   return (
     <div className="w-full min-h-screen h-full">

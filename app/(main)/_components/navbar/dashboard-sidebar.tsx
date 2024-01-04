@@ -57,18 +57,27 @@ const adminRoutes = [
 
 export const DashboardSidebar = () => {
   const { status, data: session } = useSession();
+  const { setLoadingApp } = useLoading();
   const [routes, setRoutes] = useState<
     { icon: LucideIcon; label: string; href: string }[]
   >([]);
 
   useEffect(() => {
-    if (status !== "loading") {
-      if (status === "authenticated") {
-        if (session) {
-          setRoutes(session.user.role === "ADMIN" ? adminRoutes : dashRoutes);
+    setLoadingApp(true);
+    const loadNavbarItems = async () => {
+      if (status !== "loading") {
+        if (status === "authenticated") {
+          if (session) {
+            await setRoutes(
+              session.user.role === "ADMIN" ? adminRoutes : dashRoutes
+            );
+          }
         }
       }
-    }
+    };
+    loadNavbarItems();
+
+    setLoadingApp(false);
   }, [status, session]);
 
   return (

@@ -1,5 +1,10 @@
 import { Building2, User, Users2 } from "lucide-react";
 import { db } from "@/lib/db";
+import { TitleOnPage } from "@/components/title-on-page";
+
+const crumbs = [
+  {label: "inicio", path: "inicio"}
+]
 
 const AdminPage = async () => {
   const collaborators = await db.collaborator.findMany({
@@ -28,7 +33,7 @@ const AdminPage = async () => {
 
   return (
     <div>
-      <h2 className="text-2xl">Panel</h2>
+     <TitleOnPage text="Panel" bcrumb={crumbs} />
       <div className="flex items-center ">
         <div className="container  mx-auto my-12">
           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">

@@ -14,11 +14,12 @@ declare module 'next-auth' {
         createdAt: Date;
         updatedAt: Date;
     }
-
+    
     interface Session {
         user: {
             id?: string;
             role?: string;
+            isValid: Boolean;
         } & DefaultSession['user'];
     }
 }

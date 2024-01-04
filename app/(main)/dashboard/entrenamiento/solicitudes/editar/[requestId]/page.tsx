@@ -11,6 +11,10 @@ import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-tab
 import { SelectCollaborators } from "./_components/select-collaborators";
 import { SendTraining } from "./_components/send-training";
 
+const crumbs = [
+  {label: "solicitudes", path: "/dashboard/entrenamiento/solicitudes"},
+  {label: "editar", path: "editar"},
+]
 
 const TrainingRequestPage = async ({
   params,
@@ -77,7 +81,7 @@ const TrainingRequestPage = async ({
 
       <div className="flex justify-between items-center">
         <div>
-          <TitleOnPage text={`Editar solicitud de entrenamiento `} />
+          <TitleOnPage text={`Editar solicitud de entrenamiento `} bcrumb={crumbs} />
           <span className="text-slte-300">
             complete todos los item {completionText}{" "}
           </span>

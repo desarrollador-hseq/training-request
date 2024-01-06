@@ -96,6 +96,9 @@ model Collaborator {
   phone    String?
   docType                       DocType                       @default(CC)
 
+  identificationFile String?
+  socialSecurityFile String?
+
   companyId                     String?
   company                       Company?                      @relation(fields: [companyId], references: [id])
   trainingRequestsCollaborators TrainingRequestCollaborator[]

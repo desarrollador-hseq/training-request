@@ -1,11 +1,9 @@
-
 import { redirect } from "next/navigation";
 import { TitleOnPage } from "@/components/title-on-page";
 import { db } from "@/lib/db";
-import { Card, CardContent } from "@/components/ui/card";
-import { AddCollaboratorForm } from "../_components/add-collaborator-form";
-import { DeactivateCollaborator } from "./_components/deactivate-collaborator";
 
+import { DeactivateCollaborator } from "./_components/deactivate-collaborator";
+import { TabsEditCollaborator } from "./_components/tabs-edit-collaborator";
 
 const EditCollaborator = async ({
   params,
@@ -39,15 +37,7 @@ const EditCollaborator = async ({
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <Card>
-          <CardContent className="min-h-screen">
-            <div className="p-0 overflow-hidden rounded-md">
-              {collaborator && (
-                <AddCollaboratorForm collaborator={collaborator} />
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        <TabsEditCollaborator collaborator={collaborator} />
       </div>
     </div>
   );

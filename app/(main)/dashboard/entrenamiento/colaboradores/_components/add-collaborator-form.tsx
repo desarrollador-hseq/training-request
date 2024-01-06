@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Collaborator } from "@prisma/client";
@@ -28,12 +28,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { FileInputForm } from "@/components/file-input-form";
 // import { DeleteCollaborator } from "./delete-collaborator";
 
 interface AddCollaboratorFormProps {
   collaborator?: Collaborator | null;
+  handleTabChange: (value: string) => void;
 }
-
+const MAX_FILE_SIZE = 1024 * 1024 * 5;
+const ACCEPTED_IMAGE_MIME_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "application/pdf",
+];
 const formSchema = z.object({
   fullname: z.string().min(1, {
     message: "Nombre completo es requerido",
@@ -41,6 +49,16 @@ const formSchema = z.object({
   docType: z.string().min(1, {
     message: "Tipo de documento requerido",
   }),
+  // identificationFile: z
+  // .any().or(z.string())
+  // .refine((file) => file?.length !== 0, "File is required")
+  // .refine((files) => {
+  //    return files?.size <= MAX_FILE_SIZE;
+  // }, `Max image size is 1MB.`)
+  // .refine(
+  //   (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.type),
+  //   "Solo .jpg, .jpeg, .png y .pdf son aceptados"
+  // ),
   numDoc: z
     .string()
     .min(1, {
@@ -65,6 +83,7 @@ const formSchema = z.object({
 
 export const AddCollaboratorForm = ({
   collaborator,
+  handleTabChange,
 }: AddCollaboratorFormProps) => {
   const router = useRouter();
   const isEdit = useMemo(() => collaborator, [collaborator]);
@@ -82,10 +101,15 @@ export const AddCollaboratorForm = ({
       numDoc: collaborator?.numDoc || "",
       email: collaborator?.email || "",
       phone: collaborator?.phone || "",
+      // identificationFile: collaborator?.identificationFile || undefined,
     },
   });
   const { isSubmitting, isValid } = form.formState;
-  const { setValue, setError } = form;
+  const { setValue, setError, watch, getValues } = form;
+
+  useEffect(() => {
+    console.log({ watch: watch() });
+  }, [watch()]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -122,6 +146,10 @@ export const AddCollaboratorForm = ({
         toast.error("Ocurrió un error inesperado");
       }
     }
+  };
+
+  const handleTab = () => {
+    handleTabChange("archivos");
   };
 
   return (
@@ -275,6 +303,12 @@ export const AddCollaboratorForm = ({
                     </FormItem>
                   )}
                 />
+              </div>
+
+              <div>
+                <Button type="button" onClick={handleTab}>
+                  Gestionar documentos
+                </Button>
               </div>
             </div>
           </div>

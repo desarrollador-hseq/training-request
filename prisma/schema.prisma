@@ -17,17 +17,17 @@ enum Role {
 }
 
 model Company {
-  id       String  @id @default(uuid())
-  businessName     String?
-  nit String?
+  id           String  @id @default(uuid())
+  businessName String?
+  nit          String?
 
   sector SectorCompany?
 
-  nameContact String?
-  phoneContact    String? 
-  email    String  @unique
-  password String?
-  isValid  Boolean @default(false)
+  nameContact  String?
+  phoneContact String?
+  email        String  @unique
+  password     String?
+  isValid      Boolean @default(false)
 
   role   Role              @default(COMPANY)
   groups TrainingRequest[]
@@ -39,7 +39,6 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 enum SectorCompany {
   AGROPECUARIO
@@ -55,7 +54,7 @@ enum SectorCompany {
 }
 
 model ConfigurationSettings {
-  id String @id @default(uuid())
+  id                    String  @id @default(uuid())
   emailForNotifications String?
 
   createdAt DateTime @default(now())
@@ -77,7 +76,8 @@ model TrainingRequest {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([companyId, courseId])
+  @@index([companyId])
+  @@index([courseId])
 }
 
 enum RequestTrainingStatus {
@@ -94,7 +94,7 @@ model Collaborator {
   numDoc   String
   email    String?
   phone    String?
-  docType                       DocType                       @default(CC)
+  docType  DocType @default(CC)
 
   identificationFile String?
   socialSecurityFile String?
@@ -103,12 +103,14 @@ model Collaborator {
   company                       Company?                      @relation(fields: [companyId], references: [id])
   trainingRequestsCollaborators TrainingRequestCollaborator[]
 
+  documents CollaboratorCourseLevelDocument[]
+
   certificates Certificate[]
 
   active Boolean @default(true)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 
   @@index([companyId])
 }
@@ -131,8 +133,8 @@ model TrainingRequestCollaborator {
   courseLevelId String?
   courseLevel   CourseLevel? @relation(fields: [courseLevelId], references: [id])
 
-  startDate  DateTime?
-  endDate    DateTime?
+  startDate DateTime?
+  endDate   DateTime?
 
   wasCertified Boolean @default(false)
 
@@ -140,6 +142,9 @@ model TrainingRequestCollaborator {
   updatedAt DateTime @updatedAt
 
   @@id([collaboratorId, trainingRequestId])
+  @@index([collaboratorId])
+  @@index([trainingRequestId])
+  @@index([courseLevelId])
 }
 
 model Certificate {
@@ -151,12 +156,14 @@ model Certificate {
   courseLevelId String
   courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])
 
-  date           DateTime?
-  fileUrl        String?
+  date    DateTime?
+  fileUrl String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  @@index([collaboratorId, courseLevelId])
+
+  @@index([collaboratorId])
+  @@index([courseLevelId])
 }
 
 model CourseLevel {
@@ -167,6 +174,7 @@ model CourseLevel {
   courseId String
   course   Course @relation(fields: [courseId], references: [id])
 
+  requiredDocuments RequiredDocument[]
 
   certificates Certificate[]
 
@@ -190,4 +198,40 @@ model Course {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model RequiredDocument {
+  id String @id @default(uuid())
+
+  name String?
+
+  courseLevelId String?
+  courseLevels  CourseLevel? @relation(fields: [courseLevelId], references: [id])
+
+  collaboratorCourseLevelDocument CollaboratorCourseLevelDocument[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([courseLevelId])
+}
+
+model CollaboratorCourseLevelDocument {
+  id String @id @default(uuid())
+
+  collaboratorId String?
+  collaborator   Collaborator? @relation(fields: [collaboratorId], references: [id])
+
+  courseLevelId String
+
+  requiredDocumentId String
+  requiredDocument   RequiredDocument @relation(fields: [requiredDocumentId], references: [id])
+
+  documentLink String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([collaboratorId])
+  @@index([requiredDocumentId])
 }

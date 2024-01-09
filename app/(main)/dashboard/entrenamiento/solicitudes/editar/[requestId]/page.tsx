@@ -107,6 +107,7 @@ const TrainingRequestPage = async ({
             <div className="p-0 overflow-hidden rounded-md bg-blue-50">
               <div className="p-0">
                 <SubtitleSeparator text="Datos de Colaboradores" >
+                  {/* Sheet para agregar colaboradores */}
                 <SelectCollaborators
                   isPending={isPending}
                   trainingRequestId={trainingRequest.id}
@@ -117,6 +118,7 @@ const TrainingRequestPage = async ({
                 />
                 </SubtitleSeparator>
               </div>
+              {/* Listar colaboradores de una solicitud y con collapsible de documentos */}
               <div className="p-2">
                 <CollaboratorsSimpleTable
                   collaborators={trainingRequest.collaborators}

@@ -9,7 +9,7 @@ export async function POST(req: Request) {
         const data = await req.formData()
         const file = data.get("file") as File
         const extValid = ["jpeg", "jpg", "png", "pdf"]
-        const bucket = "hseq"
+        const bucket = process.env.DO_BUCKET || "hseq"
 
         if (!file) return new NextResponse("No ha subido ningun archivo", { status: 400 })
         const fileExt = file.name.split(".").pop()

@@ -16,6 +16,8 @@ import { z } from "zod";
 interface fileFormProps {
   file?: string | null;
   collaboratorId: string;
+  courseLevelId: string;
+  documentRequiredId: string;
   fileType: string;
   label: string;
 }
@@ -33,16 +35,18 @@ const formSchema = z.object({
     .refine((file) => file?.length !== 0, "File is required")
     .refine((files) => {
       return files?.size <= MAX_FILE_SIZE;
-    }, `Max file size is 1MB.`)
+    }, `El tamaño maximo del archivo es de 1MB.`)
     .refine(
       (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.type),
-      "Only .jpg, .jpeg, .png, and .pdf are accepted"
+      "Solo los formtatos de .jpg, .jpeg, .png, y .pdf son aceptados"
     ),
 });
 
 export const IdentificationFileForm = ({
   file,
   collaboratorId,
+  courseLevelId,
+  documentRequiredId,
   fileType,
   label,
 }: fileFormProps) => {
@@ -50,7 +54,7 @@ export const IdentificationFileForm = ({
   const router = useRouter();
   const toggleEdit = () => setIsEditing((current) => !current);
 
-  const fileExt: string | undefined = file?.split(".").pop();
+  const fileExt: string | undefined = file ? file?.split(".").pop() : undefined;
 
   const isPdf = useMemo(() => fileExt === "pdf", [fileExt]);
 
@@ -68,13 +72,13 @@ export const IdentificationFileForm = ({
 
     if (file) {
       const urlKey = new URL(file).pathname.substring(1).split("/").pop();
-      const key = urlKey?.split(".").shift();
+      const key = urlKey;
       console.log({ key });
       try {
         const res = await axios.delete(`/api/upload/file/${key}`);
         console.log({ res: res.data });
       } catch (error) {
-        console.log("NO se pudo borrar el archivo" + error);
+        console.log("No se pudo borrar el archivo" + error);
       }
     }
 
@@ -85,9 +89,21 @@ export const IdentificationFileForm = ({
         },
       });
 
-      await axios.patch(`/api/collaborators/${collaboratorId}`, {
-        [fileType]: data.url,
-      });
+      if (file) {
+        await axios.patch(
+          `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-request/${documentRequiredId}`,
+          {
+            documentLink: data.url,
+          }
+        );
+      } else {
+        await axios.post(
+          `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-request/${documentRequiredId}`,
+          {
+            documentLink: data.url,
+          }
+        );
+      }
 
       toast.success("Documento actualizado");
       toggleEdit();
@@ -137,8 +153,7 @@ export const IdentificationFileForm = ({
             ) : (
               <div>
                 <ModalImage
-                  onError={() => <div>errorrr</div> }
-                
+                  onError={() => <div>errorrr</div>}
                   small={file}
                   large={file}
                   alt={label}
@@ -155,19 +170,19 @@ export const IdentificationFileForm = ({
           >
             <FileInputForm
               control={form.control}
-              label="Identificacion"
+              label="Archivo"
               name="file"
             />
-            <div className="text-xs text-muted-foreground mt-4">
-              16:9 aspect ratio recommended
+            <div className="text-xs text-muted-foreground my-4">
+              Formatos aceptados: jpg, jpeg, png, pdf
             </div>
 
             <Button
               disabled={isSubmitting || !isValid}
-              className="w-full max-w-[500px] gap-3"
+              className="w-full max-w-fit gap-3"
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-              {isEditing ? "Actualizar" : "Crear"}
+              {isEditing && file ? "Actualizar" : "Subir"}
             </Button>
           </form>
         </Form>

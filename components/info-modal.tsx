@@ -26,7 +26,7 @@ interface ConfirmModalProps {
   btnText: string;
 }
 
-export const InfoModal = ({ children, title, btnText }: ConfirmModalProps) => {
+export const InfoModald = ({ children, title, btnText }: ConfirmModalProps) => {
   return (
     <div>
       <AlertDialog>
@@ -46,7 +46,7 @@ export const InfoModal = ({ children, title, btnText }: ConfirmModalProps) => {
           </AlertDialogCancel>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-2xl">
-              {title }
+              {title}
             </AlertDialogTitle>
           </AlertDialogHeader>
           <AlertDialogDescription className="w-full"></AlertDialogDescription>

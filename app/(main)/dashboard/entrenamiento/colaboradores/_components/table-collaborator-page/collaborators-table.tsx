@@ -14,12 +14,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  Ban,
   ChevronDown,
   ChevronDownSquare,
   ChevronUpSquare,
-  Link,
-  Link2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -39,15 +36,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { CollapsibleContentTable } from "@/components/collapsible-content-table";
 import { cn } from "@/lib/utils";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import TableColumnFiltering from "@/components/table-column-filtering";
-import { Certificate, CourseLevel } from "@prisma/client";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { SubtitleSeparator } from "@/components/subtitle-separator";
+import { Certificate } from "@prisma/client";
 import { CollaboratorTableCollapsibleContent } from "./collaborator-table-collapsible-content";
 
 interface DataTableProps<TData, TValue> {
@@ -59,7 +51,6 @@ interface DataTableProps<TData, TValue> {
 export function CollaboratorsTable<TData, TValue>({
   data: initialData,
   columns,
-  certificates,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);

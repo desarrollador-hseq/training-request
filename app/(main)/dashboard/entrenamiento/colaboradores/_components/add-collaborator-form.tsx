@@ -107,10 +107,6 @@ export const AddCollaboratorForm = ({
   const { isSubmitting, isValid } = form.formState;
   const { setValue, setError, watch, getValues } = form;
 
-  useEffect(() => {
-    console.log({ watch: watch() });
-  }, [watch()]);
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       if (isEdit) {

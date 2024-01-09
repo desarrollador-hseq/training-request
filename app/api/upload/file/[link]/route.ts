@@ -6,26 +6,25 @@ export async function DELETE(req: Request, { params }: { params: { link: string 
 
     if (!params.link) return new NextResponse("", { status: 400 })
 
+    console.log({ link: params.link })
+    const bucket = process.env.DO_BUCKET || "hseq"
     try {
-        const bucket = "hseq"
-
-        const bucketParams = {
+        const input = {
             Bucket: bucket,
-            Key: params.link,
+            Key: `entrenamiento/${params.link}`,
         };
 
-
         try {
-            const res = await s3Client.deleteObject(bucketParams)
-            return NextResponse.json(`Archivo eliminado de Digital Ocean Spaces: ${res.DeleteMarker}`);
-        } catch (error) {
-            return new NextResponse("Errorr: " + error, { status: 500 })
-        }
+            const res = await s3Client.deleteObject(input);
+            return NextResponse.json(`Archivo eliminado - DO`);
+          } catch (error) {
+            console.error("Error al eliminar el objeto:", error);
+            return new NextResponse("Error al eliminar el archivo", { status: 400 });
+          }
     } catch (error) {
         return new NextResponse("Internal Errorr: " + error, { status: 500 })
 
     }
-
 
 };
 

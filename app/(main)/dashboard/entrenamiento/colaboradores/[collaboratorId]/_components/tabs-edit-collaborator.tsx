@@ -76,22 +76,7 @@ export const TabsEditCollaborator = ({
       </TabsContent>
       {/*--------- archivos ---------*/}
       <TabsContent value="archivos" className="w-full min-w-full">
-        <Card className="w-full min-w-full">
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-1 mb-7">
-            <IdentificationFileForm
-             label="Documento de identidad"
-              collaboratorId={collaborator.id}
-              file={collaborator.identificationFile}
-              fileType="identificationFile"
-            />
-            <IdentificationFileForm
-             label="Seguridad social vigente"
-              collaboratorId={collaborator.id}
-              file={collaborator.socialSecurityFile}
-              fileType="socialSecurityFile"
-            />
-          </CardContent>
-        </Card>
+        
       </TabsContent>
     </Tabs>
   );

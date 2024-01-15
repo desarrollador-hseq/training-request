@@ -8,15 +8,10 @@ export async function GET(req: Request, { params }: { params: { courseLevelId: s
 
         const documentsRequired = await db.requiredDocument.findMany({
             where: {
-                courseLevelId: params.courseLevelId
+                courseLevelId: params.courseLevelId,
+                active: true
             }
-            ,
-            include: {
-                collaboratorCourseLevelDocument: true
-            }
-            
         })
-        console.log({courselevelides: params.courseLevelId, doc: documentsRequired.map(c => c.collaboratorCourseLevelDocument.map(n => n.documentLink))})
 
         return NextResponse.json(documentsRequired)
 

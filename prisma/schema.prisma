@@ -203,12 +203,14 @@ model Course {
 model RequiredDocument {
   id String @id @default(uuid())
 
-  name String?
+  name String
 
   courseLevelId String?
   courseLevels  CourseLevel? @relation(fields: [courseLevelId], references: [id])
 
   collaboratorCourseLevelDocument CollaboratorCourseLevelDocument[]
+
+   active Boolean @default(true)
 
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

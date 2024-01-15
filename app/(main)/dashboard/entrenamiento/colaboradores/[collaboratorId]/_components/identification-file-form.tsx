@@ -1,24 +1,27 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CollaboratorCourseLevelDocument } from "@prisma/client";
+import axios from "axios";
+import { ImageIcon, Loader2, Pencil, PlusCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import ModalImage from "react-modal-image";
+import { toast } from "sonner";
+import { z } from "zod";
 import { FileInputForm } from "@/components/file-input-form";
 import PdfRenderer from "@/components/pdf-renderer";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { ImageIcon, Loader2, Pencil, PlusCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import ModalImage from "react-modal-image";
-import { toast } from "sonner";
-import { z } from "zod";
+import { db } from "@/lib/db";
 
 interface fileFormProps {
-  file?: string | null;
   collaboratorId: string;
   courseLevelId: string;
   documentRequiredId: string;
-  fileType: string;
+  field: string;
   label: string;
 }
 const MAX_FILE_SIZE = 1024 * 1024 * 1;
@@ -43,35 +46,50 @@ const formSchema = z.object({
 });
 
 export const IdentificationFileForm = ({
-  file,
   collaboratorId,
   courseLevelId,
   documentRequiredId,
-  fileType,
+  field,
   label,
 }: fileFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [fileUrl, setFileUrl] = useState<string | undefined>();
+  const [file, setFile] = useState<CollaboratorCourseLevelDocument | null>();
   const router = useRouter();
   const toggleEdit = () => setIsEditing((current) => !current);
 
-  const fileExt: string | undefined = file ? file?.split(".").pop() : undefined;
+  const fileExt: string | undefined = file?.documentLink
+    ? file?.documentLink.split(".").pop()
+    : undefined;
 
-  const isPdf = useMemo(() => fileExt === "pdf", [fileExt]);
+  const isPdf = useMemo(() => file?.documentLink.split(".").pop() === "pdf", [fileExt]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      [fileType]: file || undefined,
+      [field]: file || undefined,
     },
   });
   const { isSubmitting, isValid } = form.formState;
+
+  useEffect(() => {
+    console.log({collaboratorId, courseLevelId,documentRequiredId})
+    const getDocumentCollaborator = async () => {
+      const { data } = await axios.get(
+        `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-request/${documentRequiredId}`
+      )
+      setFile(data);
+      setFileUrl(data.documentLink);
+    };
+    getDocumentCollaborator();
+  }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     formData.append("file", values.file);
 
-    if (file) {
-      const urlKey = new URL(file).pathname.substring(1).split("/").pop();
+    if (fileUrl) {
+      const urlKey = new URL(fileUrl).pathname.substring(1).split("/").pop();
       const key = urlKey;
       console.log({ key });
       try {
@@ -89,7 +107,7 @@ export const IdentificationFileForm = ({
         },
       });
 
-      if (file) {
+      if (fileUrl) {
         await axios.patch(
           `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-request/${documentRequiredId}`,
           {
@@ -117,6 +135,9 @@ export const IdentificationFileForm = ({
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
+      {
+        JSON.stringify({collaboratorId, courseLevelId,documentRequiredId})
+      }
       <div className="font-medium flex items-center justify-between">
         {label}
         <Button
@@ -148,14 +169,14 @@ export const IdentificationFileForm = ({
           <div className="mt-2 min-w-full">
             {isPdf ? (
               <div className="max-h-[]">
-                <PdfRenderer url={file} />
+                {fileUrl && <PdfRenderer url={fileUrl} />}
               </div>
             ) : (
               <div>
                 <ModalImage
                   onError={() => <div>errorrr</div>}
-                  small={file}
-                  large={file}
+                  small={fileUrl ? fileUrl : ""}
+                  large={fileUrl}
                   alt={label}
                 />
               </div>
@@ -168,11 +189,7 @@ export const IdentificationFileForm = ({
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col items-center mt-8 p-2 w-full"
           >
-            <FileInputForm
-              control={form.control}
-              label="Archivo"
-              name="file"
-            />
+            <FileInputForm control={form.control} label="Archivo" name="file" />
             <div className="text-xs text-muted-foreground my-4">
               Formatos aceptados: jpg, jpeg, png, pdf
             </div>

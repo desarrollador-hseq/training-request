@@ -6,7 +6,30 @@ import { NextResponse } from "next/server";
 
 
 
+export async function GET(req: Request, { params }: { params: { collaboratorId: string, courseLevelId: string, documentRequestId: string } }) {
+    const session = await getServerSession(authOptions)
+    try {
 
+
+        if (!session) return new NextResponse("Unauthorized", { status: 401 })
+
+        const collaboratorCourseLevelDocument = await db.collaboratorCourseLevelDocument.findFirst({
+            where: {
+                collaboratorId: params.collaboratorId,
+                courseLevelId: params.courseLevelId,
+                requiredDocumentId: params.documentRequestId
+            }
+        })
+
+        if (!collaboratorCourseLevelDocument) return new NextResponse("Documentos de colaborador no encontrados", { status: 400 })
+
+        return NextResponse.json(collaboratorCourseLevelDocument)
+
+    } catch (error) {
+        console.log("[INSPECTION-CREATE]", error)
+        return new NextResponse("Internal Errorr", { status: 500 })
+    }
+}
 
 
 export async function POST(req: Request, { params }: { params: { collaboratorId: string, courseLevelId: string, documentRequestId: string } }) {

@@ -56,14 +56,19 @@ const TrainingRequestPage = async ({
       companyId: session.user.id,
       active: true,
     },
+    include: {
+      trainingRequestsCollaborators: true
+    }
   });
   const hasCourseLevelIds = trainingRequest.collaborators.every(col => col.courseLevelId);
+  
 
   const requiredFields = [
     trainingRequest.courseId,
     trainingRequest.collaborators.length,
     hasCourseLevelIds,
   ];
+
 
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;

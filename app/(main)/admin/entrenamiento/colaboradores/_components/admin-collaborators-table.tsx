@@ -21,12 +21,15 @@ import {
   ChevronUpSquare,
   MoreHorizontal,
 } from "lucide-react";
+import { Certificate } from "@prisma/client";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -39,18 +42,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { CollapsibleContentTable } from "@/components/collapsible-content-table";
 import { cn } from "@/lib/utils";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import TableColumnFiltering from "@/components/table-column-filtering";
-import { Certificate, CourseLevel } from "@prisma/client";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { AdminCollaboratorTableCollapsibleContent } from "./admin-collaborator-table-collapsible-content";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -197,14 +192,14 @@ export function AdminCollaboratorsTable<TData, TValue>({
                       )}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <>
+                     
                           <TableCell key={cell.id}>
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext()
                             )}
                           </TableCell>
-                        </>
+                       
                       ))}
 
                       <TableCell>

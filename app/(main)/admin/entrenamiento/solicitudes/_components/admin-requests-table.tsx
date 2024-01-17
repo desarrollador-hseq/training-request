@@ -188,14 +188,14 @@ export function AdminRequestsTable<TData, TValue>({
                       openCollapsible={idOpenCollapsible === row.id}
                     >
                       <div className="bg-slate-200">
-                        <Card className="bg-slate-100 overflow-hidden rounded-b-lg">
-                          <CardHeader className="p-0 h-8">
+                        <div className="bg-slate-100 overflow-hidden rounded-b-lg">
+                          <div className="p-0 h-8">
                             <SubtitleSeparator
                               text="Datos de Colaboradores incritos "
                               className="bg-secondary"
                             />
-                          </CardHeader>
-                          <CardContent className="bg-slate-200 p-0">
+                          </div>
+                          <div className="bg-slate-200 p-0">
                            {console.log({first: row.original})}
                             {row.original?.collaborators && (
                               <AdminCollaboratorsSimpleTable
@@ -205,8 +205,8 @@ export function AdminRequestsTable<TData, TValue>({
                                 isPending={true}
                               />
                             )}
-                          </CardContent>
-                        </Card>
+                          </div>
+                        </div>
                       </div>
                     </CollapsibleContentTable>
                   </>

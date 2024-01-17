@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import qs from "query-string";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminRequestsTable } from "./admin-requests-table";
 import { AdminCollaboratorsTable } from "../../colaboradores/_components/admin-collaborators-table";
@@ -54,31 +54,36 @@ export const TabsRequest = ({
       value={activeTab}
       className="w-full flex flex-col items-center"
     >
-      <TabsList className="w-[70%]">
-        <TabsTrigger className="w-full" value="solicitud">
-          Solicitudes
-        </TabsTrigger>
-        <TabsTrigger className="w-full" value="colaboradores">
-          Todos los Caloboradores
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="solicitud">
-        <Card className="min-h-screen">
-          <CardContent className="flex">
-            <AdminRequestsTable
-              data={requests}
-              columns={adminRequestTablecolumns}
+      <Card className="w-full rounded-sm shadow-md ">
+        <CardHeader className="flex justify-center items-center">
+          <TabsList className="w-[70%]">
+            <TabsTrigger className="w-full" value="solicitud">
+              Solicitudes
+            </TabsTrigger>
+            <TabsTrigger className="w-full" value="colaboradores">
+              Todos los Caloboradores
+            </TabsTrigger>
+          </TabsList>
+        </CardHeader>
+        <CardContent>
+          <TabsContent value="solicitud">
+            <div className="min-h-screen">
+              <div className="flex">
+                <AdminRequestsTable
+                  data={requests}
+                  columns={adminRequestTablecolumns}
+                />
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="colaboradores">
+            <AdminCollaboratorsTable
+              columns={columnsAdminCollaboratorTable}
+              data={trainingRequestCollaborators.map((m) => m)}
             />
-          </CardContent>
-        </Card>
-      </TabsContent>
-      <TabsContent value="colaboradores">
-        <AdminCollaboratorsTable
-          columns={columnsAdminCollaboratorTable}
-          data={trainingRequestCollaborators.map((m) => m)}
-
-        />
-      </TabsContent>
+          </TabsContent>
+        </CardContent>
+      </Card>
     </Tabs>
   );
 };

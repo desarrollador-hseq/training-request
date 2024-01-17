@@ -73,8 +73,8 @@ export async function PATCH(req: Request, { params }: { params: { trainingReques
   if (!session) return new NextResponse("Unauthorized", { status: 401 })
   const values = await req.json()
 
-  const {state} = values
-  if (!state) return new NextResponse("Bad request", { status: 400 })
+  const {state, activeFrom} = values
+  if (!state || !activeFrom) return new NextResponse("Bad request", { status: 400 })
 
   try {
       const request = await db.trainingRequest.update({
@@ -82,7 +82,8 @@ export async function PATCH(req: Request, { params }: { params: { trainingReques
             id: params.trainingRequestId,
           },
           data: {
-            state: state
+            state: state,
+            activeFrom: activeFrom
           }
 
       })

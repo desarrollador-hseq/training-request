@@ -8,6 +8,12 @@ import { ArrowLeftFromLine, ArrowLeftToLine } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TitleOnPage } from "@/components/title-on-page";
 
+const crumbs = [
+  { label: "solicitudes", path: "solicitudes" },
+  { label: "colaborador", path: "colaborador" },
+  { label: "programar", path: "programar" },
+];
+
 const AdminScheduleCollaborator = async ({
   params,
 }: {
@@ -24,21 +30,46 @@ const AdminScheduleCollaborator = async ({
       include: {
         collaborator: true,
         trainingRequest: true,
-        courseLevel: true,
+        courseLevel: {
+          select: {
+            course: {
+              select: {
+                name: true,
+              },
+            },
+            requiredDocuments: {
+              select: {
+                id: true,
+                name: true,
+                collaboratorCourseLevelDocument: {
+                  select: {
+                    documentLink: true,
+                   
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
-  console.log({ trainingRequestCollaborator });
+  console.log({
+    tra: trainingRequestCollaborator?.courseLevel?.requiredDocuments.map((m) =>
+      m.collaboratorCourseLevelDocument.map((n) => n)
+    ),
+  });
 
   return (
     <div>
-      <TitleOnPage text="Programar Entrenamiento de colaborador" />
+      <TitleOnPage
+        text="Programar Entrenamiento de colaborador"
+        bcrumb={crumbs}
+      />
       {trainingRequestCollaborator ? (
         <>
           <Card>
-            <CardHeader>
-
-            </CardHeader>
+            <CardHeader></CardHeader>
 
             <CardContent>
               <AdminScheduleCollaboratorForm
@@ -48,23 +79,27 @@ const AdminScheduleCollaborator = async ({
           </Card>
         </>
       ) : (
-        <div className="w-full flex">
-          <div className="w-full bg-red-600 flex justify-between items-center h-24 flex-col md:flex-row px-3">
-            <Link
-              href="/admin/entrenamiento/solicitudes"
-              className={cn(
-                buttonVariants({ variant: "secondary" }),
-                "justify-self-start"
-              )}
-            >
-              <ArrowLeftToLine className="w-4 h-4 mr-2" />
-              Regresar
-            </Link>
-            <h2 className="text-white text-xl text-center">
-              No se encontro el colaborador con esta solicitud
-            </h2>
+        <div className="w-full">
+          <Card className="w-full bg-red-800 flex  flex-col px-3">
+            <CardHeader className="w-fit flex justify-start">
+              <Link
+                href="/admin/entrenamiento/solicitudes"
+                className={cn(
+                  buttonVariants({ variant: "secondary" }),
+                  "justify-self-start"
+                )}
+              >
+                <ArrowLeftToLine className="w-4 h-4 mr-2" />
+                Regresar
+              </Link>
+            </CardHeader>
+            <CardContent>
+              <h2 className="text-white text-xl text-center">
+                No se encontro el colaborador con esta solicitud
+              </h2>
+            </CardContent>
             <div />
-          </div>
+          </Card>
         </div>
       )}
     </div>

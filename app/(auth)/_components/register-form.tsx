@@ -179,7 +179,7 @@ export const RegisterForm = ({
               <InputForm
                 control={form.control}
                 isSubmitting={isSubmitting}
-                label="Nombre Comercial"
+                label="Razón social"
                 name="businessName"
               />
             </div>

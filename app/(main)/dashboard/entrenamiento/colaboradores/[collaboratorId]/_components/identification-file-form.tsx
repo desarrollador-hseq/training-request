@@ -16,12 +16,14 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { db } from "@/lib/db";
+import { useLoading } from "@/components/providers/loading-provider";
 
 interface fileFormProps {
   collaboratorId: string;
   courseLevelId: string;
   documentRequiredId: string;
   field: string;
+  ubiPath?: string;
   label: string;
 }
 const MAX_FILE_SIZE = 1024 * 1024 * 1;
@@ -50,51 +52,56 @@ export const IdentificationFileForm = ({
   courseLevelId,
   documentRequiredId,
   field,
+  ubiPath,
   label,
 }: fileFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [fileUrl, setFileUrl] = useState<string | undefined>();
   const [file, setFile] = useState<CollaboratorCourseLevelDocument | null>();
   const router = useRouter();
+  const { setLoadingApp } = useLoading();
   const toggleEdit = () => setIsEditing((current) => !current);
 
-  const fileExt: string | undefined = file?.documentLink
-    ? file?.documentLink.split(".").pop()
-    : undefined;
+  // const fileExt: string | undefined = file?.documentLink
+  //   ? file?.documentLink.split(".").pop()
+  //   : undefined;
 
-  const isPdf = useMemo(() => file?.documentLink.split(".").pop() === "pdf", [fileExt]);
+  const isPdf = useMemo(
+    () => file?.documentLink.split(".").pop() === "pdf",
+    [file]
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      [field]: file || undefined,
+      file: file || undefined,
     },
   });
   const { isSubmitting, isValid } = form.formState;
 
   useEffect(() => {
-    console.log({collaboratorId, courseLevelId,documentRequiredId})
+    setLoadingApp(true);
     const getDocumentCollaborator = async () => {
       const { data } = await axios.get(
-        `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-request/${documentRequiredId}`
-      )
+        `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-required/${documentRequiredId}`
+      );
       setFile(data);
       setFileUrl(data.documentLink);
     };
     getDocumentCollaborator();
+    setLoadingApp(false);
   }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     formData.append("file", values.file);
+    ubiPath && formData.append("ubiPath", ubiPath);
 
     if (fileUrl) {
       const urlKey = new URL(fileUrl).pathname.substring(1).split("/").pop();
       const key = urlKey;
-      console.log({ key });
       try {
-        const res = await axios.delete(`/api/upload/file/${key}`);
-        console.log({ res: res.data });
+        const res = await axios.delete(`/api/upload/file/${key}`, {data: {"ubiPath": "colaboradores/documentos"}});
       } catch (error) {
         console.log("No se pudo borrar el archivo" + error);
       }
@@ -109,14 +116,14 @@ export const IdentificationFileForm = ({
 
       if (fileUrl) {
         await axios.patch(
-          `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-request/${documentRequiredId}`,
+          `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-required/${documentRequiredId}`,
           {
             documentLink: data.url,
           }
         );
       } else {
         await axios.post(
-          `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-request/${documentRequiredId}`,
+          `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-required/${documentRequiredId}`,
           {
             documentLink: data.url,
           }
@@ -134,10 +141,7 @@ export const IdentificationFileForm = ({
   };
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      {
-        JSON.stringify({collaboratorId, courseLevelId,documentRequiredId})
-      }
+    <div className="mt-6 border bg-slate-100 rounded-md p-4 w-full">
       <div className="font-medium flex items-center justify-between">
         {label}
         <Button

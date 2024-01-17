@@ -8,6 +8,7 @@ import { db } from "@/lib/db"
 declare module 'next-auth' {
     interface User {
         id: number;
+        businessName?: string;
         email: string;
         isValid: Boolean;
         role: Role;
@@ -18,6 +19,7 @@ declare module 'next-auth' {
     interface Session {
         user: {
             id?: string;
+            businessName?: string;
             role?: string;
             isValid: Boolean;
         } & DefaultSession['user'];

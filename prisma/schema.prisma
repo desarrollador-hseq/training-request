@@ -73,6 +73,8 @@ model TrainingRequest {
 
   collaborators TrainingRequestCollaborator[]
 
+  activeFrom DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

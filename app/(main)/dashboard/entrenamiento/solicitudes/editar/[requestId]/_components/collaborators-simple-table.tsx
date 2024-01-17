@@ -121,7 +121,6 @@ export const CollaboratorsSimpleTable = ({
     }
   };
 
-
   const handleOpenModal = (collaboratorId: string, courseLevelId: string) => {
     setOpenModals((prevOpenModals) => ({
       ...prevOpenModals,
@@ -136,6 +135,7 @@ export const CollaboratorsSimpleTable = ({
       [`${collaboratorId}-${courseLevelId}`]: false,
     }));
   };
+
 
   return (
     <Table className={cn("bg-blue-100", !isPending && "opacity-70")}>
@@ -156,7 +156,7 @@ export const CollaboratorsSimpleTable = ({
         {collaborators?.map(({ collaborator, courseLevel }: any) => (
           <TableRow
             className={cn("font-semibold", !isPending && "opacity-60")}
-            key={collaborator.id + courseLevel.id}
+            key={collaborator.id + courseLevel?.id}
           >
             <TableCell>{collaborator.fullname}</TableCell>
             <TableCell>{collaborator.numDoc}</TableCell>
@@ -184,7 +184,7 @@ export const CollaboratorsSimpleTable = ({
             {/* agregar Documentos de colaborador a solicitud */}
             <TableCell className="animation" colSpan={8}>
               <div>
-                {courseLevel.id && (
+                {courseLevel?.id && (
                   <AlertDialog
                     open={openModals[`${collaborator.id}-${courseLevel.id}`]}
                     onOpenChange={() =>
@@ -209,7 +209,12 @@ export const CollaboratorsSimpleTable = ({
                       <AlertDialogHeader>
                         <AlertDialogTitle className="text-2xl">
                           <div className="flex justify-between">
-                            title {collaborator.id}
+                            <div>
+                              Gestionar documentos del colaborador:{" "}
+                              <span className="font-normal text-xl">
+                                {collaborator.fullname} - {collaborator.numDoc}
+                              </span>
+                            </div>
                             <Button
                               className="w-fit h-fit flex rounded-md justify-center items-center p-1 hover:bg-slate-50"
                               variant="outline"
@@ -225,19 +230,6 @@ export const CollaboratorsSimpleTable = ({
                           </div>
                         </AlertDialogTitle>
                       </AlertDialogHeader>
-                      {/* {documentsRequired?.map((document: any) => (
-                          <div key={document.id}>
-                            <span className="w-full">
-                              <IdentificationFileForm
-                                label={document.name}
-                                collaboratorId={collaborator.id}
-                                courseLevelId={courseLevel.id}
-                                documentRequiredId={document.id}
-                                field={document.name}
-                              />
-                            </span>
-                          </div>
-                        ))} */}
                       {documentsRequired && documentsRequired?.length > 0 && (
                         <Tabs
                           defaultValue={"0"}
@@ -262,12 +254,16 @@ export const CollaboratorsSimpleTable = ({
                               key={doc.id + collaborator.id}
                               value={`${index}`}
                             >
+                              {
+                                doc.id
+                              }
                               <IdentificationFileForm
                                 label={doc.name!}
                                 collaboratorId={collaborator.id}
                                 courseLevelId={doc.courseLevelId!}
                                 documentRequiredId={doc.id}
                                 field={doc.name!}
+                                ubiPath="colaboradores/documentos"
                               />
                             </TabsContent>
                           ))}

@@ -2,6 +2,7 @@ import { TitleOnPage } from "@/components/title-on-page";
 import { db } from "@/lib/db";
 
 import { TabsRequest } from "./_components/tabs-request";
+import { Card, CardContent } from "@/components/ui/card";
 
 const crumbs = [{ label: "solicitudes", path: "solicitudes" }];
 
@@ -18,27 +19,33 @@ const AdminRequestPage = async () => {
         },
       },
     },
+    orderBy: {
+      activeFrom: "desc",
+    },
   });
 
-  const trainingRequestCollaborators = await db.trainingRequestCollaborator.findMany({
-    where: {
-      trainingRequest: {state: "ACTIVE"}
-    },
-    include: {
-      collaborator: {
-        include: {
-          certificates: true
-        }
-      }
-    }
-  })
-
+  const trainingRequestCollaborators =
+    await db.trainingRequestCollaborator.findMany({
+      where: {
+        trainingRequest: { state: "ACTIVE" },
+      },
+      include: {
+        collaborator: {
+          include: {
+            certificates: true,
+          },
+        },
+      },
+    });
 
   return (
     <div>
       <TitleOnPage text="Solicitudes" bcrumb={crumbs} />
 
-     <TabsRequest trainingRequestCollaborators={trainingRequestCollaborators} requests={requests} />
+      <TabsRequest
+        trainingRequestCollaborators={trainingRequestCollaborators}
+        requests={requests}
+      />
     </div>
   );
 };

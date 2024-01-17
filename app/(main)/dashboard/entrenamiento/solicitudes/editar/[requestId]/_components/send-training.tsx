@@ -24,14 +24,15 @@ export const SendTraining = ({
       try {
         await axios.patch(`/api/training-requests/${trainingRequestId}/`, {
           state: "ACTIVE",
+          activeFrom: new Date()
         });
 
         // Notificacion de correo a admins
-        try {
-          await axios.post(`/api/mail/requests-created`, { trainingRequestId });
-        } catch (emailError) {
-          console.error(emailError);
-        }
+        // try {
+        //   await axios.post(`/api/mail/requests-created`, { trainingRequestId });
+        // } catch (emailError) {
+        //   console.error(emailError);
+        // }
 
         toast.success("Solicitud enviada correctamente");
         router.refresh();

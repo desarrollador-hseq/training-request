@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 
 
-export async function GET(req: Request, { params }: { params: { collaboratorId: string, courseLevelId: string, documentRequestId: string } }) {
+export async function GET(req: Request, { params }: { params: { collaboratorId: string, courseLevelId: string, documentRequiredId: string } }) {
     const session = await getServerSession(authOptions)
     try {
 
@@ -16,8 +16,8 @@ export async function GET(req: Request, { params }: { params: { collaboratorId: 
         const collaboratorCourseLevelDocument = await db.collaboratorCourseLevelDocument.findFirst({
             where: {
                 collaboratorId: params.collaboratorId,
+                requiredDocumentId: params.documentRequiredId,
                 courseLevelId: params.courseLevelId,
-                requiredDocumentId: params.documentRequestId
             }
         })
 
@@ -32,10 +32,10 @@ export async function GET(req: Request, { params }: { params: { collaboratorId: 
 }
 
 
-export async function POST(req: Request, { params }: { params: { collaboratorId: string, courseLevelId: string, documentRequestId: string } }) {
+export async function POST(req: Request, { params }: { params: { collaboratorId: string, courseLevelId: string, documentRequiredId: string } }) {
     try {
         const session = await getServerSession(authOptions)
-        const { collaboratorId, courseLevelId, documentRequestId } = params;
+        const { collaboratorId, courseLevelId, documentRequiredId } = params;
         const values = await req.json()
 
         if (!session) return new NextResponse("Unauthorized", { status: 401 })
@@ -44,7 +44,7 @@ export async function POST(req: Request, { params }: { params: { collaboratorId:
             where: {
                 collaboratorId: collaboratorId,
                 courseLevelId: courseLevelId,
-                requiredDocumentId: documentRequestId
+                requiredDocumentId: documentRequiredId
             }
         })
         if (collaboratorCourseLevelDocument) return new NextResponse("BAD REQUEST", { status: 400 })
@@ -54,7 +54,7 @@ export async function POST(req: Request, { params }: { params: { collaboratorId:
             data: {
                 collaboratorId,
                 courseLevelId,
-                requiredDocumentId: documentRequestId,
+                requiredDocumentId: documentRequiredId,
                 ...values
             }
         })
@@ -67,10 +67,10 @@ export async function POST(req: Request, { params }: { params: { collaboratorId:
     }
 }
 
-export async function PATCH(req: Request, { params }: { params: { collaboratorId: string, courseLevelId: string, documentRequestId: string } }) {
+export async function PATCH(req: Request, { params }: { params: { collaboratorId: string, courseLevelId: string, documentRequiredId: string } }) {
     try {
         const session = await getServerSession(authOptions)
-        const { collaboratorId, courseLevelId, documentRequestId } = params;
+        const { collaboratorId, courseLevelId, documentRequiredId } = params;
         const values = await req.json()
 
         if (!session) return new NextResponse("Unauthorized", { status: 401 })
@@ -80,7 +80,7 @@ export async function PATCH(req: Request, { params }: { params: { collaboratorId
             where: {
                 collaboratorId: collaboratorId,
                 courseLevelId: courseLevelId,
-                requiredDocumentId: documentRequestId
+                requiredDocumentId: documentRequiredId
             }
         })
 

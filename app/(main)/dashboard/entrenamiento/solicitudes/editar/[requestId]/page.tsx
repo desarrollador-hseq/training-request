@@ -61,7 +61,6 @@ const TrainingRequestPage = async ({
     }
   });
   const hasCourseLevelIds = trainingRequest.collaborators.every(col => col.courseLevelId);
-  
 
   const requiredFields = [
     trainingRequest.courseId,

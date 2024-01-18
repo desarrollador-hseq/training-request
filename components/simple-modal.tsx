@@ -19,13 +19,17 @@ interface ConfirmModalProps {
   title?: string;
   textBtn?: ReactNode ;
   btnClass?: string;
+  btnDisabled?: boolean;
+  onAcept?: () => void | Promise<void> | undefined
 }
 
 export const SimpleModal = ({
   children,
   title,
   textBtn,
-  btnClass
+  btnClass,
+  btnDisabled,
+  onAcept
 }: ConfirmModalProps) => {
   const [open, setOpen] = useState(false);
 
@@ -33,11 +37,18 @@ export const SimpleModal = ({
     setOpen(false)
   }
 
+  const onClickAcept = () => {
+    setOpen(false)
+    if(onAcept) {
+      onAcept()
+    }
+  }
+
   return (
     <div>
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger asChild>
-          <Button className={cn("bg-accent", btnClass)}>{textBtn}</Button>
+          <Button disabled={btnDisabled} className={cn("bg-accent", btnClass)}>{textBtn}</Button>
         </AlertDialogTrigger>
 
         <AlertDialogContent
@@ -61,7 +72,12 @@ export const SimpleModal = ({
           </AlertDialogHeader>
           <AlertDialogDescription className="w-full"></AlertDialogDescription>
           <span className="w-full">{children}</span>
-          <AlertDialogFooter></AlertDialogFooter>
+          <AlertDialogFooter>
+            {
+              onAcept && <Button onClick={onClickAcept}>Aceptar</Button>
+            }
+           
+          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>

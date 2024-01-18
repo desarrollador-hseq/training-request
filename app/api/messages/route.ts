@@ -3,17 +3,16 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
     try {
-        const values = await req.json()
+        const { msisdn, message } = await req.json()
 
-        if (!values.msisdn || !values.message) return new NextResponse("Not Found", { status: 400 })
-
+        if (!msisdn || !message) return new NextResponse("Not Found", { status: 400 })
 
         const response = await axios.get('http://api.labsmobile.com/get/send.php', {
             params: {
                 username: process.env.LABSMOBILEUSERNAME,
                 password: process.env.LABSMOBILETOKEN,
-                msisdn: values.msisdn,
-                message: values.message,
+                msisdn: msisdn,
+                message: message,
             },
         })
 

@@ -27,8 +27,10 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface fileFormProps {
   file?: string | null;
+  update: string;
   apiUrl: string;
   field: string;
+  label: string;
   ubiPath: string;
 }
 const MAX_FILE_SIZE = 1024 * 1024 * 1;
@@ -56,7 +58,9 @@ export const FileUploadForm = ({
   file,
   apiUrl,
   field,
+  update,
   ubiPath,
+  label,
 }: fileFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
@@ -93,7 +97,7 @@ export const FileUploadForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      [field]: file || undefined,
+      file: file || undefined,
     },
   });
   const { isSubmitting, isValid } = form.formState;
@@ -103,21 +107,23 @@ export const FileUploadForm = ({
     setIsUploading(true);
     const formData = new FormData();
     formData.append("file", values.file);
-    formData.append("field", field);
+    // formData.append("field", field);
     formData.append("ubiPath", ubiPath);
 
     const progressInterval = startSimulatedProgress();
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      await axios.post(apiUrl, formData, {
+      const { data } = await axios.post(apiUrl, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      await axios.patch(update, { [field]: data.url });
+
       toast.success("Documento actualizado");
       setUploadProgress(100);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
       toggleEdit();
       router.refresh();
     } catch (e) {
@@ -149,10 +155,9 @@ export const FileUploadForm = ({
   return (
     <Card className="mt-6 bg-slate-200 rounded-md p-1 border border-primary/20  overflow-hidden">
       <CardHeader className="bg-slate-100 rounded-sm shadow-sm border border-slate-300">
-        <div className="font-medium flex items-center justify-between">
+        <div className="font-medium flex items-center justify-between flex-row md:flex-col md:gap-3 lg:flex-row">
           <h3 className="font-semibold text-lg text-primary/80 ml-2">
-            {" "}
-            {field}
+            {label}
           </h3>
           <Button
             onClick={toggleEdit}

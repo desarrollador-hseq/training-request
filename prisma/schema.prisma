@@ -135,6 +135,8 @@ model TrainingRequestCollaborator {
   courseLevelId String?
   courseLevel   CourseLevel? @relation(fields: [courseLevelId], references: [id])
 
+  isDisallowed Boolean @default(false)
+  isScheduled Boolean @default(false)
   startDate DateTime?
   endDate   DateTime?
 
@@ -175,6 +177,8 @@ model CourseLevel {
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id])
+
+  hours Int?
 
   requiredDocuments RequiredDocument[]
 

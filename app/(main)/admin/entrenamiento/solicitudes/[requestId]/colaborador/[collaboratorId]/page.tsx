@@ -28,10 +28,16 @@ const AdminScheduleCollaborator = async ({
         },
       },
       include: {
-        collaborator: true,
+        collaborator: {
+          include: {
+            company: true
+          }
+        },
         trainingRequest: true,
         courseLevel: {
           select: {
+            name: true,
+            hours: true,
             course: {
               select: {
                 name: true,
@@ -44,7 +50,7 @@ const AdminScheduleCollaborator = async ({
                 collaboratorCourseLevelDocument: {
                   select: {
                     documentLink: true,
-                   
+                    requiredDocumentId: true
                   },
                 },
               },

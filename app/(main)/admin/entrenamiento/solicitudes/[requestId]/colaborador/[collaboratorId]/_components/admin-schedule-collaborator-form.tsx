@@ -1,31 +1,31 @@
 "use client";
 
-import { FileUploadForm } from "@/components/file-upload-form";
-import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { Card, CardHeader } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import {
   Collaborator,
-  CollaboratorCourseLevelDocument,
   Company,
   Course,
   CourseLevel,
-  RequiredDocument,
   TrainingRequest,
   TrainingRequestCollaborator,
 } from "@prisma/client";
-import { ReactNode, useEffect, useState } from "react";
-
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { PickDates } from "./pick-dates";
-import { Button } from "@/components/ui/button";
-import { DateRange } from "react-day-picker";
-import { SimpleModal } from "@/components/simple-modal";
+import { FileUploadForm } from "@/components/file-upload-form";
+import { SubtitleSeparator } from "@/components/subtitle-separator";
+import { PickScheduleDates } from "./pick-schedule-dates";
+import { MarkCollaboratorDisallowed } from "./mark-collaborator-disallowed";
+import { CardItemInfo } from "@/components/card-item-info";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import axios from "axios";
 import { toast } from "sonner";
 import { useLoading } from "@/components/providers/loading-provider";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
 
 interface AdminScheduleCollaboratorFormProps {
   trainingRequestCollaborator:
@@ -38,6 +38,8 @@ interface AdminScheduleCollaboratorFormProps {
                     name: string;
                     collaboratorCourseLevelDocument:
                       | {
+                          collaboratorId: string | undefined | null;
+                          requiredDocumentId: string | undefined | null;
                           documentLink: string | undefined | null;
                           name: string | undefined | null;
                         }[]
@@ -56,83 +58,91 @@ interface AdminScheduleCollaboratorFormProps {
           | undefined;
       })
     | null;
+  courseLevels: CourseLevel[] | null | undefined;
 }
 
 export const AdminScheduleCollaboratorForm = ({
   trainingRequestCollaborator,
+  courseLevels,
 }: AdminScheduleCollaboratorFormProps) => {
+  const router = useRouter();
+  const { setLoadingApp } = useLoading();
+  const [fileUrl, setFileUrl] = useState<string | undefined>();
   const [document, setDocument] = useState(
-    trainingRequestCollaborator?.courseLevel?.requiredDocuments?.map((m) => m)
+    trainingRequestCollaborator?.courseLevel?.requiredDocuments?.map((m) => m) || []
+  );
+  const [isDisallowed, setIsDisallowed] = useState<boolean>(
+    trainingRequestCollaborator?.isDisallowed || false
   );
 
-  const [date, setDate] = useState<DateRange | undefined>();
-  const [notifyEmailDisallowed, setNotifyEmailDisallowed] =
-    useState<boolean>(false);
-  const [disallowedMessage, setDisallowedMessage] = useState<
-    string | undefined
-  >();
-  const { setLoadingApp } = useLoading();
+  useEffect(() => {
+    // Actualizar el estado 'document' cuando cambia 'courseLevel'
+    setDocument(trainingRequestCollaborator?.courseLevel?.requiredDocuments?.map((m) => m) || []);
+  }, [trainingRequestCollaborator?.courseLevel]);
 
-  const handleScheduleDate = async () => {
+  const onChange = async (courseLevelId: any, collaboratorId: string) => {
     setLoadingApp(true);
     try {
-      await axios.patch(
-        `/api/training-requests/${trainingRequestCollaborator?.trainingRequest?.id}/members/${trainingRequestCollaborator?.collaborator?.id}/schedule`,
-        { startDate: date?.from, endDate: date?.to }
+      const { data } = await axios.patch(
+        `/api/training-requests/${trainingRequestCollaborator?.trainingRequestId}/members/${collaboratorId}`,
+        { courseLevelId }
       );
-
-      toast.success("Fecha guardada");
+      toast.success("Colaborador actualizado");
+      router.refresh();
     } catch (error) {
-      toast.error(
-        "Error al programar la fecha de formación, por favor intentelo nuevamente"
-      );
+      console.error(error);
+      toast.error("Ocurrió un error inesperado");
+    } finally {
+      setLoadingApp(false);
     }
-
-    try {
-      await axios.post("/api/messages/", {
-        msisdn: "",
-        message: `fue programado para asistir a una reunion el dia ${date?.from}`,
-      });
-      toast.success("SMS enviado");
-    } catch (error) {
-      toast.error("Error al enviar el mensaje de texto al colaborador");
-      console.log({ errorApiSms: error });
-    }
-
-    setLoadingApp(false);
   };
 
-  const handleDisallowed = async () => {
-    setLoadingApp(true);
 
-    try {
-      await axios.patch(
-        `/api/training-requests/${trainingRequestCollaborator?.trainingRequest?.id}/members/${trainingRequestCollaborator?.collaborator?.id}/disallowed`
-      );
-      toast.info("Colaborador marcado como no autorizado");
-    } catch (error) {
-      toast.error("Error al marcar al colaborador que no cumple con información, por favor intentelo nuevamente");
-    }
+  // useEffect(() => {
+  //   setLoadingApp(true);
+    
+  //   getDocumentCollaborator();
+  //   setLoadingApp(false);
+  // }, []);
 
-    if (notifyEmailDisallowed) {
-      try {
-        console.log("disallowed");
-        toast.info("Correo enviado correctamente");
-      } catch (error) {
-        toast.error(
-          "Error al enviar el correo de notificación a la persona responsable de la plataforma"
-        );
-        console.log({ errorApiSms: error });
-      }
-    }
-
-    setLoadingApp(false);
-
+  const getDocumentCollaborator = async () => {
+    const { data } = await axios.get(
+      `/api/collaborators/${trainingRequestCollaborator?.collaborator?.id}/course-level/${trainingRequestCollaborator?.courseLevelId}/document-required/${trainingRequestCollaborator?.courseLevel?.requiredDocuments[0].id}`
+    );
+    setFile(data);
+    setFileUrl(data.documentLink);
   };
 
-  console.log({ selec: JSON.stringify(trainingRequestCollaborator) });
   return (
     <div className="flex flex-col gap-2">
+      <div className="absolute top-2 right-6">
+        {!trainingRequestCollaborator?.isScheduled && (
+          <MarkCollaboratorDisallowed
+            emailResponsibleCompany={
+              trainingRequestCollaborator?.collaborator?.company?.email
+            }
+            trainingRequestCollaboratorId={
+              trainingRequestCollaborator?.trainingRequest?.id
+            }
+            collaboratorId={trainingRequestCollaborator?.collaborator?.id}
+            isDisallowed={trainingRequestCollaborator?.isDisallowed}
+            setIsDisallowed={setIsDisallowed}
+          />
+        )}
+      </div>
+
+      <div>
+        <PickScheduleDates
+          isDisallowed={isDisallowed}
+          collaboratorId={trainingRequestCollaborator?.collaborator?.id}
+          trainingRequestId={trainingRequestCollaborator?.trainingRequestId}
+          scheduledDate={{
+            from: trainingRequestCollaborator?.startDate,
+            to: trainingRequestCollaborator?.endDate,
+          }}
+        />
+      </div>
+
       <Card className="bg-slate-100 ">
         <CardHeader className="mb-3 p-0">
           <div className="p-0 overflow-hidden rounded-md bg-blue-50">
@@ -142,26 +152,26 @@ export const AdminScheduleCollaboratorForm = ({
             <div>
               <div className="flex md:items-center md:justify-start h-full w-full">
                 <div className="w-full grid xs:grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-2 md:gap-3 p-2">
-                  <CardInfo
+                  <CardItemInfo
                     label="Razón social"
                     text={
                       trainingRequestCollaborator?.collaborator?.company
                         ?.businessName
                     }
                   />
-                  <CardInfo
+                  <CardItemInfo
                     label="Nit"
                     text={
                       trainingRequestCollaborator?.collaborator?.company?.nit
                     }
                   />
-                  <CardInfo
+                  <CardItemInfo
                     label="Sector"
                     text={
                       trainingRequestCollaborator?.collaborator?.company?.sector
                     }
                   />
-                  <CardInfo
+                  <CardItemInfo
                     label="Estado"
                     text={
                       trainingRequestCollaborator?.collaborator?.company?.active
@@ -169,17 +179,6 @@ export const AdminScheduleCollaboratorForm = ({
                         : "Inactiva"
                     }
                   />
-
-                  {/* <CardInfo
-                    label="Fecha de registro del colaborador"
-                    text={format(
-                      trainingRequestCollaborator?.collaborator?.createdAt,
-                      "PPP",
-                      {
-                        locale: es,
-                      }
-                    )}
-                  /> */}
                 </div>
               </div>
             </div>
@@ -195,19 +194,44 @@ export const AdminScheduleCollaboratorForm = ({
             <div>
               <div className="flex md:items-center md:justify-start h-full w-full">
                 <div className="w-full grid xs:grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-2 md:gap-3 p-2">
-                  <CardInfo
+                  <CardItemInfo
                     label="Tipo"
                     highlight
                     text={
                       trainingRequestCollaborator?.courseLevel?.course?.name
                     }
                   />
-                  <CardInfo
+                  <CardItemInfo
                     label="Nivel"
                     highlight
-                    text={trainingRequestCollaborator?.courseLevel?.name}
+                    text={
+                      <Select
+                        defaultValue={
+                          trainingRequestCollaborator?.courseLevelId!
+                        }
+                        onValueChange={(e) =>
+                          onChange(
+                            e,
+                            trainingRequestCollaborator?.collaborator?.id
+                          )
+                        }
+                        // disabled={!isPending}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="🔴 Sin definir" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {courseLevels?.map((level) => (
+                            <SelectItem key={level.id} value={level.id}>
+                              {level.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    }
                   />
-                  <CardInfo
+
+                  <CardItemInfo
                     label="# Horas"
                     text={trainingRequestCollaborator?.courseLevel?.hours}
                   />
@@ -226,123 +250,50 @@ export const AdminScheduleCollaboratorForm = ({
             <div>
               <div className="flex md:items-center md:justify-start h-full w-full">
                 <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 p-2">
-                  <CardInfo
+                  <CardItemInfo
                     label="Nombre completo"
                     text={trainingRequestCollaborator?.collaborator?.fullname}
                   />
-                  <CardInfo
+                  <CardItemInfo
                     label="N° de documento"
                     text={`${trainingRequestCollaborator?.collaborator?.docType} ${trainingRequestCollaborator?.collaborator?.numDoc}`}
                   />
-                  <CardInfo
+                  <CardItemInfo
                     label="Correo Electrónico"
                     text={trainingRequestCollaborator?.collaborator?.email}
                   />
-                  <CardInfo
+                  <CardItemInfo
                     label="Teléfono movil"
                     text={trainingRequestCollaborator?.collaborator?.phone}
                   />
                 </div>
               </div>
 
-              <div className="w-full mx-2 ">
+              <div className="px-2 grid md:grid-cols-2 gap-2">
                 {document?.map((doc, index) => (
-                  <div key={doc.name + index} className="grid md:grid-cols-2">
-                    {doc?.collaboratorCourseLevelDocument && (
-                      <div>
-                        <FileUploadForm
-                          apiUrl={`/api/upload/file`}
-                          update={`/api/collaborators/${trainingRequestCollaborator?.collaborator?.id}/course-level/${trainingRequestCollaborator?.courseLevelId}/document-required/${doc.collaboratorCourseLevelDocument[0].requiredDocumentId}`}
-                          label={doc.name}
-                          field={"documentLink"}
-                          file={
-                            doc?.collaboratorCourseLevelDocument[0]
-                              ?.documentLink
-                          }
-                          ubiPath="colaboradores/documentos"
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
+                    <div key={doc.name + index} className="">
+                      {doc?.collaboratorCourseLevelDocument && (
+                        <div>
+                          <FileUploadForm
+                            apiUrl={`/api/upload/file`}
+                            update={`/api/collaborators/${trainingRequestCollaborator?.collaborator?.id}/course-level/${trainingRequestCollaborator?.courseLevelId}/document-required/${doc.collaboratorCourseLevelDocument[0].requiredDocumentId}`}
+                            label={doc.name}
+                            field={"documentLink"}
+                            file={
+                              doc?.collaboratorCourseLevelDocument[0]
+                                ?.documentLink
+                            }
+                            ubiPath="colaboradores/documentos"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
         </CardHeader>
-
-        <SimpleModal
-          // btnDisabled={!!!date}
-          onAcept={() => handleDisallowed()}
-          textBtn="Marcar como no admitido"
-          title="Marcar como no admitido"
-        >
-          <p>
-            Desea marcar el colaborador tiene documento incorrectos o vencidos
-          </p>
-          <Checkbox checked={notifyEmailDisallowed} onCheckedChange={(e) => setNotifyEmailDisallowed(!!e)} />
-          {notifyEmailDisallowed && (
-            <Textarea
-              value={disallowedMessage}
-              onChange={(e) => setDisallowedMessage(e.target.value)}
-            />
-          )}
-        </SimpleModal>
       </Card>
-
-      
-        <div className="w-full bg-blue-300 p-3 flex flex-col lg:flex-row gap-3">
-          <PickDates disabled={trainingRequestCollaborator?.isDisallowed} date={date} setDate={setDate} />
-          <div>
-            {/* <Button className="">Programar</Button> */}
-            <SimpleModal
-              btnDisabled={trainingRequestCollaborator?.isDisallowed }
-              btnClass=""
-              textBtn="Programar"
-              onAcept={() => handleScheduleDate()}
-              title="Programar colaborador"
-            >
-              {date && (
-                <div>
-                  Desea programar el colaborador{" "}
-                  {trainingRequestCollaborator?.collaborator?.fullname} , desde
-                  el día
-                  {format(date?.from, "PPP", { locale: es })} hasta el día
-                  {format(date?.to, "PPP", { locale: es })}
-                </div>
-              )}
-            </SimpleModal>
-          </div>
-        </div>
-      
-    </div>
-  );
-};
-
-const CardInfo = ({
-  label,
-  text,
-  highlight,
-}: {
-  label: string;
-  text?: string | ReactNode | null;
-  highlight?: boolean;
-}) => {
-  return (
-    <div
-      className={`flex flex-col p-1 items-center bg-blue-100 min-w-fit ${
-        highlight && "bg-blue-200 border-4 border-blue-500"
-      }`}
-    >
-      <div>
-        <h5 className="text-lg font-bold text-center ">{label}</h5>
-        <p
-          className={`"text-normal text-center text-sm ${
-            highlight && "text-[15px]"
-          }`}
-        >
-          {`${text}`.toUpperCase()}
-        </p>
-      </div>
     </div>
   );
 };

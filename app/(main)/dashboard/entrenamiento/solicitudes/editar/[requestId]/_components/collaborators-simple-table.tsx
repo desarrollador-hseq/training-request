@@ -81,6 +81,7 @@ export const CollaboratorsSimpleTable = ({
         `/api/course-levels/${courseLevelId}/required-document`
       );
       setdocumentsRequired(data);
+      console.log({setdocumentsRequired: data})
     };
     getdocumentsRequired();
     setLoadingApp(false);

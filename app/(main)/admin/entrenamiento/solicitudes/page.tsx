@@ -41,7 +41,6 @@ const AdminRequestPage = async () => {
   return (
     <div>
       <TitleOnPage text="Solicitudes" bcrumb={crumbs} />
-
       <TabsRequest
         trainingRequestCollaborators={trainingRequestCollaborators}
         requests={requests}

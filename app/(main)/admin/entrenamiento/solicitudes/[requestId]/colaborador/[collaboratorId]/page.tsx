@@ -7,6 +7,9 @@ import { cn } from "@/lib/utils";
 import { ArrowLeftFromLine, ArrowLeftToLine } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TitleOnPage } from "@/components/title-on-page";
+import { Banner } from "@/components/banner";
+import { MarkCollaboratorDisallowed } from "./_components/mark-collaborator-disallowed";
+import { redirect } from "next/navigation";
 
 const crumbs = [
   { label: "solicitudes", path: "solicitudes" },
@@ -30,8 +33,8 @@ const AdminScheduleCollaborator = async ({
       include: {
         collaborator: {
           include: {
-            company: true
-          }
+            company: true,
+          },
         },
         trainingRequest: true,
         courseLevel: {
@@ -44,13 +47,21 @@ const AdminScheduleCollaborator = async ({
               },
             },
             requiredDocuments: {
+              where: {
+                collaboratorCourseLevelDocument: {
+                  every: {
+                    collaboratorId: params.collaboratorId
+                  }
+                }
+              },
               select: {
                 id: true,
                 name: true,
                 collaboratorCourseLevelDocument: {
                   select: {
+                    id: true,
                     documentLink: true,
-                    requiredDocumentId: true
+                    requiredDocumentId: true,
                   },
                 },
               },
@@ -60,9 +71,19 @@ const AdminScheduleCollaborator = async ({
       },
     });
 
+  if (!trainingRequestCollaborator) {
+    redirect("/admin/entrenamiento/solicitudes/c/colaborador/not");
+  }
+
+  const courseLevels = await db.courseLevel.findMany({
+    where: {
+      courseId: trainingRequestCollaborator?.courseLevel?.course.id!,
+    },
+  });
+
   console.log({
     tra: trainingRequestCollaborator?.courseLevel?.requiredDocuments.map((m) =>
-      m.collaboratorCourseLevelDocument.map((n) => n)
+      m.collaboratorCourseLevelDocument.map((n) => n.documentLink)
     ),
   });
 
@@ -73,17 +94,22 @@ const AdminScheduleCollaborator = async ({
         bcrumb={crumbs}
       />
       {trainingRequestCollaborator ? (
-        <>
-          <Card>
-            <CardHeader></CardHeader>
-
-            <CardContent>
-              <AdminScheduleCollaboratorForm
-                trainingRequestCollaborator={trainingRequestCollaborator}
+        <Card className="overflow-hidden relative">
+          <CardHeader className="relative p-0 m-0 mb-2 space-y-0">
+            {trainingRequestCollaborator.isDisallowed && (
+              <Banner
+                variant="danger"
+                label="Colaborador no cumple con los requisitos"
               />
-            </CardContent>
-          </Card>
-        </>
+            )}
+          </CardHeader>
+          <CardContent className="">
+            <AdminScheduleCollaboratorForm
+              courseLevels={courseLevels}
+              trainingRequestCollaborator={trainingRequestCollaborator}
+            />
+          </CardContent>
+        </Card>
       ) : (
         <div className="w-full">
           <Card className="w-full bg-red-800 flex  flex-col px-3">

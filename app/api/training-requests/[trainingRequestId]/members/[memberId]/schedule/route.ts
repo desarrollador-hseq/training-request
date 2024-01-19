@@ -30,7 +30,8 @@ export async function PATCH(req: Request, { params }: { params: { trainingReques
             data: {
                 isScheduled: true,
                 startDate: startDate,
-                endDate: endDate
+                endDate: endDate,
+                isDisallowed: false,
             }
         })
 

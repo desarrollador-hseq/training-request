@@ -49,7 +49,12 @@ import { AdminCollaboratorTableCollapsibleContent } from "./admin-collaborator-t
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data: TData[] &
+    {
+      isScheduled: boolean | undefined;
+      isDisallowed: boolean | undefined;
+      trainingRequestId: string | undefined;
+    }[];
   certificates?: Certificate[];
 }
 
@@ -63,14 +68,12 @@ export function AdminCollaboratorsTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [idOpenCollapsible, setIdOpenCollapsible] = useState("");
-  const [data, setData] = useState(initialData.map(m => m.collaborator));
+  const [data, setData] = useState(initialData.map((m) => m.collaborator));
   const [filtering, setFiltering] = useState("");
 
-
   useEffect(() => {
-    console.log({datar:initialData})
-  }, [data])
-  
+    console.log({ datar: initialData });
+  }, [data]);
 
   const table = useReactTable({
     data,
@@ -187,19 +190,19 @@ export function AdminCollaboratorsTable<TData, TValue>({
                     <TableRow
                       data-state={row.getIsSelected() && "selected"}
                       className={cn(
-                        idOpenCollapsible === row.id &&
-                          "bg-slate-100 border-b-0 hover:bg-slate-100"
+                        initialData[index].isScheduled &&
+                          "text-white bg-emerald-600 border-b-0 hover:bg-emerald-700",
+                        initialData[index].isDisallowed &&
+                          "text-white bg-red-600 border-b-0 hover:bg-red-700"
                       )}
                     >
                       {row.getVisibleCells().map((cell) => (
-                     
-                          <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </TableCell>
-                       
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
                       ))}
 
                       <TableCell>

@@ -17,10 +17,11 @@ import { cn } from "@/lib/utils";
 interface ConfirmModalProps {
   children: ReactNode;
   title?: string;
-  textBtn?: ReactNode ;
+  textBtn?: ReactNode;
   btnClass?: string;
   btnDisabled?: boolean;
-  onAcept?: () => void | Promise<void> | undefined
+  onAcept?: () => void | Promise<void> | undefined;
+  onClose?: () => void | undefined;
 }
 
 export const SimpleModal = ({
@@ -29,26 +30,29 @@ export const SimpleModal = ({
   textBtn,
   btnClass,
   btnDisabled,
-  onAcept
+  onAcept,
+  onClose,
 }: ConfirmModalProps) => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+    onClose && onClose();
+  };
 
   const onClickAcept = () => {
-    setOpen(false)
-    if(onAcept) {
-      onAcept()
-    }
-  }
+    setOpen(false);
+    onAcept && onAcept();
+    onClose && onClose();
+  };
 
   return (
     <div>
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger asChild>
-          <Button disabled={btnDisabled} className={cn("bg-accent", btnClass)}>{textBtn}</Button>
+          <Button disabled={btnDisabled} className={cn("bg-accent", btnClass)}>
+            {textBtn}
+          </Button>
         </AlertDialogTrigger>
 
         <AlertDialogContent
@@ -72,11 +76,9 @@ export const SimpleModal = ({
           </AlertDialogHeader>
           <AlertDialogDescription className="w-full"></AlertDialogDescription>
           <span className="w-full">{children}</span>
-          <AlertDialogFooter>
-            {
-              onAcept && <Button onClick={onClickAcept}>Aceptar</Button>
-            }
-           
+          <AlertDialogFooter className="gap-3">
+            {onAcept && <Button className="bg-zinc-400 hover:bg-zinc-600" onClick={handleClose}>Cancelar</Button>}
+            {onAcept && <Button onClick={onClickAcept}>Aceptar</Button>}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

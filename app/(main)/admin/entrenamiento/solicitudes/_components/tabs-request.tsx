@@ -9,6 +9,7 @@ import { AdminRequestsTable } from "./admin-requests-table";
 import { AdminCollaboratorsTable } from "../../colaboradores/_components/admin-collaborators-table";
 import { columnsAdminCollaboratorTable } from "../../colaboradores/_components/admin-collaborators-table-columns";
 import { adminRequestTablecolumns } from "./admin-requests-table-columns";
+import { TrainingRequestCollaborator } from "@prisma/client";
 
 interface TabsRequestProps {
   requests: any;
@@ -79,7 +80,7 @@ export const TabsRequest = ({
           <TabsContent value="colaboradores">
             <AdminCollaboratorsTable
               columns={columnsAdminCollaboratorTable}
-              data={trainingRequestCollaborators.map((m) => m)}
+              data={trainingRequestCollaborators.map((m: TrainingRequestCollaborator) => m)}
             />
           </TabsContent>
         </CardContent>

@@ -82,11 +82,15 @@ export const IdentificationFileForm = ({
   useEffect(() => {
     setLoadingApp(true);
     const getDocumentCollaborator = async () => {
-      const { data } = await axios.get(
-        `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-required/${documentRequiredId}`
-      );
-      setFile(data);
-      setFileUrl(data.documentLink);
+      try {
+        const { data } = await axios.get(
+          `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-required/${documentRequiredId}`
+        );
+        setFile(data);
+        setFileUrl(data.documentLink);
+      } catch (error) {
+        console.log("sin documentos para el usuario", error)
+      }
     };
     getDocumentCollaborator();
     setLoadingApp(false);

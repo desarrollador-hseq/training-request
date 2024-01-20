@@ -1,13 +1,24 @@
 "use client";
 
+import { useEffect } from "react";
 import * as z from "zod";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Course } from "@prisma/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import {
   Form,
   FormControl,
@@ -16,28 +27,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { es } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Course } from "@prisma/client";
-import { useEffect } from "react";
-
 const formSchema = z.object({
   courseId: z.string().min(1, {
     message: "Curso es requerido",
@@ -106,7 +95,7 @@ export const CreateTrainingForm = ({ courses }: { courses?: Course[] }) => {
                         <SelectTrigger className="bg-slate-100 border-slate-300">
                           <SelectValue
                             className="text-red-500"
-                            placeholder="Selecciona el tipo de entrenameinto"
+                            placeholder="Selecciona el tipo de entrenamiento"
                           />
                         </SelectTrigger>
                       </FormControl>

@@ -39,10 +39,12 @@ const AdminScheduleCollaborator = async ({
         trainingRequest: true,
         courseLevel: {
           select: {
+            id: true,
             name: true,
             hours: true,
             course: {
               select: {
+                id: true,
                 name: true,
               },
             },

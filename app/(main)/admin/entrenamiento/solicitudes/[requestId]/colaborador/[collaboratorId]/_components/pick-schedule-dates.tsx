@@ -31,6 +31,9 @@ interface PickDatesProps {
   isDisallowed: boolean;
   trainingRequestId?: string;
   collaboratorId?: string;
+  collaboratorCourseName?: string;
+  collaboratorCourseLevelName?: string;
+  collaboratorPhone?: string | undefined;
   collaboratorName?: string;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
 }
@@ -41,6 +44,9 @@ export const PickScheduleDates = ({
   collaboratorName,
   scheduledDate,
   isDisallowed,
+  collaboratorPhone,
+  collaboratorCourseName,
+  collaboratorCourseLevelName,
 }: PickDatesProps) => {
   // const { date, setDate } = useDashboard();
   const [date, setDate] = useState<DateRange | undefined>({
@@ -65,7 +71,6 @@ export const PickScheduleDates = ({
         setIsFiltering(false);
       }
     }
-    console.log({ date, dateSelected });
   }, [calendarOpen]);
 
   const handleClearInputCalendar = () => {
@@ -181,6 +186,9 @@ export const PickScheduleDates = ({
         <ButtonScheduleCollaborator
           collaboratorId={collaboratorId}
           collaboratorName={collaboratorName}
+          collaboratorPhone={collaboratorPhone}
+          collaboratorCourseName={collaboratorCourseName}
+          collaboratorCourseLevelName={collaboratorCourseLevelName}
           trainingRequestId={trainingRequestId}
           isDisallowed={isDisallowed}
           scheduledDate={scheduledDate}

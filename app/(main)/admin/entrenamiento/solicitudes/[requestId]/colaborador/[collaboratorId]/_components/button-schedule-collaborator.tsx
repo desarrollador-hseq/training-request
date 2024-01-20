@@ -14,6 +14,7 @@ interface ButtonScheduleCollaboratorProps {
   isDisallowed: boolean;
   trainingRequestId?: string;
   collaboratorId?: string;
+  collaboratorPhone?: string | null;
   collaboratorName?: string;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
   dateSelected: DateRange | undefined | null;
@@ -28,11 +29,10 @@ export const ButtonScheduleCollaborator = ({
   isDisallowed,
   date,
   collaboratorName,
+  collaboratorPhone,
 }: ButtonScheduleCollaboratorProps) => {
   const { setLoadingApp } = useLoading();
   const [notifyReschedule, setNotifyReschedule] = useState(false);
-
-  console.log({ dateSelected, scheduledDate });
 
   const handleScheduleDate = async () => {
     setLoadingApp(true);
@@ -52,27 +52,39 @@ export const ButtonScheduleCollaborator = ({
     }
 
     if (!!!scheduledDate.from) {
-      try {
-        await axios.post("/api/messages/", {
-          msisdn: "",
-          message: `fue programado para asistir a una reunion el dia ${date?.from}`,
-        });
-        toast.success("SMS enviado");
-      } catch (error) {
-        toast.error("Error al enviar el mensaje de texto al colaborador");
-        console.log({ errorApiSms: error });
+      if (collaboratorPhone) {
+        try {
+          await axios.post("/api/messages/", {
+            msisdn: collaboratorPhone,
+            message: `fue programado para asistir a una reunion el dia ${format(
+              date?.from,
+              "P",
+              { locale: es }
+            )}...`,
+          });
+          toast.success("SMS enviado");
+        } catch (error) {
+          toast.error("Error al enviar el mensaje de texto al colaborador");
+          console.log({ errorApiSms: error });
+        }
       }
       // todo: send email
     } else if (notifyReschedule) {
-      try {
-        await axios.post("/api/messages/", {
-          msisdn: "",
-          message: `fue programado para asistir a una reunion el dia ${date?.from}`,
-        });
-        toast.success("SMS enviado");
-      } catch (error) {
-        toast.error("Error al enviar el mensaje de texto al colaborador");
-        console.log({ errorApiSms: error });
+      if (collaboratorPhone) {
+        try {
+          await axios.post("/api/messages/", {
+            msisdn: collaboratorPhone,
+            message: `fue programado para asistir a una reunion el dia ${format(
+              date?.from,
+              "P",
+              { locale: es }
+            )}...`,
+          });
+          toast.success("SMS enviado");
+        } catch (error) {
+          toast.error("Error al enviar el mensaje de texto al colaborador");
+          console.log({ errorApiSms: error });
+        }
       }
 
       // todo: send email

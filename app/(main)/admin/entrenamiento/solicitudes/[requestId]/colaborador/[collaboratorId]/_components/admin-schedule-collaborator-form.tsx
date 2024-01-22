@@ -157,6 +157,10 @@ export const AdminScheduleCollaboratorForm = ({
         <PickScheduleDates
           isDisallowed={isDisallowed}
           collaboratorId={collaborator?.id}
+          collaboratorName={trainingRequestCollaborator?.collaborator?.fullname}
+          companyId={trainingRequestCollaborator?.collaborator?.companyId}
+          companyName={trainingRequestCollaborator?.collaborator?.company?.businessName}
+          companyEmail={trainingRequestCollaborator?.collaborator?.company?.email}
           collaboratorPhone={courseLevel?.course?.name}
           collaboratorCourseName={courseLevel?.name}
           collaboratorCourseLevelName={courseLevel?.course?.name}

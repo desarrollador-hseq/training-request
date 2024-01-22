@@ -35,6 +35,9 @@ interface PickDatesProps {
   collaboratorCourseLevelName?: string;
   collaboratorPhone?: string | undefined;
   collaboratorName?: string;
+  companyName?: string;
+  companyEmail?: string;
+  companyId?: string;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
 }
 
@@ -42,8 +45,11 @@ export const PickScheduleDates = ({
   trainingRequestId,
   collaboratorId,
   collaboratorName,
+  companyId,
   scheduledDate,
   isDisallowed,
+  companyName,
+  companyEmail,
   collaboratorPhone,
   collaboratorCourseName,
   collaboratorCourseLevelName,
@@ -125,6 +131,7 @@ export const PickScheduleDates = ({
                   className={cn(
                     "h-11 w-full justify-start text-left font-normal bg-slate-100 ",
                     !date && "text-muted-foreground"
+                    
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4 text-secondary" />
@@ -185,9 +192,12 @@ export const PickScheduleDates = ({
       {!!dateSelected?.from && (
         <ButtonScheduleCollaborator
           collaboratorId={collaboratorId}
+          companyId={companyId}
           collaboratorName={collaboratorName}
           collaboratorPhone={collaboratorPhone}
           collaboratorCourseName={collaboratorCourseName}
+          companyName={companyName}
+          companyEmail={companyEmail}
           collaboratorCourseLevelName={collaboratorCourseLevelName}
           trainingRequestId={trainingRequestId}
           isDisallowed={isDisallowed}

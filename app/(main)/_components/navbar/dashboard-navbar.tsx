@@ -7,7 +7,8 @@ import { DashboardSidebar } from "./dashboard-sidebar";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
-export const DashboardNavbar = () => {
+import { SheetCollaboratorsCart } from "../sheet-collaborators-cart";
+export const DashboardNavbar = ({ role }: { role: string }) => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const { status, data: session } = useSession();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -27,7 +28,10 @@ export const DashboardNavbar = () => {
       <div className="mx-auto w-full max-w-[1500px] mt-1">
         <div className="mx-3 flex items-center justify-between">
           <div className="p-2 flex gap-1 relative">
-            <Button variant="ghost" onClick={(e) => setOpenSidebar(!openSidebar)}>
+            <Button
+              variant="ghost"
+              onClick={(e) => setOpenSidebar(!openSidebar)}
+            >
               <Menu className="md:hidden" />
             </Button>
             <DashboardSidebar
@@ -39,7 +43,9 @@ export const DashboardNavbar = () => {
             {/* <LogoClaro goRoot className="flex" /> */}
           </div>
 
-          {memoizedCompany?.role === "ADMIN" && <span>Admin</span>}
+          {role === "ADMIN" && <SheetCollaboratorsCart />}
+
+          {role === "ADMIN" && <span>Admin</span>}
 
           <span className="text-white">{memoizedCompany?.businessName}</span>
 

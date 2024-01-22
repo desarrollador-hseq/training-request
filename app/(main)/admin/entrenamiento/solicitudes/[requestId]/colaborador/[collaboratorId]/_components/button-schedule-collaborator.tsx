@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DateRange } from "react-day-picker";
+import { useCollaboratorsCart } from "@/components/providers/collaborators-cart-provider";
 
 interface ButtonScheduleCollaboratorProps {
   isDisallowed: boolean;
@@ -16,6 +17,9 @@ interface ButtonScheduleCollaboratorProps {
   collaboratorId?: string;
   collaboratorPhone?: string | null;
   collaboratorName?: string;
+  companyId?: string;
+  companyEmail?: string;
+  companyName?: string;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
   dateSelected: DateRange | undefined | null;
   date: DateRange | undefined | null;
@@ -28,11 +32,18 @@ export const ButtonScheduleCollaborator = ({
   scheduledDate,
   isDisallowed,
   date,
+  companyId,
+  companyName,
+  companyEmail,
   collaboratorName,
   collaboratorPhone,
 }: ButtonScheduleCollaboratorProps) => {
   const { setLoadingApp } = useLoading();
   const [notifyReschedule, setNotifyReschedule] = useState(false);
+  const { addCartItem } = useCollaboratorsCart();
+
+
+
 
   const handleScheduleDate = async () => {
     setLoadingApp(true);
@@ -41,6 +52,9 @@ export const ButtonScheduleCollaborator = ({
         `/api/training-requests/${trainingRequestId}/members/${collaboratorId}/schedule`,
         { startDate: date?.from, endDate: date?.to }
       );
+
+
+      addCartItem(companyId!, companyName!,companyEmail!, collaboratorId!, collaboratorName!,date!)
 
       toast.success(
         !!!scheduledDate.from ? "Fecha guardada" : "Fecha reprogramada"
@@ -54,14 +68,14 @@ export const ButtonScheduleCollaborator = ({
     if (!!!scheduledDate.from) {
       if (collaboratorPhone) {
         try {
-          await axios.post("/api/messages/", {
-            msisdn: collaboratorPhone,
-            message: `fue programado para asistir a una reunion el dia ${format(
-              date?.from,
-              "P",
-              { locale: es }
-            )}...`,
-          });
+          // await axios.post("/api/messages/", {
+          //   msisdn: collaboratorPhone,
+          //   message: `fue programado para asistir a una reunion el dia ${format(
+          //     date?.from,
+          //     "P",
+          //     { locale: es }
+          //   )}...`,
+          // });
           toast.success("SMS enviado");
         } catch (error) {
           toast.error("Error al enviar el mensaje de texto al colaborador");
@@ -72,14 +86,14 @@ export const ButtonScheduleCollaborator = ({
     } else if (notifyReschedule) {
       if (collaboratorPhone) {
         try {
-          await axios.post("/api/messages/", {
-            msisdn: collaboratorPhone,
-            message: `fue programado para asistir a una reunion el dia ${format(
-              date?.from,
-              "P",
-              { locale: es }
-            )}...`,
-          });
+          // await axios.post("/api/messages/", {
+          //   msisdn: collaboratorPhone,
+          //   message: `fue programado para asistir a una reunion el dia ${format(
+          //     date?.from,
+          //     "P",
+          //     { locale: es }
+          //   )}...`,
+          // });
           toast.success("SMS enviado");
         } catch (error) {
           toast.error("Error al enviar el mensaje de texto al colaborador");
@@ -92,6 +106,9 @@ export const ButtonScheduleCollaborator = ({
 
     setLoadingApp(false);
   };
+
+
+
   return (
     <div>
       {/* <Button className="">Programar</Button> */}

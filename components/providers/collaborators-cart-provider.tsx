@@ -1,5 +1,7 @@
 "use client";
 
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import {
   createContext,
   useContext,
@@ -17,6 +19,8 @@ interface CartItem {
     collaboratorId: string;
     courseDate: DateRange;
     collaboratorName: string;
+    courseName: string;
+    courseLevelName: string;
   }[];
 }
 
@@ -28,6 +32,8 @@ interface CollaboratorCartContextValue {
     companyEmail: string,
     collaboratorId: string,
     collaboratorName: string,
+    courseName: string,
+    courseLevelName: string,
     date: DateRange
   ) => void;
   removeCartItem: (itemId: string) => void;
@@ -51,7 +57,8 @@ export const CollaboratorsCartProvider = ({
   children,
 }: PropsWithChildren<{}>) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    const storedCart =  typeof window !== 'undefined' ? localStorage.getItem('cart') : null
+    const storedCart =
+      typeof window !== "undefined" ? localStorage.getItem("cart") : null;
     return storedCart ? JSON.parse(storedCart) : [];
   });
 
@@ -59,57 +66,80 @@ export const CollaboratorsCartProvider = ({
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
+  const updateCollaboratorBooking = (
+    cartItems: CartItem[],
+    companyId: string,
+    collaboratorId: string,
+    updatedFields: {
+      date?: DateRange;
+      courseName?: string;
+      courseLevelName?: string;
+    }
+  ) => {
+    return cartItems.map((cartItem) => {
+      if (cartItem.companyId === companyId) {
+        const existingCollaboratorIndex = cartItem.collaboratorBookings.findIndex(
+          (booking) => booking.collaboratorId === collaboratorId
+        );
+  
+        if (existingCollaboratorIndex !== -1) {
+          const updatedCollaboratorBooking = {
+            ...cartItem.collaboratorBookings[existingCollaboratorIndex],
+            ...updatedFields,
+          };
+  
+          const updatedCollaboratorBookings = [...cartItem.collaboratorBookings];
+          updatedCollaboratorBookings[existingCollaboratorIndex] = updatedCollaboratorBooking;
+  
+          return {
+            ...cartItem,
+            collaboratorBookings: updatedCollaboratorBookings,
+          };
+        } else {
+          console.warn(`El colaborador con ID ${collaboratorId} no existe en el carrito.`);
+        }
+      }
+      return cartItem;
+    });
+  };
+  
   const addCartItem = (
     companyId: string,
     companyName: string,
     companyEmail: string,
     collaboratorId: string,
     collaboratorName: string,
+    courseName: string,
+    courseLevelName: string,
     date: DateRange
   ) => {
     setCartItems((prevCartItems) => {
-      const index = prevCartItems.findIndex(
-        (cart) => cart.companyId === companyId
-      );
+      const updatedCartItems = updateCollaboratorBooking(prevCartItems, companyId, collaboratorId, {
+        date,
+        courseName,
+        courseLevelName,
+      });
+  
+      const index = updatedCartItems.findIndex((cart) => cart.companyId === companyId);
   
       if (index !== -1) {
-        const existingCollaboratorIndex = prevCartItems[index].collaboratorBookings.findIndex(
+        // Resto de tu lógica para agregar un nuevo ítem si no existe, similar a tu implementación actual.
+        const existingCollaboratorIndex = updatedCartItems[index].collaboratorBookings.findIndex(
           (booking) => booking.collaboratorId === collaboratorId
         );
   
-        if (existingCollaboratorIndex !== -1) {
-          // El colaborador ya existe, verifica si la fecha es diferente antes de actualizar.
-          if (prevCartItems[index].collaboratorBookings[existingCollaboratorIndex].courseDate !== date) {
-            const updatedCartItems = [...prevCartItems];
-            updatedCartItems[index].collaboratorBookings[existingCollaboratorIndex].courseDate = date;
-            return updatedCartItems;
-          } else {
-            // La fecha es la misma, no es necesario realizar cambios.
-            console.warn(`El colaborador ${collaboratorName} ya está en el carrito con la misma fecha.`);
-            return prevCartItems;
-          }
+        if (existingCollaboratorIndex === -1) {
+          updatedCartItems[index].collaboratorBookings.push({
+            collaboratorId,
+            collaboratorName,
+            courseName,
+            courseLevelName,
+            courseDate: date,
+          });
         }
-  
-        // El colaborador no existe, agrégalo al carrito.
-        const updatedCartItems = [...prevCartItems];
-        updatedCartItems[index].collaboratorBookings.push({
-          collaboratorId,
-          collaboratorName,
-          courseDate: date,
-        });
-        return updatedCartItems;
-      } else {
-        // La empresa no existe en el carrito, crea un nuevo ítem.
-        const newCartItem: CartItem = {
-          companyId,
-          companyName,
-          companyEmail,
-          collaboratorBookings: [
-            { collaboratorId, collaboratorName, courseDate: date },
-          ],
-        };
-        return [...prevCartItems, newCartItem];
       }
+  
+      return updatedCartItems;
     });
   };
   // setCartItems((prevCartItems) => [...prevCartItems, item]);
@@ -122,18 +152,22 @@ export const CollaboratorsCartProvider = ({
   const removeCollaboratorItem = (itemId: string) => {
     setCartItems((prevCartItems) =>
       prevCartItems.filter((item) => {
-        const hasCollaborator = item.collaboratorBookings.some((col) => col.collaboratorId === itemId);
-  
+        const hasCollaborator = item.collaboratorBookings.some(
+          (col) => col.collaboratorId === itemId
+        );
+
         if (hasCollaborator) {
           // Filtrar las colaboraciones del colaborador actual
-          item.collaboratorBookings = item.collaboratorBookings.filter((col) => col.collaboratorId !== itemId);
-  
+          item.collaboratorBookings = item.collaboratorBookings.filter(
+            (col) => col.collaboratorId !== itemId
+          );
+
           // Si ya no hay colaboradores, eliminar el ítem completo
           if (item.collaboratorBookings.length === 0) {
             return false; // No incluir en el nuevo array
           }
         }
-  
+
         return true; // Incluir en el nuevo array
       })
     );
@@ -154,20 +188,37 @@ export const CollaboratorsCartProvider = ({
 
   const sendEmailToCompany = () => {
     cartItems.forEach((cartItem) => {
-    
-      const { companyId, companyName, companyEmail, collaboratorBookings } = cartItem;
+      const { companyId, companyName, companyEmail, collaboratorBookings } =
+        cartItem;
 
-      console.log(`Enviando lista de colaboradores agendados para la empresa ${companyName} (${companyEmail}):`);
+      console.log(
+        `Enviando lista de colaboradores agendados para la empresa ${companyName} (${companyEmail}):`
+      );
       collaboratorBookings.forEach((collaborator) => {
-        console.log(`- ${collaborator.collaboratorName}: ${collaborator.courseDate.from} a ${collaborator.courseDate.to}`);
+        console.log(
+          `- ${collaborator.collaboratorName}: ${
+            collaborator?.courseDate.from &&
+            format(collaborator?.courseDate?.from, "P", { locale: es })
+          } a ${
+            collaborator?.courseDate.to &&
+            format(collaborator.courseDate.to, "P", { locale: es })
+          } - ${collaborator.courseName} - ${collaborator.courseLevelName}`
+        );
       });
-      console.log('\n');
+      console.log("\n");
     });
-  }
+  };
 
   return (
     <CollaboratorCartContext.Provider
-      value={{ cartItems, addCartItem, removeCartItem, removeCollaboratorItem, updateCartItemDate, sendEmailToCompany }}
+      value={{
+        cartItems,
+        addCartItem,
+        removeCartItem,
+        removeCollaboratorItem,
+        updateCartItemDate,
+        sendEmailToCompany,
+      }}
     >
       {children}
     </CollaboratorCartContext.Provider>

@@ -3,13 +3,15 @@
 import { useLoading } from "@/components/providers/loading-provider";
 import { SimpleModal } from "@/components/simple-modal";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DateRange } from "react-day-picker";
 import { useCollaboratorsCart } from "@/components/providers/collaborators-cart-provider";
+import { Company } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 interface ButtonScheduleCollaboratorProps {
   isDisallowed: boolean;
@@ -17,9 +19,11 @@ interface ButtonScheduleCollaboratorProps {
   collaboratorId?: string;
   collaboratorPhone?: string | null;
   collaboratorName?: string;
-  companyId?: string;
-  companyEmail?: string;
-  companyName?: string;
+  courseName?: string;
+  courseLevelName?: string;
+  collaboratorCourseName?: string;
+  trainingRequestCollaborator?: any;
+  company?: Company;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
   dateSelected: DateRange | undefined | null;
   date: DateRange | undefined | null;
@@ -28,33 +32,49 @@ interface ButtonScheduleCollaboratorProps {
 export const ButtonScheduleCollaborator = ({
   trainingRequestId,
   collaboratorId,
+  collaboratorName,
+  collaboratorPhone,
+  trainingRequestCollaborator,
+  courseName,
+  courseLevelName,
   dateSelected,
   scheduledDate,
   isDisallowed,
   date,
-  companyId,
-  companyName,
-  companyEmail,
-  collaboratorName,
-  collaboratorPhone,
+  company,
 }: ButtonScheduleCollaboratorProps) => {
+  const router = useRouter();
   const { setLoadingApp } = useLoading();
   const [notifyReschedule, setNotifyReschedule] = useState(false);
+  const [trainingRequest, setTrainingRequest] = useState(
+    trainingRequestCollaborator
+  );
   const { addCartItem } = useCollaboratorsCart();
 
-
-
+  useEffect(() => {
+    setTrainingRequest(trainingRequestCollaborator);
+  }, [trainingRequestCollaborator]);
 
   const handleScheduleDate = async () => {
     setLoadingApp(true);
+    router.refresh();
     try {
-      await axios.patch(
+      const { data } = await axios.patch(
         `/api/training-requests/${trainingRequestId}/members/${collaboratorId}/schedule`,
         { startDate: date?.from, endDate: date?.to }
       );
 
-
-      addCartItem(companyId!, companyName!,companyEmail!, collaboratorId!, collaboratorName!,date!)
+      console.log({ buttoncourse: trainingRequest.courseLevel });
+      addCartItem(
+        company?.id!,
+        company?.businessName!,
+        company?.email!,
+        collaboratorId!,
+        collaboratorName!,
+        trainingRequestCollaborator.courseLevel.course.name!,
+        trainingRequestCollaborator.courseLevel.name!,
+        date!
+      );
 
       toast.success(
         !!!scheduledDate.from ? "Fecha guardada" : "Fecha reprogramada"
@@ -107,8 +127,6 @@ export const ButtonScheduleCollaborator = ({
     setLoadingApp(false);
   };
 
-
-
   return (
     <div>
       {/* <Button className="">Programar</Button> */}
@@ -123,13 +141,13 @@ export const ButtonScheduleCollaborator = ({
             : "Reprogramar al colaborador"
         }
       >
-        {!!dateSelected?.from && !!dateSelected.to && (
+        {!!date?.from && !!date.to && (
           <div>
             {!!!scheduledDate?.from && !!!scheduledDate?.to ? (
               <p>
                 Desea programar el colaborador {collaboratorName}, desde el día
-                {format(dateSelected?.from, "PPP", { locale: es })} hasta el día
-                {format(dateSelected?.to, "PPP", { locale: es })}
+                {format(date?.from, "PPP", { locale: es })} hasta el día
+                {format(date?.to, "PPP", { locale: es })}
               </p>
             ) : (
               <div>
@@ -138,11 +156,11 @@ export const ButtonScheduleCollaborator = ({
                   <span className="font-bold">{collaboratorName}</span>, desde
                   el día{" "}
                   <span className="font-bold">
-                    {format(dateSelected?.from, "PPP", { locale: es })}
+                    {format(date?.from, "PPP", { locale: es })}
                   </span>{" "}
                   hasta el día{" "}
                   <span className="font-bold">
-                    {format(dateSelected?.to, "PPP", { locale: es })}
+                    {format(date?.to, "PPP", { locale: es })}
                   </span>
                 </p>
                 <div className="items-top flex space-x-2 border-2 border-slate-300 my-3 p-2">

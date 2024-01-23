@@ -26,18 +26,20 @@ import axios from "axios";
 import { useLoading } from "@/components/providers/loading-provider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ButtonScheduleCollaborator } from "./button-schedule-collaborator";
+import { Company } from "@prisma/client";
 
 interface PickDatesProps {
   isDisallowed: boolean;
   trainingRequestId?: string;
   collaboratorId?: string;
-  collaboratorCourseName?: string;
-  collaboratorCourseLevelName?: string;
+  courseLevelName?: string;
+  courseName?: string;
   collaboratorPhone?: string | undefined;
   collaboratorName?: string;
-  companyName?: string;
-  companyEmail?: string;
-  companyId?: string;
+  trainingRequestCollaborator?: any;
+  setDate: Dispatch<SetStateAction<DateRange | undefined>>
+  date: DateRange | undefined;
+  company?: Company;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
 }
 
@@ -45,27 +47,32 @@ export const PickScheduleDates = ({
   trainingRequestId,
   collaboratorId,
   collaboratorName,
-  companyId,
+  trainingRequestCollaborator,
+  company,
+  setDate,
+  date,
   scheduledDate,
   isDisallowed,
-  companyName,
-  companyEmail,
   collaboratorPhone,
-  collaboratorCourseName,
-  collaboratorCourseLevelName,
+  courseName,
+  courseLevelName,
 }: PickDatesProps) => {
   // const { date, setDate } = useDashboard();
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: scheduledDate.from || undefined,
-    to: scheduledDate.to || undefined,
-  });
 
   const [calendarOpen, setCalendarOpen] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
+  const [trainingRequest, setTrainingRequest] = useState(trainingRequestCollaborator);
   const [dateSelected, setDateSelected] = useState<DateRange | undefined>({
     from: scheduledDate.from || undefined,
     to: scheduledDate.to || undefined,
   });
+
+
+  useEffect(() => {
+    setTrainingRequest(trainingRequestCollaborator)
+    console.log({picktraiingreques: trainingRequestCollaborator})
+  }, [trainingRequestCollaborator])
+  
 
   useEffect(() => {
     if (!calendarOpen) {
@@ -189,23 +196,7 @@ export const PickScheduleDates = ({
         )}
       </div>
 
-      {!!dateSelected?.from && (
-        <ButtonScheduleCollaborator
-          collaboratorId={collaboratorId}
-          companyId={companyId}
-          collaboratorName={collaboratorName}
-          collaboratorPhone={collaboratorPhone}
-          collaboratorCourseName={collaboratorCourseName}
-          companyName={companyName}
-          companyEmail={companyEmail}
-          collaboratorCourseLevelName={collaboratorCourseLevelName}
-          trainingRequestId={trainingRequestId}
-          isDisallowed={isDisallowed}
-          scheduledDate={scheduledDate}
-          dateSelected={dateSelected}
-          date={date}
-        />
-      )}
+      
     </div>
   );
 };

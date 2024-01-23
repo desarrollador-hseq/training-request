@@ -77,6 +77,9 @@ const AdminScheduleCollaborator = async ({
     redirect("/admin/entrenamiento/solicitudes/c/colaborador/not");
   }
 
+
+  console.log({trainingRequestCollaborator})
+
   const courseLevels = await db.courseLevel.findMany({
     where: {
       courseId: trainingRequestCollaborator?.courseLevel?.course.id!,

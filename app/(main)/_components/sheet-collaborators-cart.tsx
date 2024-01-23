@@ -95,7 +95,7 @@ export const SheetCollaboratorsCart = () => {
                     className="flex justify-between items-center p-2 rounded-sm bg-primary/50 text-white mt-2"
                   >
                     <p className="text-base font-semibold line-clamp-1">
-                      {index + 1}. {col.collaboratorName}
+                      {index + 1}. {col.collaboratorName} - {col.courseLevelName}
                     </p>
                     <SimpleModal
                       title="Eliminar colaborador del listado de notificación de la empresa"

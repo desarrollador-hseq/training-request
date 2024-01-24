@@ -155,7 +155,7 @@ model Certificate {
   id String @id @default(uuid())
 
   collaboratorId String
-  Collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
+  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
 
   courseLevelId String
   courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])

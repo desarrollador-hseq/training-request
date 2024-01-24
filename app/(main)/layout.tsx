@@ -16,9 +16,9 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
 
   return (
     <main className="relative flex flex-col h-full min-h-screen m-0 p-0 mx-auto">
-      <DashboardNavbar />
-      <div className="mt-1 md:ml-[223px] min-h-screen max-w-[1500px] w-auto">
-        <div className="mx-1 min-h-full mt-[56px]">
+      <DashboardNavbar role={session.user.role} />
+      <div className="mt-1 md:pl-[223px] min-h-screen xl:flex justify-center items-center xl:w-full">
+        <div className="mx-1 min-h-full mt-[56px] max-w-[1200px] w-full">
           {session.user.isValid ? children : <NotValidCompany />}
         </div>
       </div>

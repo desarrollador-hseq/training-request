@@ -3,7 +3,7 @@ import { TitleOnPage } from "@/components/title-on-page";
 import { db } from "@/lib/db";
 
 import { DeactivateCollaborator } from "./_components/deactivate-collaborator";
-import { TabsEditCollaborator } from "./_components/tabs-edit-collaborator";
+import { AddCollaboratorForm } from "../_components/add-collaborator-form";
 
 const EditCollaborator = async ({
   params,
@@ -25,19 +25,17 @@ const EditCollaborator = async ({
 
   return (
     <div className="">
-      <div className="flex justify-between items-center">
+      <div className="w-full flex justify-between items-center">
         <div className="w-full flex justify-between items-center">
           <div>
             <TitleOnPage text={`Editar Colaborador`} />
-            <span className="text-slte-300">
-              Lorem ipsum dolor sit amet consectetur.
-            </span>
+            <span className="text-slte-300"></span>
           </div>
           <DeactivateCollaborator collaborator={collaborator} />
         </div>
       </div>
-      <div className="flex flex-col gap-3">
-        <TabsEditCollaborator collaborator={collaborator} />
+      <div className="w-full flex flex-col gap-3">
+        <AddCollaboratorForm collaborator={collaborator} />
       </div>
     </div>
   );

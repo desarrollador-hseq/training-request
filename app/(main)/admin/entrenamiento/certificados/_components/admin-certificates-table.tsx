@@ -1,6 +1,8 @@
+
+
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,14 +16,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  Ban,
-  CalendarDays,
   ChevronDown,
-  ChevronDownSquare,
-  ChevronUpSquare,
   MoreHorizontal,
+  Pencil,
 } from "lucide-react";
-import { Certificate } from "@prisma/client";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -41,36 +39,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import TableColumnFiltering from "@/components/table-column-filtering";
-import { AdminCollaboratorTableCollapsibleContent } from "./admin-collaborator-table-collapsible-content";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[] &
-    {
-      isScheduled: boolean | undefined;
-      isDisallowed: boolean | undefined;
-      trainingRequestId: string | undefined;
-    }[];
-  certificates?: Certificate[];
+  data: TData[];
 }
 
-export function AdminCollaboratorsTable<TData, TValue>({
-  data: initialData,
+export function AdminCertificateTable<TData, TValue>({
+  data,
   columns,
-  certificates,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [idOpenCollapsible, setIdOpenCollapsible] = useState("");
-  const [data, setData] = useState(initialData.map((m) => m.collaborator));
   const [filtering, setFiltering] = useState("");
-
 
   const table = useReactTable({
     data,
@@ -178,83 +164,44 @@ export function AdminCollaboratorsTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, index) => (
-                <Collapsible
+                <TableRow
                   key={row.id + index}
-                  asChild
-                  open={idOpenCollapsible === row.id}
+                  data-state={row.getIsSelected() && "selected"}
                 >
-                  <>
-                    <TableRow
-                      data-state={row.getIsSelected() && "selected"}
-                      className={cn(
-                        initialData[index].isScheduled &&
-                          "text-white bg-emerald-600 border-b-0 hover:bg-emerald-700",
-                        initialData[index].isDisallowed &&
-                          "text-white bg-red-600 border-b-0 hover:bg-red-700"
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
+                    </TableCell>
+                  ))}
 
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-4 w-8 p-0">
-                              <span className="sr-only">abrir menu</span>
-                              <MoreHorizontal />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            align="end"
-                            className="flex flex-col"
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-4 w-8 p-0">
+                          <span className="sr-only">abrir menu</span>
+                          <MoreHorizontal />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="flex flex-col"
+                      >
+                        <DropdownMenuItem asChild className="cursor-pointer">
+                          <Link
+                            className="flex justify-center"
+                            href={`/admin/entrenamiento/empresas/${row.original.id}`}
                           >
-                            <DropdownMenuItem
-                              asChild
-                              className="cursor-pointer"
-                            >
-                              <Link
-                                className="flex justify-center"
-                                href={`/admin/entrenamiento/solicitudes/${initialData[index].trainingRequestId}/colaborador/${row.original.id}`}
-                              >
-                                <CalendarDays className="w-4 h-4 mr-2" />
-                                Programar
-                              </Link>
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-
-                      {/*------- collapsible trigger -------*/}
-                      {row.original.certificates.length > 0 && (
-                        <CollapsibleTrigger
-                          onClick={() => handleCollapsible(row.id)}
-                          asChild
-                        >
-                          <td className="h-full p-1">
-                            <Button variant="ghost">
-                              {idOpenCollapsible !== row.id ? (
-                                <ChevronDownSquare />
-                              ) : (
-                                <ChevronUpSquare />
-                              )}
-                            </Button>
-                          </td>
-                        </CollapsibleTrigger>
-                      )}
-                    </TableRow>
-                    <AdminCollaboratorTableCollapsibleContent
-                      collaborator={row.original}
-                      openCollapsible={!!idOpenCollapsible}
-                      certificates={row.original.certificates}
-                    />
-                  </>
-                </Collapsible>
+                            <Pencil className="w-4 h-4 mr-2" />
+                            Editar
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
               ))
             ) : (
               <TableRow>

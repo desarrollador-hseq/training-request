@@ -36,7 +36,7 @@ export const DeleteConfirmModal = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogCancel className="bg-zinc-300 hover:bg-zinc-400 text-white">Cancelar</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>Eliminar</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

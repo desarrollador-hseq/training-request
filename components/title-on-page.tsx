@@ -1,14 +1,15 @@
 "use client";
 
-import { ChevronRight, Home, HomeIcon } from "lucide-react";
+import { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ChevronRight, HomeIcon } from "lucide-react";
 
 export const TitleOnPage = ({
   text,
   bcrumb,
 }: {
-  text: string;
+  text: ReactNode;
   bcrumb?: { label: string; path: string }[];
 }) => {
   const paths = usePathname();

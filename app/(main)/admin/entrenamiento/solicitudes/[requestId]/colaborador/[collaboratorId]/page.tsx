@@ -1,15 +1,12 @@
 import Link from "next/link";
-import React from "react";
+import { ArrowLeftToLine } from "lucide-react";
 import { AdminScheduleCollaboratorForm } from "./_components/admin-schedule-collaborator-form";
 import { db } from "@/lib/db";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ArrowLeftFromLine, ArrowLeftToLine } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TitleOnPage } from "@/components/title-on-page";
 import { Banner } from "@/components/banner";
-import { MarkCollaboratorDisallowed } from "./_components/mark-collaborator-disallowed";
-import { redirect } from "next/navigation";
 
 const crumbs = [
   { label: "solicitudes", path: "solicitudes" },
@@ -52,9 +49,9 @@ const AdminScheduleCollaborator = async ({
               where: {
                 collaboratorCourseLevelDocument: {
                   every: {
-                    collaboratorId: params.collaboratorId
-                  }
-                }
+                    collaboratorId: params.collaboratorId,
+                  },
+                },
               },
               select: {
                 id: true,
@@ -72,13 +69,6 @@ const AdminScheduleCollaborator = async ({
         },
       },
     });
-
-  if (!trainingRequestCollaborator) {
-    redirect("/admin/entrenamiento/solicitudes/c/colaborador/not");
-  }
-
-
-  console.log({trainingRequestCollaborator})
 
   const courseLevels = await db.courseLevel.findMany({
     where: {

@@ -6,7 +6,6 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { ClientCookiesProvider } from "@/components/providers/cookies-provider";
 import { NextAuthProvider } from "@/components/providers/nextauth-provider";
-import { cn } from "@/lib/utils";
 import { LoadingProvider } from "@/components/providers/loading-provider";
 
 const inter = Inter({ subsets: ["latin"] });

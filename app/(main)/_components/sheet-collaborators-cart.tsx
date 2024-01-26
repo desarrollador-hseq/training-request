@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import {
   Sheet,
   SheetClose,
@@ -37,8 +37,15 @@ export const SheetCollaboratorsCart = () => {
   return (
     <div>
       <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="primary">notificar empresa</Button>
+        <SheetTrigger asChild className="relative">
+          <Button variant="primary" className="rounded-full p-3 h-auto ">
+            <Send className="text-primary-foreground " />
+            {cartItems.length > 0 && (
+              <span className="h-5 w-5 text-xs absolute top-[-3px] left-[-3px] rounded-full bg-blue-500 p-0.5 flex items-center justify-center">
+                {cartItems.length}
+              </span>
+            )}
+          </Button>
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
@@ -95,7 +102,8 @@ export const SheetCollaboratorsCart = () => {
                     className="flex justify-between items-center p-2 rounded-sm bg-primary/50 text-white mt-2"
                   >
                     <p className="text-base font-semibold line-clamp-1">
-                      {index + 1}. {col.collaboratorName} - {col.courseLevelName}
+                      {index + 1}. {col.collaboratorName} -{" "}
+                      {col.courseLevelName}
                     </p>
                     <SimpleModal
                       title="Eliminar colaborador del listado de notificación de la empresa"

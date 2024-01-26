@@ -4,8 +4,10 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
+  Building2,
   Clipboard,
   ClipboardCheck,
+  HardHat,
   LucideIcon,
   Menu,
   Users,
@@ -49,9 +51,14 @@ const adminRoutes = [
     href: "/admin/entrenamiento/colaboradores",
   },
   {
-    icon: ClipboardCheck,
+    icon: Building2,
     label: "Empresas",
     href: "/admin/entrenamiento/empresas",
+  },
+  {
+    icon: HardHat,
+    label: "Cursos",
+    href: "/admin/entrenamiento/cursos",
   },
 ];
 

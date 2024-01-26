@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
-import { Certificate, Collaborator, CourseLevel } from "@prisma/client";
+import { Certificate, Collaborator, Course, CourseLevel } from "@prisma/client";
 import { format } from "date-fns";
 import { Ban, Link2 } from "lucide-react";
 import { es } from "date-fns/locale";
 
 interface CertificateWithCourseLevel extends Certificate {
-  courseLevel: CourseLevel;
+  courseLevel: CourseLevel & { course: Course | null | undefined };
 }
 type CollaboratorTableCollapsibleContentProps = {
   openCollapsible: boolean;
@@ -35,18 +35,19 @@ export const AdminCollaboratorTableCollapsibleContent = ({
       <TableRow
         className={cn(openCollapsible && "bg-slate-100 hover:bg-slate-100")}
       >
-        <TableCell className="animation" colSpan={7}>
+        <TableCell className="animation" colSpan={12}>
           <Card className="bg-slate-100 overflow-hidden border-2 border-secondary">
             <CardHeader className="p-0">
               <SubtitleSeparator
-                text={`Datos de formacion anterior | ${collaborator.fullname} - ${collaborator.numDoc}`}
+                text={`${collaborator.fullname} - ${collaborator.numDoc}`}
               />
             </CardHeader>
             <CardContent className="">
               <Table className="">
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Título</TableHead>
+                    <TableHead>Curso</TableHead>
+                    <TableHead>Nivel</TableHead>
                     <TableHead>Fecha</TableHead>
                     <TableHead>Link</TableHead>
                   </TableRow>
@@ -58,17 +59,20 @@ export const AdminCollaboratorTableCollapsibleContent = ({
                         {certificate && (
                           <>
                             <TableCell>
-                              {certificate.courseLevel.name}
+                              {certificate?.courseLevel?.course?.name}
                             </TableCell>
                             <TableCell>
-                              {format(certificate.date!, "PPP", {
+                              {certificate?.courseLevel?.name}
+                            </TableCell>
+                            <TableCell>
+                              {format(certificate?.date!, "PPP", {
                                 locale: es,
                               })}
                             </TableCell>
                             <TableCell>
-                              {certificate.fileUrl ? (
+                              {certificate?.fileUrl ? (
                                 <a
-                                  href={certificate.fileUrl}
+                                  href={certificate?.fileUrl}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >

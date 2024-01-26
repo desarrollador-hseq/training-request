@@ -32,6 +32,11 @@ const AdminRequestPage = async () => {
       include: {
         collaborator: {
           include: {
+            company: {
+              select: {
+                nit: true
+              }
+            },
             certificates: true,
           },
         },

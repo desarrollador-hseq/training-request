@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,15 +14,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  Ban,
-  CalendarDays,
   ChevronDown,
   ChevronDownSquare,
   ChevronUpSquare,
   MoreHorizontal,
-  Star,
+  Pencil,
 } from "lucide-react";
-import { Certificate } from "@prisma/client";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -42,24 +39,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import TableColumnFiltering from "@/components/table-column-filtering";
-import { AdminCollaboratorTableCollapsibleContent } from "./admin-collaborator-table-collapsible-content";
+import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { AdminCoursesTableCollapsibleContent } from "./admin-courses-table-collapsible-content";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[] &
-    {
-      wasCertified: boolean | undefined;
-      isDisallowed: boolean | undefined;
-      trainingRequestId: string | undefined;
-    }[];
+  data: TData[];
 }
 
-export function AdminCollaboratorsTable<TData, TValue>({
-  data: initialData,
+export function AdminCoursesTable<TData, TValue>({
+  data,
   columns,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -67,7 +58,6 @@ export function AdminCollaboratorsTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [idOpenCollapsible, setIdOpenCollapsible] = useState("");
-  const [data, setData] = useState(initialData);
   const [filtering, setFiltering] = useState("");
 
   const table = useReactTable({
@@ -144,32 +134,29 @@ export function AdminCollaboratorsTable<TData, TValue>({
                 key={headerGroup.id}
                 className="bg-primary hover:bg-primary"
               >
-                <TableHead />
                 {headerGroup.headers.map((header) => {
                   return (
-                    <>
-                      <TableHead
-                        key={header.id}
-                        className="py-2 text-secondary-foreground"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                        {header.column.getCanFilter() ? (
-                          <div className=" flex flex-col justify-around">
-                            <TableColumnFiltering
-                              column={header.column}
-                              table={table}
-                            />
-                          </div>
-                        ) : (
-                          <div className="h-6"></div>
-                        )}
-                      </TableHead>
-                    </>
+                    <TableHead
+                      key={header.id}
+                      className="py-2 text-secondary-foreground"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      {header.column.getCanFilter() ? (
+                        <div className=" flex flex-col justify-around">
+                          <TableColumnFiltering
+                            column={header.column}
+                            table={table}
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-6" />
+                      )}
+                    </TableHead>
                   );
                 })}
                 <TableHead />
@@ -187,16 +174,12 @@ export function AdminCollaboratorsTable<TData, TValue>({
                 >
                   <>
                     <TableRow
+                      key={row.id + index}
                       data-state={row.getIsSelected() && "selected"}
-                      className={`${
-                        idOpenCollapsible === row.id && "bg-slate-300 font-bold"
-                      }`}
+                      className={`${idOpenCollapsible === row.id && "bg-slate-300 hover:bg-slate-300 font-bold"}`}
                     >
-                      <TableCell className="max-w-[50px]">
-                        {initialData[index]?.wasCertified! && <Star />}
-                      </TableCell>
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className="p-2">
+                        <TableCell key={cell.id}>
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
@@ -222,18 +205,17 @@ export function AdminCollaboratorsTable<TData, TValue>({
                             >
                               <Link
                                 className="flex justify-center"
-                                href={`/admin/entrenamiento/solicitudes/${initialData[index].trainingRequestId}/colaborador/${row.original.collaborator.id}`}
+                                href={`/admin/entrenamiento/cursos/${row.original.id}`}
                               >
-                                <CalendarDays className="w-4 h-4 mr-2" />
-                                Programar
+                                <Pencil className="w-4 h-4 mr-2" />
+                                Editar
                               </Link>
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
-
                       {/*------- collapsible trigger -------*/}
-                      {row.original.collaborator.certificates.length > 0 && (
+                      {row.original.courseLevels?.length > 0 && (
                         <CollapsibleTrigger
                           onClick={() => handleCollapsible(row.id)}
                           asChild
@@ -250,10 +232,10 @@ export function AdminCollaboratorsTable<TData, TValue>({
                         </CollapsibleTrigger>
                       )}
                     </TableRow>
-                    <AdminCollaboratorTableCollapsibleContent
-                      collaborator={row.original.collaborator}
+                    <AdminCoursesTableCollapsibleContent
                       openCollapsible={!!idOpenCollapsible}
-                      certificates={row.original.collaborator.certificates}
+                      courseId={row.original.id}
+                      courseLevels={row.original.courseLevels}
                     />
                   </>
                 </Collapsible>
@@ -261,7 +243,7 @@ export function AdminCollaboratorsTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length + 2}
+                  colSpan={columns.length}
                   className="h-24 text-center"
                 >
                   No se encontraron resultados.

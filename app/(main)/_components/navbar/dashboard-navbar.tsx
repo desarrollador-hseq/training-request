@@ -43,7 +43,7 @@ export const DashboardNavbar = ({ role }: { role: string }) => {
             {/* <LogoClaro goRoot className="flex" /> */}
           </div>
 
-          {role === "ADMIN" && <SheetCollaboratorsCart />}
+          {role === "ADMIN" && <SheetCollaboratorsCart  />}
 
           {role === "ADMIN" && <span>Admin</span>}
 

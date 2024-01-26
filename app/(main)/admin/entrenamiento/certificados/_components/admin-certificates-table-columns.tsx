@@ -11,42 +11,30 @@ import {
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface TabsCertificatesProps {
-  certificates: Certificate & {
-    courseLevel:
-      | (CourseLevel & { course: Course | undefined | null })
-      | null
-      | undefined;
-    collaborator:
-      | (Collaborator & { company: Company | undefined | null })
-      | null
-      | undefined;
-  };
+interface CertificateWithCollaborator extends Certificate {
+  collaborator:
+    | (Collaborator & { company: Company | undefined | null })
+    | null
+    | undefined;
+  courseLevel:
+    | (CourseLevel & { course: Course | undefined | null })
+    | null
+    | undefined;
 }
 
-export const columnsAdminCertificatesTable: ColumnDef<
-  Certificate & {
-    courseLevel:
-      | (CourseLevel & { course: Course | undefined | null })
-      | null
-      | undefined;
-    collaborator:
-      | (Collaborator & { company: Company | undefined | null })
-      | null
-      | undefined;
-  }
->[] = [
+export const columnsAdminCertificatesTable: ColumnDef<CertificateWithCollaborator>[] = [
   {
     accessorKey: "fullname",
+    accessorFn: (value) => value.collaborator?.fullname,
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-secondary/30 hover:text-secondary-foreground"
+          className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
         >
-          Nombre del colaborador
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          Colaborador
+          <ArrowUpDown className="ml-2 h-3 w-3" />
         </Button>
       );
     },
@@ -57,15 +45,16 @@ export const columnsAdminCertificatesTable: ColumnDef<
   },
   {
     accessorKey: "numDoc",
+    accessorFn: (value) => value.collaborator?.numDoc,
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-secondary/30 hover:text-secondary-foreground"
+          className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
         >
-          Documento del colaborador
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          # Documento
+          <ArrowUpDown className="ml-2 h-3 w-3" />
         </Button>
       );
     },
@@ -76,83 +65,102 @@ export const columnsAdminCertificatesTable: ColumnDef<
   },
   {
     accessorKey: "companyName",
-    maxSize: 100,
+    accessorFn: (value) => value.collaborator?.company?.businessName,
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-secondary/30 hover:text-secondary-foreground"
+          className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
         >
           Empresa
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 h-3 w-3" />
         </Button>
       );
     },
     cell: ({ row }) => {
-        const name = row.original?.collaborator?.company?.businessName;
-        return <div className="capitalize">{name}</div>;
-      },
+      const name = row.original?.collaborator?.company?.businessName;
+      return <div className="capitalize">{name}</div>;
+    },
   },
   {
     accessorKey: "companyNit",
-    maxSize: 100,
+    accessorFn: (value) => value.collaborator?.company?.nit,
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-secondary/30 hover:text-secondary-foreground"
+          className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
         >
-          NIT empresa
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          NIT
+          <ArrowUpDown className="ml-2 h-3 w-3" />
         </Button>
       );
     },
     cell: ({ row }) => {
-        const nit = row.original?.collaborator?.company?.nit;
-        return <div className="capitalize">{nit}</div>;
-      },
+      const nit = row.original?.collaborator?.company?.nit;
+      return <div className="capitalize">{nit}</div>;
+    },
   },
   {
     accessorKey: "courseName",
-    maxSize: 100,
+    accessorFn: (value) => value.courseLevel?.course?.name,
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-secondary/30 hover:text-secondary-foreground"
+          className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
         >
-         Nombre del curso
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          Nombre del curso
+          <ArrowUpDown className="ml-2 h-3 w-3" />
         </Button>
       );
     },
     cell: ({ row }) => {
-        const name = row.original?.courseLevel?.course?.name;
-        return <div className="capitalize">{name}</div>;
-      },
+      const name = row.original?.courseLevel?.course?.name;
+      return <div className="capitalize">{name}</div>;
+    },
   },
   {
     accessorKey: "courseLevelName",
-    maxSize: 100,
+    accessorFn: (value) => value.courseLevel?.name,
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-secondary/30 hover:text-secondary-foreground"
+          className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
         >
           Nivel de curso
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 h-3 w-3" />
         </Button>
       );
     },
     cell: ({ row }) => {
-        const name = row.original?.courseLevel?.name;
-        return <div className="capitalize">{name}</div>;
-      },
+      const name = row.original?.courseLevel?.name;
+      return <div className="capitalize">{name}</div>;
+    },
+  },
+  {
+    accessorKey: "fileUrl",
+    accessorFn: (value) => value.fileUrl,
+    enableColumnFilter: false,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
+        >
+          Link
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const name = row.original?.fileUrl;
+      return <div className="capitalize">{name}</div>;
+    },
   },
   //   {
   //     accessorKey: "date",
@@ -164,7 +172,7 @@ export const columnsAdminCertificatesTable: ColumnDef<
   //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
   //         >
   //           date
-  //           <ArrowUpDown className="ml-2 h-4 w-4" />
+  //           <ArrowUpDown className="ml-2 h-3 w-3" />
   //         </Button>
   //       );
   //     },

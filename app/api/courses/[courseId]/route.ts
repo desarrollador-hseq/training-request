@@ -55,3 +55,36 @@ export async function PATCH(req: Request, { params }: { params: { courseId: stri
     }
 
 }
+
+export async function DELETE(req: Request, { params }: { params: { courseId: string } }) {
+    try {
+        const session = await getServerSession(authOptions)
+        const { courseId } = params;
+
+        if (!session || session.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
+
+        const deactivateLevels = await db.courseLevel.updateMany({
+            where: {
+                courseId: courseId,
+            },
+            data: {
+                active: false
+            }
+        })
+
+        const company = await db.course.update({
+            where: {
+                id: courseId,
+            },
+            data: {
+                active: false
+            }
+        })
+
+        return NextResponse.json(company)
+
+    } catch (error) {
+        console.log("[COMPANY_DELETE_ID]", error)
+        return new NextResponse("Internal Errorr" + error, { status: 500 })
+    }
+}

@@ -31,7 +31,7 @@ export const DeleteConfirmModal = ({
         <AlertDialogHeader>
           <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
           <AlertDialogDescription asChild  className="inline flex-col">
-           <span className="inline"> Esta seguro que desea borrar {title}, Una vez borrado no podrá
+           <span className="inline"> ¿Esta seguro que desea borrar {title}?, Una vez borrado no podrá
             recuperarlo.</span>
           </AlertDialogDescription>
         </AlertDialogHeader>

@@ -36,7 +36,15 @@ const TrainingRequestPage = async ({
       collaborators: {
         include: {
           collaborator: true,
-          courseLevel: true,
+          courseLevel: {
+            include: {
+              requiredDocuments: {
+                select: {
+                  id: true,
+                }
+              }
+            }
+          },
         },
       },
     },
@@ -49,6 +57,7 @@ const TrainingRequestPage = async ({
   const courseLevels = await db.courseLevel.findMany({
     where: {
       courseId: trainingRequest.courseId!,
+      active: true
     },
   });
   const collaborators = await db.collaborator.findMany({

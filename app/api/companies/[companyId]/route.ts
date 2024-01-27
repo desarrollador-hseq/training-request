@@ -53,7 +53,7 @@ export async function DELETE(req: Request, { params }: { params: { companyId: st
         const session = await getServerSession(authOptions)
         const { companyId } = params;
 
-        if (!session) return new NextResponse("Unauthorized", { status: 401 })
+        if (!session || session.user.role !== "ADMIN") return new NextResponse("No autorizado", { status: 401 })
 
 
         const company = await db.company.update({

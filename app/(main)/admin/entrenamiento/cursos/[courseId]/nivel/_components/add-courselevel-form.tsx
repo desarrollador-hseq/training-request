@@ -15,6 +15,8 @@ import { Form } from "@/components/ui/form";
 
 interface AddCourseLevelFormProps {
   courseLevel?: CourseLevel | null;
+  courseId: string;
+  courseName?: string | null;
 }
 
 const formSchema = z.object({
@@ -27,14 +29,14 @@ const formSchema = z.object({
 
 export const AddCourseLevelForm = ({
   courseLevel,
+  courseId,
+  courseName,
 }: AddCourseLevelFormProps) => {
   const router = useRouter();
-  const isEdit = useMemo(() => courseLevel, [courseLevel]);
+  const isLevel =  useMemo(() => courseLevel !== null, [courseLevel]);
+  const isEdit = useMemo(() => isLevel && courseLevel, [courseLevel]);
+  console.log({courseLevel, isEdit})
 
-  if (isEdit && !courseLevel) {
-    router.replace("/admin/entrenameinto/cursos");
-    toast.error("Curso no encontrado, redirigiendo...");
-  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,29 +48,23 @@ export const AddCourseLevelForm = ({
   });
 
   const { isSubmitting, isValid } = form.formState;
-  const { watch } = form;
-
-  useEffect(() => {
-    console.log({watch: watch()})
-  }, [watch()])
-  
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       if (isEdit) {
         await axios.patch(
-          `/api/courses/${courseLevel?.courseId}/${courseLevel?.id}`,
+          `/api/courses/${courseId}/course-levels/${courseLevel?.id}`,
           values
         );
         toast.success("Nivel actualizado");
       } else {
         const { data } = await axios.post(
-          `/api/courses/${courseLevel?.courseId}/course-levels`,
+          `/api/courses/${courseId}/course-levels`,
           values
         );
         toast.success("Nivel creado");
       }
-      router.push(`/admin/entrenamiento/cursos`);
+      router.push(`/admin/entrenamiento/cursos/${courseId}`);
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -83,7 +79,11 @@ export const AddCourseLevelForm = ({
           className="flex flex-col items-center mt-8 p-2"
         >
           <div className="grid grid-cols-1 gap-6 mt-1 mb-7 w-full max-w-[50%]">
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-col justify-center">
+              <div className="w-full flex items-center justify-center gap-2 bg-secondary p-2 rounded-md text-white">
+                <h2 className="font-semibold text-xl ">Curso de </h2>
+                <p>{courseName}</p>
+              </div>
               <div>
                 <InputForm control={form.control} label="Nombre" name="name" />
               </div>

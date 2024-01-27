@@ -2,7 +2,6 @@
 
 import { ReactNode } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ChevronRight, HomeIcon } from "lucide-react";
 
 export const TitleOnPage = ({
@@ -10,14 +9,11 @@ export const TitleOnPage = ({
   bcrumb,
 }: {
   text: ReactNode;
-  bcrumb?: { label: string; path: string }[];
+  bcrumb?: { label: string; path: string; click?: boolean }[];
 }) => {
-  const paths = usePathname();
-  const isAdmin = paths.split("/").some((p) => p === "admin");
-
   return (
     <div className="w-full h-20 flex items-center">
-      <div className="w-full flex flex-col  ml-2">
+      <div className="w-full flex flex-col ml-2">
         <h2 className="text-3xl font-extrabold text-primary/80">{text}</h2>
 
         {bcrumb && (
@@ -25,7 +21,7 @@ export const TitleOnPage = ({
             <ol className="inline-flex items-center space-x-1">
               <li className="inline-flex items-center ">
                 <Link
-                  href={isAdmin ? "/admin" : "/dashboard"}
+                  href="/"
                   className="inline-flex items-center text-xs font-medium  text-blue-500"
                 >
                   <HomeIcon className="w-4 h-4 text-primary/60 mr-1" />
@@ -34,7 +30,7 @@ export const TitleOnPage = ({
               </li>
 
               {bcrumb?.map((crumb, index) => {
-                if (crumb.label === "inicio") return <div key={crumb.path}></div>;
+                if (crumb.label === 'inicio') return <div key={crumb.path}></div>;
                 return (
                   <li key={crumb.path}>
                     <div className="flex items-center">
@@ -44,12 +40,15 @@ export const TitleOnPage = ({
                           {crumb.label}
                         </span>
                       ) : (
-                        <Link
-                          href={crumb.path}
-                          className=" text-xs font-medium text-blue-600"
-                        >
-                         {crumb.label}
-                        </Link>
+                        crumb.click === false ? (
+                          <span className="text-xs font-medium text-gray-500">
+                            {crumb.label}
+                          </span>
+                        ) : (
+                          <Link href={crumb.path} className="text-xs font-medium text-blue-600">
+                            {crumb.label}
+                          </Link>
+                        )
                       )}
                     </div>
                   </li>

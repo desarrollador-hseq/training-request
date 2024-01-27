@@ -81,6 +81,7 @@ export const IdentificationFileForm = ({
 
   useEffect(() => {
     setLoadingApp(true);
+    console.log({collaboratorId, courseLevelId, documentRequiredId})
     const getDocumentCollaborator = async () => {
       try {
         const { data } = await axios.get(
@@ -89,7 +90,7 @@ export const IdentificationFileForm = ({
         setFile(data);
         setFileUrl(data.documentLink);
       } catch (error) {
-        console.log("sin documentos para el usuario", error)
+        console.log("sin documentos para el usuario")
       }
     };
     getDocumentCollaborator();

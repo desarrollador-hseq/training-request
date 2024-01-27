@@ -8,17 +8,16 @@ import { AdminSimpleCourselevels } from "../_components/admin-simple-courselevel
 import { Card } from "@/components/ui/card";
 import { Ban } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { DeactivateCourse } from "./_components/deactivate-course";
 
 const crumbs = [
   { label: "Cursos", path: "/admin/entrenamiento/cursos" },
   { label: "Editar", path: "editar" },
 ];
 
-const EditCoursePage = async ({
-  params,
-}: {
-  params: { courseId: string };
-}) => {
+const EditCoursePage = async ({ params }: { params: { courseId: string } }) => {
   const { courseId } = params;
 
   const course = await db.course.findUnique({
@@ -27,19 +26,42 @@ const EditCoursePage = async ({
       active: true,
     },
     include: {
-      courseLevels: true,
+      courseLevels: {
+        where: {
+          active: true,
+        },
+      },
     },
   });
+
+  if (!course) {
+    redirect("/admin/entrenamiento/cursos/");
+  }
 
   return (
     <div className="">
       <div className="w-full flex justify-between items-center">
         <div className="w-full flex justify-between items-center">
-          <div>
-            <TitleOnPage text={`Editar Curso`} bcrumb={crumbs} />
-            <span className="text-slte-300"></span>
+          <div className="w-full flex justify-between items-center">
+            <TitleOnPage
+              text={
+                <span>
+                  Editar Curso:{" "}
+                  <span className="font-semibold text-2xl">{course?.name}</span>
+                </span>
+              }
+              bcrumb={crumbs}
+            />
+            <div className="flex gap-5">
+              <DeactivateCourse course={course} />
+              <Link
+                className={cn(buttonVariants())}
+                href={`/admin/entrenamiento/cursos/${course?.id}/nivel/crear`}
+              >
+                Agregar Nivel
+              </Link>
+            </div>
           </div>
-          {/* <DeactivateCollaborator collaborator={collaborator} /> */}
         </div>
       </div>
       <div className="w-full flex flex-col gap-3">
@@ -58,7 +80,12 @@ const EditCoursePage = async ({
               <div className="h-12 flex items-center gap-3">
                 <Ban className="w-6 h-6 " />
                 <h4 className="font-bold text-lg">Sin niveles</h4>
-                <Link href={`/admin/entrenamiento/cursos/${course?.id}/nivel/crear`}>Agregar</Link>
+                <Link
+                  className={cn(buttonVariants())}
+                  href={`/admin/entrenamiento/cursos/${course?.id}/nivel/crear`}
+                >
+                  Agregar
+                </Link>
               </div>
             </div>
           )}

@@ -25,7 +25,10 @@ const CoursesPage = async () => {
     <div>
       <div className="flex items-center">
         <TitleOnPage text="Cursos" bcrumb={crumbs} />
-        <Link className={cn(buttonVariants())} href={`/admin/entrenamiento/cursos/crear`}>
+        <Link
+          className={cn(buttonVariants())}
+          href={`/admin/entrenamiento/cursos/crear`}
+        >
           Crear
         </Link>
       </div>

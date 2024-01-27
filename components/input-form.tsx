@@ -18,6 +18,8 @@ interface InputFormProps<T extends FieldValues>
   control: Control<T>;
   label: string;
   isSubmitting?: boolean;
+  readOnly?: boolean;
+  disabled?: boolean;
   type?: HTMLInputTypeAttribute | undefined;
 }
 
@@ -27,6 +29,8 @@ export const InputForm: React.FC<InputFormProps<any>> = ({
   label,
   isSubmitting,
   type,
+  readOnly,
+  disabled,
 }) => {
   return (
     <FormField
@@ -40,10 +44,15 @@ export const InputForm: React.FC<InputFormProps<any>> = ({
           <FormControl>
             <Input
               id={name}
-              disabled={isSubmitting}
+              disabled={isSubmitting || disabled}
               placeholder=""
               type={type || "text"}
+              readOnly={readOnly}
               {...field}
+              className={`${
+                disabled &&
+                "bg-slate-400 text-white text-lg focus:border-none outline-none"
+              }`}
             />
           </FormControl>
           <FormMessage />

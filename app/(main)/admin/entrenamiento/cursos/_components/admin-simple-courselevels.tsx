@@ -53,7 +53,7 @@ export const AdminSimpleCourselevels = ({
           <TableBody>
             {courseLevels &&
               courseLevels.map((level) => (
-                <TableRow className="text-center font-semibold">
+                <TableRow key={level.id} className="text-center font-semibold">
                   {level && (
                     <>
                       <TableCell>{level?.name}</TableCell>

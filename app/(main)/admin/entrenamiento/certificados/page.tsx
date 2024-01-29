@@ -25,19 +25,25 @@ const CertificatePage = async () => {
     },
   });
 
-  console.log({
-    first: certificates.filter(
-      (cer) => cer.monthsToExpire && addMonths(cer.date, cer.monthsToExpire) - new Date()
-    ),
-  });
+  // console.log({
+  //   first: certificates.filter(
+  //     (cer) => cer.monthsToExpire && addMonths(cer.date, cer.monthsToExpire) - new Date()
+  //   ),
+  // });
 
-  console.log({adt: addMonths(certificates[0].date, certificates[0].monthsToExpire)})
 
   return (
     <div>
       <TitleOnPage text="Certificados" bcrumb={crumbs} />
 
       <TabsCertificates certificates={certificates} />
+      <div>
+      <div className="min-h-[2000px]">
+        
+    
+      {/* <CertificateExample name={name} id={id} date={date} reentrenamiento={reentrenamiento} /> */}
+      </div>
+      </div>
     </div>
   );
 };

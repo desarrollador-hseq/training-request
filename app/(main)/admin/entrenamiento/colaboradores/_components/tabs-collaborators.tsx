@@ -3,6 +3,8 @@
 import {
   Certificate,
   Collaborator,
+  Company,
+  Course,
   CourseLevel,
   TrainingRequestCollaborator,
 } from "@prisma/client";
@@ -12,31 +14,33 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useTabManager from "@/hooks/useTabManager";
 import { AdminCollaboratorsTable } from "./admin-collaborators-table";
 import { columnsAdminCollaboratorTable } from "./admin-collaborators-table-columns";
-interface TabsCollaboratorsProps {
-  courseLevel: CourseLevel | null | undefined;
-  collaborators: Collaborator &
-    {
-      trainingRequestsCollaborators:
-        | TrainingRequestCollaborator[]
-        | null
-        | undefined;
-      certificates: Certificate | null | undefined;
-    }[];
+
+interface trainingRequestCollaboratorWithCourselevel
+  extends TrainingRequestCollaborator {
+  courseLevel:
+    | (CourseLevel & { course: Course | null | undefined })
+    | null
+    | undefined;
+  collaborator: Collaborator & {
+    certificates: Certificate | null | undefined;
+    company: Company | null | undefined;
+  } | null | undefined;
+}
+
+interface trainingRequestCollaborator {
+  trainingRequestCollaborator: trainingRequestCollaboratorWithCourselevel[];
 }
 
 export const TabsCollaborators = ({
-  collaborators,
-}: TabsCollaboratorsProps) => {
+  trainingRequestCollaborator,
+}: trainingRequestCollaborator) => {
   const { activeTab, handleTabChange } = useTabManager({
     initialTab: "por-certificar",
   });
 
-  console.log({ col: collaborators.filter((col) =>
-    col.trainingRequestsCollaborators?.map(
-      (tr) => tr.isScheduled && !tr.wasCertified
-    ))});
-
-  const toCertificate = collaborators.filter(col => col.isScheduled && !col.wasCertified)
+  const toCertificate = trainingRequestCollaborator.filter(
+    (col) => col?.isScheduled && !col?.wasCertified
+  );
 
   return (
     <Tabs
@@ -64,11 +68,11 @@ export const TabsCollaborators = ({
             />
           </TabsContent>
           <TabsContent value="todos">
-          <AdminCollaboratorsTable
-            columns={columnsAdminCollaboratorTable}
-            data={collaborators}
-          />
-        </TabsContent>
+            <AdminCollaboratorsTable
+              columns={columnsAdminCollaboratorTable}
+              data={trainingRequestCollaborator}
+            />
+          </TabsContent>
         </CardContent>
       </Card>
     </Tabs>

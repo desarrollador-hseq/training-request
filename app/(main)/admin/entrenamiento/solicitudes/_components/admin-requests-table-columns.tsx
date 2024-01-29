@@ -14,7 +14,6 @@ const stateEsp = {
   EXECUTED: { text: "Ejecutada", icon: "✔️" },
   PROGRAMMED: { text: "Programada", icon: "📅" },
   CANCELLED: { text: "Cancelada", icon: "❌" },
-  // Agrega más estados según sea necesario
 };
 
 export const adminRequestTablecolumns: ColumnDef<

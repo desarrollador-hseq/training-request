@@ -1,8 +1,8 @@
 import { TitleOnPage } from "@/components/title-on-page";
 import { db } from "@/lib/db";
-import { AddCourseLevelForm } from "../_components/add-courselevel-form";
-import { Course } from "@prisma/client";
+import { AddCourseLevelForm } from "./_components/add-courselevel-form";
 import { redirect } from "next/navigation";
+import { TabsCorselevel } from "./_components/tabs-courselevel";
 
 const EditCourseLevelPage = async ({
   params,
@@ -24,6 +24,18 @@ const EditCourseLevelPage = async ({
       active: true,
     },
     include: {
+      requiredDocuments: {
+        where: {
+          active: true,
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+        orderBy: {
+          createdAt: "asc"
+        }
+      },
       course: {
         select: {
           name: true,
@@ -38,11 +50,9 @@ const EditCourseLevelPage = async ({
     },
   });
 
-  
   if (levelId !== "crear" && !courseLevel) {
     redirect("/admin/entrenamiento/cursos");
   }
-
 
   return (
     <div className="">
@@ -72,10 +82,10 @@ const EditCourseLevelPage = async ({
         </div>
       </div>
       <div className="w-full flex flex-col gap-3">
-        <AddCourseLevelForm
+        <TabsCorselevel
           courseLevel={courseLevel}
-          courseName={course?.name}
           courseId={courseId}
+          courseName={course?.name}
         />
       </div>
     </div>

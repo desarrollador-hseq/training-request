@@ -14,6 +14,7 @@ import { AdminCertificateTable } from "./admin-certificates-table";
 import { columnsAdminCertificatesTable } from "./admin-certificates-table-columns";
 import { isAfter, addMonths } from "date-fns";
 
+
 interface CertificateWithCollaborator extends Certificate {
   collaborator:
     | (Collaborator & { company: Company | undefined | null })
@@ -51,6 +52,7 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
     return false;
   });
 
+
   return (
     <Tabs
       defaultValue="activos"
@@ -75,7 +77,10 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
               columns={columnsAdminCertificatesTable}
               data={certificatesNotExpired}
             />
+        
+           
           </TabsContent>
+
           <TabsContent value="vencidos">
             <AdminCertificateTable
               columns={columnsAdminCertificatesTable}

@@ -5,26 +5,27 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { courseLevelId: string } }
+  { params }: { params: { courseLevelId: string; docId: string } }
 ) {
   try {
-    const documentsRequired = await db.requiredDocument.findMany({
+    const documentRequired = await db.requiredDocument.findUnique({
       where: {
+        id: params.docId,
         courseLevelId: params.courseLevelId,
         active: true,
       },
     });
 
-    return NextResponse.json(documentsRequired);
+    return NextResponse.json(documentRequired);
   } catch (error) {
     console.log("[GET-DOCUMENTS-COURSELEVEL]", error);
     return new NextResponse("Internal Errorr", { status: 500 });
   }
 }
 
-export async function POST(
+export async function PATCH(
   req: Request,
-  { params }: { params: { courseLevelId: string } }
+  { params }: { params: { courseLevelId: string; docId: string } }
 ) {
   const session = await getServerSession(authOptions);
   try {
@@ -32,18 +33,19 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     const values = await req.json();
 
-    if (!params.courseLevelId)
-      return new NextResponse("Bad request", { status: 400 });
-    const courses = await db.requiredDocument.create({
-      data: {
+    const courses = await db.requiredDocument.update({
+      where: {
+        id: params.docId,
         courseLevelId: params.courseLevelId,
+      },
+      data: {
         ...values,
       },
     });
 
     return NextResponse.json(courses);
   } catch (error) {
-    console.log("[CREATE-DOCUMENTS-COURSELEVEL]", error);
+    console.log("[PATCH-DOCUMENTS-COURSELEVEL]", error);
     return new NextResponse("Internal Errorr", { status: 500 });
   }
 }

@@ -2,7 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import {
+  Certificate,
   Collaborator,
+  Company,
   Course,
   CourseLevel,
   TrainingRequestCollaborator,
@@ -16,7 +18,13 @@ interface TrainingCollaboratorWithCourseLevel
     | (CourseLevel & { course: Course | null | undefined })
     | null
     | undefined;
-  collaborator: Collaborator | null | undefined;
+  collaborator:
+    | (Collaborator & {
+        company: Company | null | undefined;
+        certificates: Certificate | null | undefined;
+      })
+    | null
+    | undefined;
 }
 
 export const columnsAdminCollaboratorTable: ColumnDef<TrainingCollaboratorWithCourseLevel>[] =
@@ -86,7 +94,7 @@ export const columnsAdminCollaboratorTable: ColumnDef<TrainingCollaboratorWithCo
         );
       },
       cell: ({ row }) => {
-        const name = row.original?.collaborator?.company.nit;
+        const name = row.original?.collaborator?.company?.nit;
         return <div className="capitalize">{name}</div>;
       },
     },

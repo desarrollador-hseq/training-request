@@ -2,10 +2,8 @@
 import {
   Collaborator,
   CourseLevel,
-  RequiredDocument,
   TrainingRequestCollaborator,
 } from "@prisma/client";
-import { useEffect, useState } from "react";
 import { MoreHorizontal, Trash, X } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
@@ -34,14 +32,6 @@ import {
 } from "@/components/ui/select";
 import { useLoading } from "@/components/providers/loading-provider";
 import { cn } from "@/lib/utils";
-import { IdentificationFileForm } from "../../../../colaboradores/[collaboratorId]/_components/identification-file-form";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ModalUploadDocument } from "./modal-upload-document";
 
 interface CollaboratorsSimpleTableProps {
@@ -102,7 +92,6 @@ export const CollaboratorsSimpleTable = ({
     }
   };
 
- 
   return (
     <Table className={cn("bg-blue-100", !isPending && "opacity-70")} >
       {/* <TableCaption>A list </TableCaption> */}

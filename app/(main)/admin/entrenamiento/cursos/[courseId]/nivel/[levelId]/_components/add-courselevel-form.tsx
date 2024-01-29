@@ -15,7 +15,7 @@ import { Form } from "@/components/ui/form";
 
 interface AddCourseLevelFormProps {
   courseLevel?: CourseLevel | null;
-  courseId: string;
+  courseId?: string | null;
   courseName?: string | null;
 }
 
@@ -33,10 +33,9 @@ export const AddCourseLevelForm = ({
   courseName,
 }: AddCourseLevelFormProps) => {
   const router = useRouter();
-  const isLevel =  useMemo(() => courseLevel !== null, [courseLevel]);
+  const isLevel = useMemo(() => courseLevel !== null, [courseLevel]);
   const isEdit = useMemo(() => isLevel && courseLevel, [courseLevel]);
-  console.log({courseLevel, isEdit})
-
+  console.log({ courseLevel, isEdit });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

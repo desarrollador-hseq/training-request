@@ -135,6 +135,9 @@ model TrainingRequestCollaborator {
   courseLevelId String?
   courseLevel   CourseLevel? @relation(fields: [courseLevelId], references: [id])
 
+  collaboratorFullname String?
+  collaboratorDoc String?
+
   isDisallowed Boolean   @default(false)
   isScheduled  Boolean   @default(false)
   startDate    DateTime?
@@ -164,6 +167,8 @@ model Certificate {
   fileUrl String?
 
   monthsToExpire Int? @default(0)
+
+  active Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -202,6 +207,7 @@ model Course {
 
   name            String?
   shortName       String?
+  resolution      String?
   courseLevels    CourseLevel[]
   trainingRequest TrainingRequest[]
 

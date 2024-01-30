@@ -17,16 +17,21 @@ function useTabManager({ initialTab = 'validar' } = {}) {
     }, [searchParams.get('tab'), initialTab]);
   
     useEffect(() => {
-      setActiveTab(searchParams.get('tab')!);
-    }, [searchParams.get('tab')]);
+      setActiveTab(searchParams.get('tab') || initialTab);
+    }, [searchParams.get('tab'), initialTab]);
   
     const handleTabChange = (value: string) => {
       setActiveTab(value);
-      const url = qs.stringifyUrl({
-        url: pathname,
-        query: { tab: value },
-      }, { skipNull: true, skipEmptyString: true });
-      router.push(url);
+      if (value) {
+        const url = qs.stringifyUrl(
+          {
+            url: pathname,
+            query: { tab: value },
+          },
+          { skipNull: true, skipEmptyString: true }
+        );
+        router.replace(url);
+      }
     };
   
     return { activeTab, handleTabChange };

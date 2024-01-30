@@ -21,7 +21,8 @@ model Company {
   businessName String?
   nit          String?
 
-  sector SectorCompany?
+  legalRepresentative String?
+  sector              SectorCompany?
 
   nameContact  String?
   phoneContact String?
@@ -100,6 +101,7 @@ model Collaborator {
 
   identificationFile String?
   socialSecurityFile String?
+  arlName            String?
 
   companyId                     String?
   company                       Company?                      @relation(fields: [companyId], references: [id])
@@ -135,9 +137,6 @@ model TrainingRequestCollaborator {
   courseLevelId String?
   courseLevel   CourseLevel? @relation(fields: [courseLevelId], references: [id])
 
-  collaboratorFullname String?
-  collaboratorDoc String?
-
   isDisallowed Boolean   @default(false)
   isScheduled  Boolean   @default(false)
   startDate    DateTime?
@@ -163,10 +162,25 @@ model Certificate {
   courseLevelId String
   courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])
 
-  date    DateTime?
-  fileUrl String?
+  fileUrl         String?
 
-  monthsToExpire Int? @default(0)
+  collaboratorFullname String?
+  collaboratorNumDoc   String?
+  collaboratorTypeDoc  DocType?
+  collaboratorArlName  String?
+  companyName          String?
+  legalRepresentative  String?
+  companyNit           String?
+
+  courseName String?
+  levelName  String?
+  resolution String?
+  levelHours Int?
+
+
+  certificateDate   DateTime?
+  expeditionDate    DateTime?
+  dueDate           DateTime?
 
   active Boolean @default(true)
 

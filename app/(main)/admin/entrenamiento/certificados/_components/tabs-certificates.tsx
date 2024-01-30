@@ -14,20 +14,12 @@ import { AdminCertificateTable } from "./admin-certificates-table";
 import { columnsAdminCertificatesTable } from "./admin-certificates-table-columns";
 import { isAfter, addMonths } from "date-fns";
 
-
-interface CertificateWithCollaborator extends Certificate {
-  collaborator:
-    | (Collaborator & { company: Company | undefined | null })
-    | null
-    | undefined;
-  courseLevel:
-    | (CourseLevel & { course: Course | undefined | null })
-    | null
-    | undefined;
+interface CertificateWithCourseLevel extends Certificate {
+  courseLevel: { monthsToExpire: number | undefined | null };
 }
 
 interface TabsCertificatesProps {
-  certificates: CertificateWithCollaborator[];
+  certificates: CertificateWithCourseLevel[];
 }
 
 export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
@@ -37,21 +29,26 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
   });
 
   const certificatesNotExpired = certificates.filter((cer) => {
-    if (cer.monthsToExpire && cer.date) {
-      const expirationDate = addMonths(cer.date, cer.monthsToExpire);
+    if (cer.certificateDate && cer.dueDate) {
+      const expirationDate = addMonths(
+        cer.certificateDate,
+        cer?.courseLevel?.monthsToExpire!
+      );
       return isAfter(expirationDate, currentDate);
     }
     return false;
   });
 
   const certificatesExpired = certificates.filter((cer) => {
-    if (cer.monthsToExpire && cer.date) {
-      const expirationDate = addMonths(cer.date, cer.monthsToExpire);
+    if (cer.dueDate && cer.certificateDate) {
+      const expirationDate = addMonths(
+        cer.certificateDate,
+        cer.courseLevel.monthsToExpire!
+      );
       return isAfter(currentDate, expirationDate);
     }
     return false;
   });
-
 
   return (
     <Tabs
@@ -77,8 +74,6 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
               columns={columnsAdminCertificatesTable}
               data={certificatesNotExpired}
             />
-        
-           
           </TabsContent>
 
           <TabsContent value="vencidos">

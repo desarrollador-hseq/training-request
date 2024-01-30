@@ -1,11 +1,37 @@
+import { redirect } from "next/navigation";
+import { AddCertificateForm } from "./add-certificate-form";
+import { db } from "@/lib/db";
+import { CertificatePreview } from "../generar/[collaboratorId]/[requestId]/_components/certificate-preview";
+import { DocumentCertificateTemplate } from "../generar/[collaboratorId]/[requestId]/_components/document-certificate-template";
+import { formatDateOf } from "@/lib/utils";
+import { PDFViewer } from "@react-pdf/renderer";
 
+const EditCertificate = async ({
+  params,
+}: {
+  params: { certificateId: string };
+}) => {
+  const { certificateId } = params;
 
-import React from 'react'
+  const baseUrl = process.env.NEXTAUTH_URL
 
-const EditCertificate = () => {
+  const certificate = await db.certificate.findUnique({
+    where: {
+      id: certificateId,
+      active: true,
+    },
+  });
+
+  if (!certificate) {
+    redirect("/admin/entrenamiento/cursos/");
+  }
+
   return (
-    <div>EditCertificate</div>
-  )
-}
+    <div>
+      <AddCertificateForm certificate={certificate} baseUrl={baseUrl} />
 
-export default EditCertificate
+    </div>
+  );
+};
+
+export default EditCertificate;

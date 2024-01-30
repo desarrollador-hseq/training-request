@@ -31,7 +31,7 @@ export const AddCourseForm = ({ course }: AddCourseFormProps) => {
   const isEdit = useMemo(() => course, [course]);
 
   if (isEdit && !course) {
-    router.replace("/admin/entrenameinto/cursos");
+    router.replace("/admin/entrenamiento/cursos");
     toast.error("Curso no encontrado, redirigiendo...");
   }
 

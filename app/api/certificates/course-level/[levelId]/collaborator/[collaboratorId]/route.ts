@@ -25,13 +25,14 @@ export async function POST(req: Request, { params }: { params: { levelId: string
             "certificateDate",
             "expeditionDate",
             "dueDate",
-          ];
-          
-          const missingProperty = requiredProperties.find(prop => !(prop in values));
-          
-          if (missingProperty) {
+            "trainingRequestId",
+        ];
+
+        const missingProperty = requiredProperties.find(prop => !(prop in values));
+
+        if (missingProperty) {
             return new NextResponse(`Missing property: ${missingProperty}`, { status: 400 });
-          }
+        }
 
         const courses = await db.certificate.create({
             data: {
@@ -40,6 +41,18 @@ export async function POST(req: Request, { params }: { params: { levelId: string
                 ...values
             }
 
+        })
+
+        const training = await db.trainingRequestCollaborator.update({
+            where: {
+                collaboratorId_trainingRequestId: {
+                    collaboratorId: params.collaboratorId,
+                    trainingRequestId: values.trainingRequestId
+                }
+            },
+            data: {
+                wasCertified: true,
+            }
         })
 
         return NextResponse.json(courses)

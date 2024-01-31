@@ -31,7 +31,7 @@ export const AdminCollaboratorTableCollapsibleContent = ({
   collaborator,
 }: CollaboratorTableCollapsibleContentProps) => {
   return (
-    <CollapsibleContent asChild className="CollapsibleContent w-full">
+    <CollapsibleContent asChild className="CollapsibleContent w-full ">
       <TableRow
         className={cn(openCollapsible && "bg-slate-100 hover:bg-slate-100")}
       >
@@ -42,20 +42,20 @@ export const AdminCollaboratorTableCollapsibleContent = ({
                 text={`${collaborator.fullname} - ${collaborator.numDoc}`}
               />
             </CardHeader>
-            <CardContent className="">
-              <Table className="">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Curso</TableHead>
-                    <TableHead>Nivel</TableHead>
-                    <TableHead>Fecha</TableHead>
-                    <TableHead>Link</TableHead>
+            <CardContent className="bg-blue-100 px-0">
+              <Table>
+                <TableHeader className="bg-blue-300 hover:bg-blue-300 text-primary">
+                  <TableRow className="hover:bg-blue-300">
+                    <TableHead className="text-primary">Curso</TableHead>
+                    <TableHead className="text-primary">Nivel</TableHead>
+                    <TableHead className="text-primary">Fecha</TableHead>
+                    <TableHead className="text-primary">Link</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {certificates &&
                     certificates.map((certificate) => (
-                      <TableRow>
+                      <TableRow key={certificate.id} className="border border-b-primary">
                         {certificate && (
                           <>
                             <TableCell>
@@ -65,7 +65,7 @@ export const AdminCollaboratorTableCollapsibleContent = ({
                               {certificate?.courseLevel?.name}
                             </TableCell>
                             <TableCell>
-                              {format(certificate?.date!, "PPP", {
+                              {format(certificate?.certificateDate!, "PPP", {
                                 locale: es,
                               })}
                             </TableCell>
@@ -77,12 +77,12 @@ export const AdminCollaboratorTableCollapsibleContent = ({
                                   rel="noopener noreferrer"
                                 >
                                   <div className="bg-emerald-700 px-1 rounded-sm w-[28px] flex justify-center">
-                                    <Link2 className="w-6 h-6 text-center" />
+                                    <Link2 className="w-6 h-6 text-center text-white" />
                                   </div>
                                 </a>
                               ) : (
                                 <div className="bg-red-700 px-1 rounded-sm p-1 w-[28px] flex justify-center cursor-not-allowed">
-                                  <Ban className="w-4 h-4" />
+                                  <Ban className="w-4 h-4 text-white" />
                                 </div>
                               )}
                             </TableCell>
@@ -99,38 +99,3 @@ export const AdminCollaboratorTableCollapsibleContent = ({
     </CollapsibleContent>
   );
 };
-
-{
-  /* <Card className="grid grid-cols-3 grid-rows-1 gap-2 bg-accent text-white p-1 px-3">
-<div className="flex flex-col items-center border-b md:border-r md:border-b-0 border-white">
-  <h5 className="font-bold">Título</h5>
-  <p>{certificate.courseLevel.name}</p>
-</div>
-<div className="flex flex-col items-center border-b md:border-r md:border-b-0 border-white">
-  <h5 className="font-bold">fecha</h5>
-  <p>
-    {format(certificate.date!, "PPP", {
-      locale: es,
-    })}
-  </p>
-</div>
-<div className="flex flex-col items-center">
-  <h5 className="font-bold">Link</h5>
-  {certificate.fileUrl ? (
-    <a
-      href={certificate.fileUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <div className="bg-emerald-700 px-1 rounded-sm w-[28px] flex justify-center">
-        <Link2 className="w-6 h-6 text-center" />
-      </div>
-    </a>
-  ) : (
-    <div className="bg-red-700 px-1 rounded-sm p-1 w-[28px] flex justify-center cursor-not-allowed">
-      <Ban className="w-4 h-4" />
-    </div>
-  )}
-</div>
-</Card> */
-}

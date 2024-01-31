@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { TrainingRequestCollaborator } from "@prisma/client";
@@ -14,18 +14,16 @@ import useTabManager from "@/hooks/useTabManager";
 
 interface TabsRequestProps {
   requests: any;
-  trainingRequestCollaborators: any;
 }
 
 export const TabsRequest = ({
   requests,
-  trainingRequestCollaborators,
 }: TabsRequestProps) => {
+
 
   const { activeTab, handleTabChange } = useTabManager({
     initialTab: "solicitud",
   });
-
 
 
   return (
@@ -51,17 +49,14 @@ export const TabsRequest = ({
             <div className="min-h-screen">
               <div className="flex">
                 <AdminRequestsTable
-                  data={requests}
                   columns={adminRequestTablecolumns}
+                  data={requests}
                 />
               </div>
             </div>
           </TabsContent>
           <TabsContent value="colaboradores">
-            <AdminCollaboratorsTable
-              columns={columnsAdminCollaboratorTable}
-              data={trainingRequestCollaborators.map((m: TrainingRequestCollaborator) => m)}
-            />
+         
           </TabsContent>
         </CardContent>
       </Card>

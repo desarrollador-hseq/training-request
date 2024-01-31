@@ -16,7 +16,7 @@ export const TooltipInfo = ({ children, text }: TooltipInfoProps) => {
     <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent side="left" className="max-w-[500px]">
           <p>{text}</p>
         </TooltipContent>
       </Tooltip>

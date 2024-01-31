@@ -10,11 +10,13 @@ import { Banner } from "@/components/banner";
 import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-table";
 import { SelectCollaborators } from "./_components/select-collaborators";
 import { SendTraining } from "./_components/send-training";
+import { TooltipInfo } from "@/components/tooltip-info";
+import { Info } from "lucide-react";
 
 const crumbs = [
-  {label: "solicitudes", path: "/dashboard/entrenamiento/solicitudes"},
-  {label: "editar", path: "editar"},
-]
+  { label: "solicitudes", path: "/dashboard/entrenamiento/solicitudes" },
+  { label: "editar", path: "editar" },
+];
 
 const TrainingRequestPage = async ({
   params,
@@ -41,9 +43,9 @@ const TrainingRequestPage = async ({
               requiredDocuments: {
                 select: {
                   id: true,
-                }
-              }
-            }
+                },
+              },
+            },
           },
         },
       },
@@ -57,7 +59,7 @@ const TrainingRequestPage = async ({
   const courseLevels = await db.courseLevel.findMany({
     where: {
       courseId: trainingRequest.courseId!,
-      active: true
+      active: true,
     },
   });
   const collaborators = await db.collaborator.findMany({
@@ -66,10 +68,12 @@ const TrainingRequestPage = async ({
       active: true,
     },
     include: {
-      trainingRequestsCollaborators: true
-    }
+      trainingRequestsCollaborators: true,
+    },
   });
-  const hasCourseLevelIds = trainingRequest.collaborators.every(col => col.courseLevelId);
+  const hasCourseLevelIds = trainingRequest.collaborators.every(
+    (col) => col.courseLevelId
+  );
 
   const requiredFields = [
     trainingRequest.courseId,
@@ -77,29 +81,39 @@ const TrainingRequestPage = async ({
     hasCourseLevelIds,
   ];
 
-
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
 
   const completionText = `(${completedFields}/${totalFields})`;
 
   const isComplete = requiredFields.every(Boolean);
-  const isPending = trainingRequest.state === "PENDING"
+  const isPending = trainingRequest.state === "PENDING";
 
   return (
     <div className="">
       {trainingRequest.state === "PENDING" && (
-        <Banner label="Solicitud no enviada" />
+        <Banner label="Solicitud no enviada">
+          <TooltipInfo text="La solicitud fue creada, pero no enviada. Cuando seleccione a los colaboradores y agregue sus documentos, podrá enviarla.">
+            <Info />
+          </TooltipInfo>
+        </Banner>
       )}
 
       <div className="flex justify-between items-center">
         <div>
-          <TitleOnPage text={`Editar solicitud de entrenamiento `} bcrumb={crumbs} />
+          <TitleOnPage
+            text={`Editar solicitud de entrenamiento `}
+            bcrumb={crumbs}
+          />
           <span className="text-slte-300">
             complete todos los item {completionText}{" "}
           </span>
         </div>
-      <SendTraining trainingRequestId={params.requestId} disabled={isComplete} isPending={isPending}  />
+        <SendTraining
+          trainingRequestId={params.requestId}
+          disabled={isComplete}
+          isPending={isPending}
+        />
       </div>
       <div className="flex flex-col gap-3">
         <Card>
@@ -119,16 +133,16 @@ const TrainingRequestPage = async ({
           <CardContent className="">
             <div className="p-0 overflow-hidden rounded-md bg-blue-50">
               <div className="p-0">
-                <SubtitleSeparator text="Datos de Colaboradores" >
+                <SubtitleSeparator text="Datos de Colaboradores">
                   {/* Sheet para agregar colaboradores */}
-                <SelectCollaborators
-                  isPending={isPending}
-                  trainingRequestId={trainingRequest.id}
-                  collaborators={collaborators}
-                  collaboratorSelected={trainingRequest.collaborators.map(
-                    (col) => col.collaborator
-                  )}
-                />
+                  <SelectCollaborators
+                    isPending={isPending}
+                    trainingRequestId={trainingRequest.id}
+                    collaborators={collaborators}
+                    collaboratorSelected={trainingRequest.collaborators.map(
+                      (col) => col.collaborator
+                    )}
+                  />
                 </SubtitleSeparator>
               </div>
               {/* Listar colaboradores de una solicitud y con collapsible de documentos */}

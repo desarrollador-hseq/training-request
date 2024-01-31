@@ -37,7 +37,7 @@ interface CertificateWithCourseLevel extends Certificate {
 }
 
 
-export const columnsAdminCollaboratorTable: ColumnDef<TrainingRequestCollaboratorWithCourseLevel>[] =
+export const columnsAdminCollaboratorTableSimple: ColumnDef<TrainingRequestCollaboratorWithCourseLevel>[] =
   [
     {
       accessorKey: "fullname",
@@ -145,44 +145,6 @@ export const columnsAdminCollaboratorTable: ColumnDef<TrainingRequestCollaborato
       },
       cell: ({ row }) => {
         const name = row.original.courseLevel?.name;
-        return <div className="capitalize">{name}</div>;
-      },
-    },
-    {
-      accessorKey: "email",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-secondary/30 hover:text-secondary-foreground"
-          >
-            Email
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const name = row.original?.collaborator?.email;
-        return <div className="capitalize">{name}</div>;
-      },
-    },
-    {
-      accessorKey: "phone",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-secondary/30 hover:text-secondary-foreground"
-          >
-            Teléfono
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const name = row.original?.collaborator?.phone;
         return <div className="capitalize">{name}</div>;
       },
     },

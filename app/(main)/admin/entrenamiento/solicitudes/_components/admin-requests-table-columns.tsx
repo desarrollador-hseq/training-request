@@ -1,7 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Pencil } from "lucide-react";
-import { Collaborator, Course, TrainingRequest } from "@prisma/client";
+import { Collaborator, Company, Course, TrainingRequest } from "@prisma/client";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,10 +17,11 @@ const stateEsp = {
 };
 
 export const adminRequestTablecolumns: ColumnDef<
-  TrainingRequest & { course?: Course | null; collaborators?: Collaborator[] | null }
+  TrainingRequest & { course?: Course | null; company: Company | null; collaborators?: Collaborator[] | null }
 >[] = [
   {
     accessorKey: "companyId",
+    accessorFn: (value) => `${value?.company?.businessName}`,
     header: ({ column }) => {
       return (
         <Button
@@ -32,7 +33,6 @@ export const adminRequestTablecolumns: ColumnDef<
         </Button>
       );
     },
-    accessorFn: (value) => `${value?.company?.businessName}`,
     cell: ({ row }) => {
       const company = row.original.company;
       return <div className="capitalize font-bold">{company?.businessName}</div>;
@@ -40,6 +40,7 @@ export const adminRequestTablecolumns: ColumnDef<
   },
   {
     accessorKey: "courseId",
+    accessorFn: value => value.course?.name,
     header: ({ column }) => {
       return (
         <Button
@@ -51,7 +52,6 @@ export const adminRequestTablecolumns: ColumnDef<
         </Button>
       );
     },
-    accessorFn: (value) => `${value?.course?.name}`,
     cell: ({ row }) => {
       const course = row.original.course;
       return <div className="capitalize">{course?.name}</div>;
@@ -59,6 +59,7 @@ export const adminRequestTablecolumns: ColumnDef<
   },
   {
     accessorKey: "state",
+    accessorFn: value => value.state,
     header: ({ column }) => {
       return (
         <Button

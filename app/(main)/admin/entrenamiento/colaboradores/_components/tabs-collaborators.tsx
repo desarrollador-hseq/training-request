@@ -15,20 +15,33 @@ import useTabManager from "@/hooks/useTabManager";
 import { AdminCollaboratorsTable } from "./admin-collaborators-table";
 import { columnsAdminCollaboratorTable } from "./admin-collaborators-table-columns";
 
-interface trainingRequestCollaboratorWithCourselevel
-  extends TrainingRequestCollaborator {
-  courseLevel:
-    | (CourseLevel & { course: Course | null | undefined })
-    | null
-    | undefined;
+interface TrainingRequestCollaboratorWithCourseLevel extends TrainingRequestCollaborator {
+  courseLevel?: {
+    name?: string | null ;
+    course?: {
+      name?: string | null;
+    } | null ;
+  } | null ;
+
   collaborator: Collaborator & {
-    certificates: Certificate | null | undefined;
-    company: Company | null | undefined;
+    certificates?: CertificateWithCourseLevel[] | null;
+    company?: {
+      nit?: string | null;
+    } | null;
   } | null | undefined;
 }
 
+interface CertificateWithCourseLevel extends Certificate {
+  courseLevel?: CourseLevel & {
+    course: {
+      name?: string | null | undefined;
+    }
+  } | null ;
+}
+
+
 interface trainingRequestCollaborator {
-  trainingRequestCollaborator: trainingRequestCollaboratorWithCourselevel[];
+  trainingRequestCollaborator: TrainingRequestCollaboratorWithCourseLevel[];
 }
 
 export const TabsCollaborators = ({
@@ -37,6 +50,8 @@ export const TabsCollaborators = ({
   const { activeTab, handleTabChange } = useTabManager({
     initialTab: "por-certificar",
   });
+
+  console.log({ fir: trainingRequestCollaborator });
 
   const toCertificate = trainingRequestCollaborator.filter(
     (col) => col?.isScheduled && !col?.wasCertified

@@ -37,8 +37,23 @@ model Company {
 
   active Boolean @default(true)
 
+  passwordResetTokens PasswordResetToken[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PasswordResetToken {
+  id      String    @id @default(uuid())
+  token   String    @unique
+  resetAt DateTime?
+
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([companyId])
 }
 
 enum SectorCompany {
@@ -75,6 +90,8 @@ model TrainingRequest {
   collaborators TrainingRequestCollaborator[]
 
   activeFrom DateTime?
+
+  active Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -162,7 +179,7 @@ model Certificate {
   courseLevelId String
   courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])
 
-  fileUrl         String?
+  fileUrl String?
 
   collaboratorFullname String?
   collaboratorNumDoc   String?
@@ -177,10 +194,9 @@ model Certificate {
   resolution String?
   levelHours Int?
 
-
-  certificateDate   DateTime?
-  expeditionDate    DateTime?
-  dueDate           DateTime?
+  certificateDate DateTime?
+  expeditionDate  DateTime?
+  dueDate         DateTime?
 
   active Boolean @default(true)
 

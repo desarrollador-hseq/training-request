@@ -8,7 +8,7 @@ const crumbs = [{ label: "solicitudes", path: "solicitudes" }];
 
 const AdminRequestPage = async () => {
   const requests = await db.trainingRequest.findMany({
-    where: { state: "ACTIVE" },
+    where: { active: true },
     include: {
       course: true,
       company: true,
@@ -24,30 +24,11 @@ const AdminRequestPage = async () => {
     },
   });
 
-  const trainingRequestCollaborators =
-    await db.trainingRequestCollaborator.findMany({
-      where: {
-        trainingRequest: { state: "ACTIVE" },
-      },
-      include: {
-        collaborator: {
-          include: {
-            company: {
-              select: {
-                nit: true
-              }
-            },
-            certificates: true,
-          },
-        },
-      },
-    });
 
   return (
     <div>
       <TitleOnPage text="Solicitudes" bcrumb={crumbs} />
       <TabsRequest
-        trainingRequestCollaborators={trainingRequestCollaborators}
         requests={requests}
       />
     </div>

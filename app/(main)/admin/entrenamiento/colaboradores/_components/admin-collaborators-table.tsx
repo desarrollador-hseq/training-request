@@ -15,10 +15,13 @@ import {
 } from "@tanstack/react-table";
 import {
   Ban,
+  CalendarClock,
   CalendarDays,
   ChevronDown,
   ChevronDownSquare,
   ChevronUpSquare,
+  GraduationCap,
+  GraduationCapIcon,
   MoreHorizontal,
   Star,
 } from "lucide-react";
@@ -54,6 +57,7 @@ interface DataTableProps<TData, TValue> {
     {
       wasCertified: boolean | undefined;
       isDisallowed: boolean | undefined;
+      isScheduled: boolean | undefined;
       trainingRequestId: string | undefined;
     }[];
 }
@@ -119,20 +123,16 @@ export function AdminCollaboratorsTable<TData, TValue>({
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -145,33 +145,30 @@ export function AdminCollaboratorsTable<TData, TValue>({
                 className="bg-primary hover:bg-primary"
               >
                 <TableHead />
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <>
-                      <TableHead
-                        key={header.id}
-                        className="py-2 text-secondary-foreground"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                        {header.column.getCanFilter() ? (
-                          <div className=" flex flex-col justify-around">
-                            <TableColumnFiltering
-                              column={header.column}
-                              table={table}
-                            />
-                          </div>
-                        ) : (
-                          <div className="h-6"></div>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="py-2 text-secondary-foreground"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
                         )}
-                      </TableHead>
-                    </>
-                  );
-                })}
+                    {header.column.getCanFilter() ? (
+                      <div className=" flex flex-col justify-around">
+                        <TableColumnFiltering
+                          column={header.column}
+                          table={table}
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-6"></div>
+                    )}
+                  </TableHead>
+                ))}
+
                 <TableHead />
                 <TableHead />
               </TableRow>
@@ -188,12 +185,22 @@ export function AdminCollaboratorsTable<TData, TValue>({
                   <>
                     <TableRow
                       data-state={row.getIsSelected() && "selected"}
-                      className={`${
-                        idOpenCollapsible === row.id && "bg-slate-300 font-bold"
+                      className={`text-sm ${
+                        idOpenCollapsible === row.id && "bg-blue-100 font-bold"
                       }`}
                     >
-                      <TableCell className="max-w-[50px]">
-                        {initialData[index]?.wasCertified! && <Star />}
+                      <TableCell className="max-w-[60px] flex">
+                        {initialData[index]?.wasCertified! &&
+                          initialData[index]?.isScheduled! && (
+                            <GraduationCap className="w-4 h-4" />
+                          )}
+                        {initialData[index]?.isScheduled! &&
+                          !initialData[index]?.wasCertified! && (
+                            <CalendarClock className="w-4 h-4" />
+                          )}
+                        {initialData[index]?.isDisallowed! && (
+                          <Ban className="w-4 h-4" />
+                        )}
                       </TableCell>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="p-2">

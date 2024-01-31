@@ -10,6 +10,7 @@ import { LoginForm } from "./_components/login-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RegisterForm } from "./_components/register-form";
 import { ModalWaitValidation } from "./_components/modal-wait-validation";
+import { AuthNavbar } from "./_components/auth-navbar";
 export default function LoginPage() {
   const { data: session, status } = useSession();
   const [tabSelected, setTabSelected] = useState("login");
@@ -29,16 +30,7 @@ export default function LoginPage() {
 
   return (
     <div className="bg-slate-50 min-h-[calc(100vh-40px)]">
-      <div className="relative p-1 border-b h-[55px] max-h-[70px] w-full bg-primary shadow-sm flex items-center">
-        <div className="mx-auto w-full max-w-[1500px] mt-1">
-          <div className="mx-3 flex items-center justify-between">
-            <div className="p-2 flex gap-1 text-white">
-              {/* <LogoGrupoHseq  /> */}
-              LOGO
-            </div>
-          </div>
-        </div>
-      </div>
+      <AuthNavbar />
       <div className="container w-full flex items-start justify-center pt-14 h-fit">
         <Tabs
           value={tabSelected}

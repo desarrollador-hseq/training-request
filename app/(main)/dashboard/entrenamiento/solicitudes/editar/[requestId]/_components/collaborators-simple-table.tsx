@@ -55,7 +55,6 @@ export const CollaboratorsSimpleTable = ({
 }: CollaboratorsSimpleTableProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
- 
 
   const handleRemove = async (id: string) => {
     setLoadingApp(true);
@@ -93,16 +92,16 @@ export const CollaboratorsSimpleTable = ({
   };
 
   return (
-    <Table className={cn("bg-blue-100", !isPending && "opacity-70")} >
+    <Table className={cn("bg-blue-100", !isPending && "opacity-70")}>
       {/* <TableCaption>A list </TableCaption> */}
-      <TableHeader className="w-full" >
+      <TableHeader className="w-full">
         <TableRow className="bg-slate-600 hover:bg-slate-600">
           <TableHead className="text-white">Nombre completo</TableHead>
           <TableHead className="text-white">N° Documento</TableHead>
           <TableHead className="text-white">Correo electrónico</TableHead>
           <TableHead className="text-white">Teléfono</TableHead>
           <TableHead className="text-white">Nivel</TableHead>
-          <TableHead className="text-white">documentos</TableHead>
+          <TableHead className="text-white">Documentos</TableHead>
           {isPending && (
             <TableHead className="text-right text-white">Acción</TableHead>
           )}
@@ -139,9 +138,13 @@ export const CollaboratorsSimpleTable = ({
             </TableCell>
             {/* agregar Documentos de colaborador a solicitud */}
             <TableCell className="animation">
-              {courseLevel.requiredDocuments && courseLevel.requiredDocuments.length > 0 && (
-                <ModalUploadDocument collaborator={collaborator} courseLevel={courseLevel} />
-              )}
+              {courseLevel?.requiredDocuments &&
+                courseLevel?.requiredDocuments.length > 0 && (
+                  <ModalUploadDocument
+                    collaborator={collaborator}
+                    courseLevel={courseLevel}
+                  />
+                )}
             </TableCell>
 
             {isPending && (

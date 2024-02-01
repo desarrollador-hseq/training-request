@@ -49,10 +49,6 @@ export const InputForm: React.FC<InputFormProps<any>> = ({
               type={type || "text"}
               readOnly={readOnly}
               {...field}
-              className={`${
-                disabled &&
-                "bg-slate-400 text-white text-lg focus:border-none outline-none"
-              }`}
             />
           </FormControl>
           <FormMessage />

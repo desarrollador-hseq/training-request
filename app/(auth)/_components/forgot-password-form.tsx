@@ -1,4 +1,3 @@
-
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -27,20 +26,20 @@ import { cn } from "@/lib/utils";
 const formSchema = z.object({
   email: z.string().min(1, {
     message: "Correo Electrónico es requerido",
-  })
+  }),
 });
 
 export const ForgotPasswordForm = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [wasSend, setWasSend] = useState(false);
-  const [message, setMessage] = useState();
+  const [error, setError] = useState<string>();
 
   const router = useRouter();
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: ""},
+    defaultValues: { email: "" },
   });
   const { isSubmitting, isValid } = form.formState;
   // https://ethanmick.com/how-to-create-a-password-reset-flow/
@@ -48,73 +47,128 @@ export const ForgotPasswordForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsEditing(true);
     try {
-        const { data } = await axios.post(`/api/collaborators/recover-password`, values)
+      const { data } = await axios.post(
+        `/api/companies/recover-password`,
+        values
+      );
 
-        // setMessage
-      setWasSend(true)
-      router.refresh();
+      setWasSend(true);
+      router.push("");
       toast.success("correo enviado");
       toggleEdit();
     } catch (error) {
-      toast.error("Something went wrong");
-      console.log("errorr", error);
+      if (axios.isAxiosError(error)) {
+        const serverResponse = error.response;
+        if (serverResponse && serverResponse.status === 400) {
+          const errorMessage = serverResponse.data;
+          if (
+            typeof errorMessage === "string" &&
+            errorMessage.includes(
+              "Correo electrónico no se encuentra registrado"
+            )
+          ) {
+            setError(errorMessage);
+          } else {
+            toast.error(errorMessage);
+          }
+        } else {
+          toast.error(
+            "Ocurrió un error inesperado. Por favor intentelo nuevamente"
+          );
+        }
+      } else {
+        console.error(error);
+        toast.error(
+          "Ocurrió un error inesperado. Por favor intentelo nuevamente"
+        );
+      }
     } finally {
       setIsEditing(false);
-      form.reset()
+      form.reset();
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-4 w-full max-w-[500px]">
-        {/* {
-            wasSend && (
-                // <Banner label={} />
-            )
-        } */}
-        <div>
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-bold text-primary" htmlFor="email">
-                  Correo Electrónico
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    id="email"
-                    disabled={isSubmitting}
-                    placeholder="ejemplo@miempresa.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
- 
-
-        {/* <Link href="/dashboard" className="w-full">
-        Entrar
-      </Link> */}
-        <Button disabled={!isValid || isSubmitting} className="w-full">
-          {isEditing && <Loader2 className="w-4 h-4 animate-spin" />}
-          Entrar
-        </Button>
-        <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-        
+      {wasSend || !!error ? (
+        <div className="flex flex-col gap-5">
+          {wasSend && !!!error ? (
+            <Banner
+              variant={"success"}
+              label={
+                "El enlace para restablecer la contraseña fue enviado al correo electrónico"
+              }
+            />
+          ) : (
+            <Banner
+              variant={!!error ? "danger" : "success"}
+              label={
+                !!error
+                  ? error
+                  : "El enlace para restablecer la contraseña fue enviado al correo electrónico"
+              }
+            />
+          )}
           <Link
-
             href="/"
-            className={cn(buttonVariants({variant: "outline"}), "font-medium dark:text-blue-500")}
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "font-medium dark:text-blue-500"
+            )}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-              Regresar al inicio de sesión
+            Regresar al inicio de sesión
           </Link>
-        </p>
-      </form>
+        </div>
+      ) : (
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 mt-4 w-full max-w-[500px]"
+        >
+          <div>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold text-primary" htmlFor="email">
+                    Correo Electrónico
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="email"
+                      disabled={isSubmitting}
+                      placeholder="ejemplo@miempresa.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* <Link href="/dashboard" className="w-full">
+        Entrar
+      </Link> */}
+          <Button disabled={!isValid || isSubmitting} className="w-full">
+            {isEditing && <Loader2 className="w-4 h-4 animate-spin" />}
+            Enviar
+          </Button>
+          <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+            <Link
+              href="/"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "font-medium dark:text-blue-500"
+              )}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Regresar al inicio de sesión
+            </Link>
+          </p>
+        </form>
+      )}
     </Form>
   );
 };

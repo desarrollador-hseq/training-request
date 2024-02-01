@@ -24,6 +24,7 @@ const formSchema = z.object({
   shortName: z.string().min(1, {
     message: "Nombre corto del curso es requerido",
   }),
+  resolution: z.string().optional(),
 });
 
 export const AddCourseForm = ({ course }: AddCourseFormProps) => {
@@ -40,6 +41,7 @@ export const AddCourseForm = ({ course }: AddCourseFormProps) => {
     defaultValues: {
       name: course?.name || "",
       shortName: course?.shortName || "",
+      resolution: course?.resolution || "",
     },
   });
 
@@ -78,6 +80,13 @@ export const AddCourseForm = ({ course }: AddCourseFormProps) => {
                   control={form.control}
                   label="Nombre corto"
                   name="shortName"
+                />
+              </div>
+              <div>
+                <InputForm
+                  control={form.control}
+                  label="Resolución"
+                  name="resolution"
                 />
               </div>
             </div>

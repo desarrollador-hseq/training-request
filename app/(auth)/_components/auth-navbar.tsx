@@ -1,4 +1,5 @@
-import React from "react";
+import { LogoMain } from "@/components/logo-main";
+
 
 export const AuthNavbar = () => {
   return (
@@ -6,8 +7,7 @@ export const AuthNavbar = () => {
       <div className="mx-auto w-full max-w-[1500px] mt-1">
         <div className="mx-3 flex items-center justify-between">
           <div className="p-2 flex gap-1 text-white">
-            {/* <LogoGrupoHseq  /> */}
-            LOGO
+            <LogoMain goRoot />
           </div>
         </div>
       </div>

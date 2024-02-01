@@ -25,8 +25,10 @@ export const DashboardSidebarItems = ({
         pathname === "/dashboard" &&
         href === "/dashboard") ||
       pathname === href ||
-      pathname?.startsWith(`/dashboard${href}/`) ||
-      (href.startsWith('/admin') && pathname.startsWith(href)), // Nueva condición para rutas de administración
+      pathname?.startsWith(`/dashboard${href}/`) &&
+        !href.startsWith('/admin') ||
+      href.startsWith('/admin') &&
+        pathname?.startsWith(href),
     [pathname, href]
   );
   

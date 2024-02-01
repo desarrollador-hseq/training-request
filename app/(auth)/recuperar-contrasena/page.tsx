@@ -3,9 +3,10 @@ import { ForgotPasswordForm } from "../_components/forgot-password-form";
 import { AuthNavbar } from "../_components/auth-navbar";
 
 const RecoverPasswordPage = () => {
+
+  
   return (
     <div className="min-h-[calc(100vh-40px)]">
-    <AuthNavbar />
       <div className="container w-full flex items-center justify-center h-fit pt-10">
         <ForgotPasswordForm />
       </div>

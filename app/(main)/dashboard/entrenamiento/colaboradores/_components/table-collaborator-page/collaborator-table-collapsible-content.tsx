@@ -61,7 +61,7 @@ export const CollaboratorTableCollapsibleContent = ({
                               {certificate.courseLevel.name}
                             </TableCell>
                             <TableCell>
-                              {format(certificate.date!, "PPP", {
+                              {format(certificate.certificateDate!, "PPP", {
                                 locale: es,
                               })}
                             </TableCell>

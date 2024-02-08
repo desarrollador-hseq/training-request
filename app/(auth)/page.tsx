@@ -13,20 +13,20 @@ export default function LoginPage() {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="bg-slate-50 min-h-[calc(100vh-40px)]">
-      <div className="container w-full flex items-start justify-center pt-14 h-fit">
+    <div className="bg-blue-100 min-h-screen">
+      <div className="container w-full flex items-start justify-center pt-4 min-h-full ">
         <Tabs
           value={tabSelected}
           onValueChange={setTabSelected}
-          className="w-[800px]"
+          className="max-w-full"
         >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
             <TabsTrigger value="register">Registrar Empresa</TabsTrigger>
           </TabsList>
           {/* --------login-------- */}
-          <TabsContent value="login">
-            <Card className="">
+          <TabsContent value="login" className="max-w-m">
+            <Card className="max-w-2xl">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold leading-tight tracking-tight text-slate-500 text-center">
                   Ingresar

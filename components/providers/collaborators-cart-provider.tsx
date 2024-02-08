@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
@@ -10,12 +11,14 @@ import {
   useEffect,
 } from "react";
 import { DateRange } from "react-day-picker";
+import { toast } from "sonner";
+import { useLoading } from "./loading-provider";
 
 interface CartItem {
   companyId: string;
   companyName: string;
   companyEmail: string;
-  collaboratorBookings: {
+  collaborators: {
     collaboratorId: string;
     courseDate: DateRange;
     collaboratorName: string;
@@ -51,7 +54,7 @@ const CollaboratorCartContext = createContext<CollaboratorCartContextValue>({
   sendEmailToCompany: () => {},
 });
 
-export const useCart = () => useContext(CollaboratorCartContext);
+//  export const useCart = () => useContext(CollaboratorCartContext);
 
 export const CollaboratorsCartProvider = ({
   children,
@@ -61,6 +64,7 @@ export const CollaboratorsCartProvider = ({
       typeof window !== "undefined" ? localStorage.getItem("cart") : null;
     return storedCart ? JSON.parse(storedCart) : [];
   });
+  const { setLoadingApp } = useLoading();
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
@@ -78,32 +82,35 @@ export const CollaboratorsCartProvider = ({
   ) => {
     return cartItems.map((cartItem) => {
       if (cartItem.companyId === companyId) {
-        const existingCollaboratorIndex = cartItem.collaboratorBookings.findIndex(
+        const existingCollaboratorIndex = cartItem.collaborators.findIndex(
           (booking) => booking.collaboratorId === collaboratorId
         );
-  
+
         if (existingCollaboratorIndex !== -1) {
-          const updatedCollaboratorBooking = {
-            ...cartItem.collaboratorBookings[existingCollaboratorIndex],
-            ...updatedFields,
-          };
-  
-          const updatedCollaboratorBookings = [...cartItem.collaboratorBookings];
-          updatedCollaboratorBookings[existingCollaboratorIndex] = updatedCollaboratorBooking;
-  
+          // Actualizar el elemento existente si se encuentra
           return {
             ...cartItem,
-            collaboratorBookings: updatedCollaboratorBookings,
+            collaborators: cartItem.collaborators.map((booking, index) => {
+              if (index === existingCollaboratorIndex) {
+                return {
+                  ...booking,
+                  ...updatedFields,
+                };
+              }
+              return booking;
+            }),
           };
         } else {
-          console.warn(`El colaborador con ID ${collaboratorId} no existe en el carrito.`);
+          console.warn(
+            `El colaborador con ID ${collaboratorId} no existe en el carrito.`
+          );
         }
       }
       return cartItem;
     });
   };
-  
-  const addCartItem = (
+
+  const addCartItem = async (
     companyId: string,
     companyName: string,
     companyEmail: string,
@@ -114,31 +121,39 @@ export const CollaboratorsCartProvider = ({
     date: DateRange
   ) => {
     setCartItems((prevCartItems) => {
-      const updatedCartItems = updateCollaboratorBooking(prevCartItems, companyId, collaboratorId, {
-        date,
-        courseName,
-        courseLevelName,
-      });
-  
-      const index = updatedCartItems.findIndex((cart) => cart.companyId === companyId);
-  
-      if (index !== -1) {
-        // Resto de tu lógica para agregar un nuevo ítem si no existe, similar a tu implementación actual.
-        const existingCollaboratorIndex = updatedCartItems[index].collaboratorBookings.findIndex(
-          (booking) => booking.collaboratorId === collaboratorId
-        );
-  
-        if (existingCollaboratorIndex === -1) {
-          updatedCartItems[index].collaboratorBookings.push({
-            collaboratorId,
-            collaboratorName,
-            courseName,
-            courseLevelName,
-            courseDate: date,
-          });
+      const updatedCartItems = updateCollaboratorBooking(
+        prevCartItems,
+        companyId,
+        collaboratorId,
+        {
+          date,
+          courseName,
+          courseLevelName,
         }
+      );
+
+      // Asegurarse de que el elemento actualizado exista en el array actualizado
+      const existingIndex = updatedCartItems.findIndex(
+        (cart) => cart.companyId === companyId
+      );
+      if (existingIndex === -1) {
+        // Si no existe, agregar un nuevo elemento al array actualizado
+        updatedCartItems.push({
+          companyId,
+          companyName,
+          companyEmail,
+          collaborators: [
+            {
+              collaboratorId,
+              collaboratorName,
+              courseName,
+              courseLevelName,
+              courseDate: date,
+            },
+          ],
+        });
       }
-  
+
       return updatedCartItems;
     });
   };
@@ -152,18 +167,18 @@ export const CollaboratorsCartProvider = ({
   const removeCollaboratorItem = (itemId: string) => {
     setCartItems((prevCartItems) =>
       prevCartItems.filter((item) => {
-        const hasCollaborator = item.collaboratorBookings.some(
+        const hasCollaborator = item.collaborators.some(
           (col) => col.collaboratorId === itemId
         );
 
         if (hasCollaborator) {
           // Filtrar las colaboraciones del colaborador actual
-          item.collaboratorBookings = item.collaboratorBookings.filter(
+          item.collaborators = item.collaborators.filter(
             (col) => col.collaboratorId !== itemId
           );
 
           // Si ya no hay colaboradores, eliminar el ítem completo
-          if (item.collaboratorBookings.length === 0) {
+          if (item.collaborators.length === 0) {
             return false; // No incluir en el nuevo array
           }
         }
@@ -179,33 +194,48 @@ export const CollaboratorsCartProvider = ({
         item.companyId === companyId
           ? {
               ...item,
-              collaboratorBookings: { ...item.collaboratorBookings, date },
+              collaborators: { ...item.collaborators, date },
             }
           : item
       )
     );
   };
 
-  const sendEmailToCompany = () => {
-    cartItems.forEach((cartItem) => {
-      const { companyId, companyName, companyEmail, collaboratorBookings } =
-        cartItem;
-
-      console.log(
-        `Enviando lista de colaboradores agendados para la empresa ${companyName} (${companyEmail}):`
-      );
-      collaboratorBookings.forEach((collaborator) => {
-        console.log(
-          `- ${collaborator.collaboratorName}: ${
-            collaborator?.courseDate.from &&
-            format(collaborator?.courseDate?.from, "P", { locale: es })
-          } a ${
-            collaborator?.courseDate.to &&
-            format(collaborator.courseDate.to, "P", { locale: es })
-          } - ${collaborator.courseName} - ${collaborator.courseLevelName}`
+  const sendEmailToCompany = async () => {
+    setLoadingApp(true);
+    let countMail = 0;
+    cartItems.forEach(async (cartItem) => {
+      // const { companyId, companyName, companyEmail, collaborators } =
+      //   cartItem;
+      try {
+        await axios.post(`/api/mail/company-list-collaborator-programmed`, {
+          cartItem,
+        });
+        countMail++;
+      } catch (error) {
+        console.log("Error al notificar por correo a la empresa: ", error);
+      } finally {
+        setLoadingApp(false);
+        setCartItems([]);
+        toast.success(
+          `Correos enviado correctamente.  (${countMail} /${cartItems.length})`
         );
-      });
-      console.log("\n");
+      }
+      // console.log(
+      //   `Enviando lista de colaboradores agendados para la empresa ${companyName} (${companyEmail}):`
+      // );
+      // collaborators.forEach((collaborator) => {
+      //   console.log(
+      //     `- ${collaborator.collaboratorName}: ${
+      //       collaborator?.courseDate.from &&
+      //       format(collaborator?.courseDate?.from, "P", { locale: es })
+      //     } a ${
+      //       collaborator?.courseDate.to &&
+      //       format(collaborator.courseDate.to, "P", { locale: es })
+      //     } - ${collaborator.courseName} - ${collaborator.courseLevelName}`
+      //   );
+      // });
+      // console.log("\n");
     });
   };
 

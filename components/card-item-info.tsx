@@ -12,7 +12,7 @@ export const CardItemInfo = ({
   return (
     <div
       className={`flex flex-col p-1 items-center bg-blue-100 min-w-fit ${
-        highlight && "bg-blue-200 border-4 border-blue-500"
+        highlight && "bg-blue-200 border-2 border-blue-500 shadow-md"
       }`}
     >
       <div>

@@ -2,10 +2,6 @@
 
 import {
   Certificate,
-  Collaborator,
-  Company,
-  Course,
-  CourseLevel,
 } from "@prisma/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +9,7 @@ import useTabManager from "@/hooks/useTabManager";
 import { AdminCertificateTable } from "./admin-certificates-table";
 import { columnsAdminCertificatesTable } from "./admin-certificates-table-columns";
 import { isAfter, addMonths } from "date-fns";
+import { TableDefault } from "@/components/table-default";
 
 interface CertificateWithCourseLevel extends Certificate {
   courseLevel: { monthsToExpire: number | undefined | null };
@@ -70,16 +67,18 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
         </CardHeader>
         <CardContent>
           <TabsContent value="activos">
-            <AdminCertificateTable
+            <TableDefault
               columns={columnsAdminCertificatesTable}
               data={certificatesNotExpired}
+              editHref={{btnText: `Ver`, href: `/admin/entrenamiento/certificados` }}
             />
           </TabsContent>
 
           <TabsContent value="vencidos">
-            <AdminCertificateTable
+            <TableDefault
               columns={columnsAdminCertificatesTable}
               data={certificatesExpired}
+              editHref={{btnText: `Ver`, href: `/admin/entrenamiento/certificados` }}
             />
           </TabsContent>
         </CardContent>

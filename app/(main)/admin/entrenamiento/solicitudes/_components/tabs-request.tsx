@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminRequestsTable } from "./admin-requests-table";
 import { adminRequestTablecolumns } from "./admin-requests-table-columns";
 import useTabManager from "@/hooks/useTabManager";
+import { adminRequestsActivesTablecolumns } from "./admin-requests-actives-table-columns";
 
 interface TabsRequestProps {
   requests: TrainingRequest[];
@@ -13,7 +14,7 @@ interface TabsRequestProps {
 
 export const TabsRequest = ({ requests }: TabsRequestProps) => {
   const { activeTab, handleTabChange } = useTabManager({
-    initialTab: "solicitud",
+    initialTab: "activas",
   });
 
   const actives = requests.filter((req) => req.state === "ACTIVE");
@@ -22,7 +23,7 @@ export const TabsRequest = ({ requests }: TabsRequestProps) => {
 
   return (
     <Tabs
-      defaultValue="solicitud"
+      defaultValue="activas"
       onValueChange={handleTabChange}
       value={activeTab}
       className="w-full flex flex-col items-center"
@@ -30,31 +31,31 @@ export const TabsRequest = ({ requests }: TabsRequestProps) => {
       <Card className="w-full rounded-sm shadow-md ">
         <CardHeader className="flex justify-center items-center">
           <TabsList className="w-[70%]">
-            <TabsTrigger className="w-full" value="solicitud">
+            <TabsTrigger className="w-full" value="activas">
               Activas
             </TabsTrigger>
-            <TabsTrigger className="w-full" value="executed">
+            <TabsTrigger className="w-full" value="ejecutadas">
               Ejecutadas
             </TabsTrigger>
-            <TabsTrigger className="w-full" value="cancelled">
+            <TabsTrigger className="w-full" value="canceladas">
               Canceladas
             </TabsTrigger>
           </TabsList>
         </CardHeader>
         <CardContent>
-          <TabsContent value="solicitud">
+          <TabsContent value="activas">
             <AdminRequestsTable
-              columns={adminRequestTablecolumns}
+              columns={adminRequestsActivesTablecolumns}
               data={actives}
             />
           </TabsContent>
-          <TabsContent value="executed">
+          <TabsContent value="ejecutadas">
             <AdminRequestsTable
               columns={adminRequestTablecolumns}
               data={executed}
             />
           </TabsContent>
-          <TabsContent value="cancelled">
+          <TabsContent value="canceladas">
             <AdminRequestsTable
               columns={adminRequestTablecolumns}
               data={cancelled}

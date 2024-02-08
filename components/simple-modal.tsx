@@ -49,55 +49,50 @@ export const SimpleModal = ({
   };
 
   return (
-    <div>
-      <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogTrigger asChild>
-          {typeof textBtn === "string" ? (
-            <Button
-              disabled={btnDisabled}
-              className={cn("bg-accent", btnClass)}
-            >
-              {textBtn}
-            </Button>
-          ) : (
-            textBtn
-          )}
-        </AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        {typeof textBtn === "string" ? (
+          <Button disabled={btnDisabled} className={cn("bg-accent", btnClass)}>
+            {textBtn}
+          </Button>
+        ) : (
+          textBtn
+        )}
+      </AlertDialogTrigger>
 
-        <AlertDialogContent
-          className={`${
-            large ? "max-w-screen-lg min-h-[300px]" : "max-w-[600px]"
-          }  max-h-screen `}
-        >
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-2xl">
-              <div className="flex justify-between">
-                {`${title}`}
-                <Button
-                  className="w-fit h-fit flex rounded-md justify-center items-center p-1 hover:bg-slate-50"
-                  variant="outline"
-                  onClick={handleClose}
-                >
-                  <X className="text-red-500" />
-                </Button>
-              </div>
-            </AlertDialogTitle>
-          </AlertDialogHeader>
-          <AlertDialogDescription className="w-full"></AlertDialogDescription>
-          <span className="w-full">{children}</span>
-          <AlertDialogFooter className="gap-3">
-            {onAcept && (
+      <AlertDialogContent
+        className={`${
+          large ? "max-w-screen-lg min-h-[300px]" : "max-w-[600px]"
+        }  max-h-screen `}
+      >
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-2xl">
+            <div className="flex justify-between">
+              {`${title}`}
               <Button
-                className="bg-zinc-400 hover:bg-zinc-600"
+                className="w-fit h-fit flex rounded-md justify-center items-center p-1 hover:bg-slate-50"
+                variant="outline"
                 onClick={handleClose}
               >
-                Cancelar
+                <X className="text-red-500" />
               </Button>
-            )}
-            {onAcept && <Button onClick={onClickAcept}>Aceptar</Button>}
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+            </div>
+          </AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogDescription className="w-full"></AlertDialogDescription>
+        <span className="w-full">{children}</span>
+        <AlertDialogFooter className="gap-3">
+          {onAcept && (
+            <Button
+              className="bg-zinc-400 hover:bg-zinc-600"
+              onClick={handleClose}
+            >
+              Cancelar
+            </Button>
+          )}
+          {onAcept && <Button onClick={onClickAcept}>Aceptar</Button>}
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

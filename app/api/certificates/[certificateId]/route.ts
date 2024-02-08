@@ -25,6 +25,7 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
             "certificateDate",
             "expeditionDate",
             "dueDate",
+            "monthsToExpire",
         ];
 
         const missingProperty = requiredProperties.find(prop => !(prop in values));

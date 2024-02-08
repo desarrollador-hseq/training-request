@@ -13,7 +13,7 @@ import { InputForm } from "@/components/input-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { CalendarInputForm } from "@/components/calendar-input-form";
-import { DocumentCertificateTemplate } from "../generar/[collaboratorId]/[requestId]/_components/document-certificate-template";
+import { DocumentCertificateTemplate } from "../../../../_components/document-certificate-template";
 import { formatDateOf } from "@/lib/utils";
 import { PDFViewer } from "@react-pdf/renderer";
 

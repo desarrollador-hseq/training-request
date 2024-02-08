@@ -19,7 +19,6 @@ interface MarkCollaboratorDisallowedProps {
   trainingRequestCollaboratorId?: string;
   collaboratorId?: string;
   emailResponsibleCompany?: string;
- 
 }
 
 export const MarkCollaboratorDisallowed = ({
@@ -36,7 +35,6 @@ export const MarkCollaboratorDisallowed = ({
   const [disallowedMessage, setDisallowedMessage] = useState<
     string | undefined
   >();
-  
 
   const handleDisallowed = async () => {
     setLoadingApp(true);
@@ -79,63 +77,57 @@ export const MarkCollaboratorDisallowed = ({
   };
 
   return (
-    <div>
-      <SimpleModal
-        onClose={() => resetFieldsModal()}
-        onAcept={() => handleDisallowed()}
-        btnClass={cn(
-          "p-2",
-          isDisallowed
+    <SimpleModal
+      onClose={() => resetFieldsModal()}
+      onAcept={() => handleDisallowed()}
+      btnClass={`p-2 bg-red-500 ${isDisallowed
             ? "bg-green-600 hover:bg-green-800"
-            : "bg-red-500 hover:bg-red-700 "
-        )}
-        textBtn={
-          isDisallowed ? (
-            <CheckCircle className="h-5 w-5" />
-          ) : (
-            <XCircle className="h-5 w-5" />
-          )
-        }
-        title={
-          isDisallowed ? "Marcar como admitido" : "Marcar como no admitido"
-        }
-      >
-        <p className="mb-3">
-          {isDisallowed
-            ? "El colaborador cumple como los requisitos"
-            : "Desea marcar el colaborador tiene documento incorrectos o vencidos"}
-        </p>
-        {!isDisallowed && (
-          <div className="items-top flex space-x-2 border-2 border-slate-300 my-3">
-            <Checkbox
-              id="notify"
-              checked={notifyEmailDisallowed}
-              onCheckedChange={(e) => setNotifyEmailDisallowed(!!e)}
-            />
-            <div className="grid gap-1.5 leading-none">
-              <label
-                htmlFor="notify"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Notificar por correo al responsable de la empresa
-              </label>
-              <p className="text-sm text-muted-foreground">
-                {emailResponsibleCompany}
-              </p>
-            </div>
+            : "bg-red-500 hover:bg-red-700"
+        }`}
+      textBtn={
+        isDisallowed ? (
+          <CheckCircle className="h-5 w-5" />
+        ) : (
+          <XCircle className="h-5 w-5" />
+        )
+      }
+      title={isDisallowed ? "Marcar como admitido" : "Marcar como no admitido"}
+    >
+      <p className="mb-3">
+        {isDisallowed
+          ? "El colaborador cumple como los requisitos"
+          : "Desea marcar el colaborador tiene documento incorrectos o vencidos"}
+      </p>
+      {!isDisallowed && (
+        <div className="items-top flex space-x-2 border-2 border-slate-300 my-3">
+          <Checkbox
+            id="notify"
+            checked={notifyEmailDisallowed}
+            onCheckedChange={(e) => setNotifyEmailDisallowed(!!e)}
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="notify"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Notificar por correo al responsable de la empresa
+            </label>
+            <p className="text-sm text-muted-foreground">
+              {emailResponsibleCompany}
+            </p>
           </div>
-        )}
+        </div>
+      )}
 
-        {notifyEmailDisallowed && (
-          <Label>
-            Detalles del incumplimiento
-            <Textarea
-              value={disallowedMessage}
-              onChange={(e) => setDisallowedMessage(e.target.value)}
-            />
-          </Label>
-        )}
-      </SimpleModal>
-    </div>
+      {notifyEmailDisallowed && (
+        <Label>
+          Detalles del incumplimiento
+          <Textarea
+            value={disallowedMessage}
+            onChange={(e) => setDisallowedMessage(e.target.value)}
+          />
+        </Label>
+      )}
+    </SimpleModal>
   );
 };

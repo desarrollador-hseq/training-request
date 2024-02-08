@@ -13,11 +13,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  ChevronDown,
-  ChevronDownSquare,
-  ChevronUpSquare,
-} from "lucide-react";
+import { Certificate } from "@prisma/client";
+import { ChevronDown, ChevronDownSquare, ChevronUpSquare } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -39,7 +36,6 @@ import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import TableColumnFiltering from "@/components/table-column-filtering";
-import { Certificate } from "@prisma/client";
 import { CollaboratorTableCollapsibleContent } from "./collaborator-table-collapsible-content";
 
 interface DataTableProps<TData, TValue> {
@@ -130,30 +126,36 @@ export function CollaboratorsTable<TData, TValue>({
         <Table className="">
           <TableHeader className="bg-secondary">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="bg-secondary hover:bg-secondary">
+              <TableRow
+                key={headerGroup.id}
+                className="bg-secondary hover:bg-secondary"
+              >
                 {headerGroup.headers.map((header) => {
                   return (
-              
-                    <TableHead key={header.id}  className="py-2 text-secondary-foreground">
+                    <TableHead
+                      key={header.id}
+                      className="py-2 text-secondary-foreground"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+                            header.column.columnDef.header,
+                            header.getContext()
                           )}
                       {header.column.getCanFilter() ? (
                         <div className=" flex flex-col justify-around">
                           <TableColumnFiltering
                             column={header.column}
                             table={table}
-                            />
+                          />
                         </div>
-                      ) : <div className="h-6"></div> }
+                      ) : (
+                        <div className="h-6"></div>
+                      )}
                     </TableHead>
-                   
-                   );
-                  })}
-                  <TableHead />
+                  );
+                })}
+                <TableHead />
               </TableRow>
             ))}
           </TableHeader>
@@ -174,7 +176,7 @@ export function CollaboratorsTable<TData, TValue>({
                       )}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} >
+                        <TableCell key={cell.id}>
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
@@ -199,7 +201,11 @@ export function CollaboratorsTable<TData, TValue>({
                         </CollapsibleTrigger>
                       )}
                     </TableRow>
-                    <CollaboratorTableCollapsibleContent collaborator={row.original} openCollapsible={!!idOpenCollapsible} certificates={row.original.certificates} />
+                    <CollaboratorTableCollapsibleContent
+                      collaborator={row.original}
+                      openCollapsible={!!idOpenCollapsible}
+                      certificates={row.original.certificates}
+                    />
                   </>
                 </Collapsible>
               ))

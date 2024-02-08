@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DateRange } from "react-day-picker";
 import { useCollaboratorsCart } from "@/components/providers/collaborators-cart-provider";
 import { Company } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface ButtonScheduleCollaboratorProps {
   isDisallowed: boolean;
@@ -50,7 +50,7 @@ export const ButtonScheduleCollaborator = ({
     trainingRequestCollaborator
   );
   const { addCartItem } = useCollaboratorsCart();
-
+  const pathname = usePathname();
   useEffect(() => {
     setTrainingRequest(trainingRequestCollaborator);
   }, [trainingRequestCollaborator]);
@@ -63,22 +63,13 @@ export const ButtonScheduleCollaborator = ({
         `/api/training-requests/${trainingRequestId}/members/${collaboratorId}/schedule`,
         { startDate: date?.from, endDate: date?.to }
       );
-
-      console.log({ buttoncourse: trainingRequest.courseLevel });
-      addCartItem(
-        company?.id!,
-        company?.businessName!,
-        company?.email!,
-        collaboratorId!,
-        collaboratorName!,
-        trainingRequestCollaborator.courseLevel.course.name!,
-        trainingRequestCollaborator.courseLevel.name!,
-        date!
-      );
+      console.log({ buttoncourse: collaboratorName });
 
       toast.success(
         !!!scheduledDate.from ? "Fecha guardada" : "Fecha reprogramada"
       );
+
+      router.push(pathname);
     } catch (error) {
       toast.error(
         "Error al programar la fecha de formación, por favor intentelo nuevamente"
@@ -125,14 +116,24 @@ export const ButtonScheduleCollaborator = ({
     }
 
     setLoadingApp(false);
+
+    addCartItem(
+      company?.id!,
+      company?.businessName!,
+      company?.email!,
+      collaboratorId!,
+      collaboratorName!,
+      trainingRequestCollaborator.courseLevel.course.name!,
+      trainingRequestCollaborator.courseLevel.name!,
+      date!
+    );
   };
 
   return (
-    <div>
-      {/* <Button className="">Programar</Button> */}
+    <div className="w-full justify-center flex my-1">
       <SimpleModal
         btnDisabled={isDisallowed || !date}
-        btnClass=""
+        btnClass="w-[50%] shadow-sm"
         textBtn={!!!scheduledDate.from ? "Programar" : "Reprogramar"}
         onAcept={() => handleScheduleDate()}
         title={

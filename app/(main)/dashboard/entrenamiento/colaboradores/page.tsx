@@ -23,20 +23,24 @@ const ListCollaboratorsPage = async () => {
     include: {
       certificates: {
         include: {
-          courseLevel: true
-        }
+          courseLevel: true,
+        },
       },
     },
   });
 
   return (
     <div>
-     <div className="flex justify-between items-center">
-     <TitleOnPage text="Listado de colaboradores" />
-    <Link className={buttonVariants()} href="/dashboard/entrenamiento/colaboradores/crear" >
-      Registrar
-    </Link>
-     </div>
+      <div className="flex justify-between items-center">
+        <TitleOnPage text="Listado de colaboradores">
+          <Link
+            className={buttonVariants()}
+            href="/dashboard/entrenamiento/colaboradores/crear"
+          >
+            Registrar
+          </Link>
+        </TitleOnPage>
+      </div>
       <Card className="min-h-screen">
         <CardContent>
           <CollaboratorsTable

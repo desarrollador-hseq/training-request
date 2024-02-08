@@ -12,8 +12,10 @@ import {
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useTabManager from "@/hooks/useTabManager";
-import { AdminCollaboratorsTable } from "./admin-collaborators-table";
+
 import { columnsAdminCollaboratorTable } from "./admin-collaborators-table-columns";
+import { TableDefault } from "@/components/table-default";
+import { AdminCollaboratorsCertificateTable } from "./admin-collaborators-certificate-table";
 
 interface TrainingRequestCollaboratorWithCourseLevel extends TrainingRequestCollaborator {
   courseLevel?: {
@@ -77,13 +79,14 @@ export const TabsCollaborators = ({
         </CardHeader>
         <CardContent>
           <TabsContent value="por-certificar">
-            <AdminCollaboratorsTable
+            <AdminCollaboratorsCertificateTable
               columns={columnsAdminCollaboratorTable}
               data={toCertificate}
+             
             />
           </TabsContent>
           <TabsContent value="todos">
-            <AdminCollaboratorsTable
+            <AdminCollaboratorsCertificateTable
               columns={columnsAdminCollaboratorTable}
               data={trainingRequestCollaborator}
             />

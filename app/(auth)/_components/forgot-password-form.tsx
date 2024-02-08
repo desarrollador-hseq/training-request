@@ -48,7 +48,7 @@ export const ForgotPasswordForm = () => {
     setIsEditing(true);
     try {
       const { data } = await axios.post(
-        `/api/companies/recover-password`,
+        `/api/mail/company-password-reset`,
         values
       );
 

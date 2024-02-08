@@ -1,13 +1,12 @@
+import { TrainingRequestCollaborator } from "@prisma/client";
 import { Building2, User, Users2 } from "lucide-react";
 import { db } from "@/lib/db";
 import { TitleOnPage } from "@/components/title-on-page";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { AdminCollaboratorsTable } from "./entrenamiento/colaboradores/_components/admin-collaborators-table";
-import { columnsAdminCollaboratorTable } from "./entrenamiento/colaboradores/_components/admin-collaborators-table-columns";
-import { TrainingRequestCollaborator } from "@prisma/client";
 import { AdminRequestsTable } from "./entrenamiento/solicitudes/_components/admin-requests-table";
-import { adminRequestTablecolumns } from "./entrenamiento/solicitudes/_components/admin-requests-table-columns";
 import { columnsAdminCollaboratorTableSimple } from "./entrenamiento/colaboradores/_components/admin-collaborators-table-columns-simple";
+import { adminRequestsActivesTablecolumns } from "./entrenamiento/solicitudes/_components/admin-requests-actives-table-columns";
+import { AdminCollaboratorsProgrammingTable } from "./entrenamiento/colaboradores/_components/admin-collaborators-programming-table";
 
 const crumbs = [{ label: "inicio", path: "inicio" }];
 
@@ -36,9 +35,8 @@ const AdminPage = async () => {
     },
   });
 
-
   const requests = await db.trainingRequest.findMany({
-    where: { state: "ACTIVE" },
+    where: { state: "ACTIVE", active: true },
     include: {
       course: true,
       company: true,
@@ -57,7 +55,6 @@ const AdminPage = async () => {
   const trainingRequestCollaborator =
     await db.trainingRequestCollaborator.findMany({
       where: {
-        isScheduled: true,
         trainingRequest: {
           state: "ACTIVE",
         },
@@ -97,8 +94,6 @@ const AdminPage = async () => {
         },
       },
     });
-
-    
 
   return (
     <div>
@@ -180,7 +175,7 @@ const AdminPage = async () => {
           </CardHeader>
           <CardContent>
             <AdminRequestsTable
-              columns={adminRequestTablecolumns}
+              columns={adminRequestsActivesTablecolumns}
               data={requests}
             />
           </CardContent>
@@ -192,7 +187,7 @@ const AdminPage = async () => {
             </h3>
           </CardHeader>
           <CardContent>
-            <AdminCollaboratorsTable
+            <AdminCollaboratorsProgrammingTable
               columns={columnsAdminCollaboratorTableSimple}
               data={trainingRequestCollaborator.map(
                 (m: TrainingRequestCollaborator) => m

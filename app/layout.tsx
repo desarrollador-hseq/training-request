@@ -14,10 +14,16 @@ const roboto = Roboto({
   subsets: ['latin'],
 })
 
+// const open_Sans = Open_Sans({
+//   weight: "400",
+//   subsets: ["latin"],
+// });
+
 export const metadata: Metadata = {
   title: "HSEQ Entrenamiento",
   description: "empresas",
 };
+
 
 export default function RootLayout({
   children,
@@ -32,7 +38,6 @@ export default function RootLayout({
             <Toaster richColors position="top-right" />
             <div className="min-h-[calc(100vh-40px)]">
               {children}
-
             </div>
             <footer className="footer h-10 w-full bg-primary flex items-center">
               <div className="w-[70%] mx-auto flex justify-center gap-1 text-white text-sm">

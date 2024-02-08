@@ -120,8 +120,8 @@ export const AdminScheduleCollaboratorForm = ({
         { courseLevelId }
       );
       toast.success("Colaborador actualizado");
-      // router.replace(pathname);
-      router.refresh();
+      router.replace(pathname);
+      // router.refresh();
     } catch (error) {
       console.error(error);
       toast.error("Ocurrió un error inesperado");

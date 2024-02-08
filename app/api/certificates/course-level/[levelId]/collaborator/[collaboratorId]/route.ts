@@ -15,10 +15,9 @@ export async function POST(req: Request, { params }: { params: { levelId: string
             "collaboratorFullname",
             "collaboratorNumDoc",
             "collaboratorTypeDoc",
-            "collaboratorArlName",
+           
             "companyName",
             "companyNit",
-            "legalRepresentative",
             "courseName",
             "levelName",
             "levelHours",
@@ -34,11 +33,15 @@ export async function POST(req: Request, { params }: { params: { levelId: string
             return new NextResponse(`Missing property: ${missingProperty}`, { status: 400 });
         }
 
+        const {trainingRequestId, ...otherValues} = values
+
+  
+
         const courses = await db.certificate.create({
             data: {
                 collaboratorId: params.collaboratorId,
                 courseLevelId: params.levelId,
-                ...values
+                ...otherValues
             }
 
         })
@@ -47,7 +50,7 @@ export async function POST(req: Request, { params }: { params: { levelId: string
             where: {
                 collaboratorId_trainingRequestId: {
                     collaboratorId: params.collaboratorId,
-                    trainingRequestId: values.trainingRequestId
+                    trainingRequestId: trainingRequestId
                 }
             },
             data: {
@@ -59,7 +62,7 @@ export async function POST(req: Request, { params }: { params: { levelId: string
 
     } catch (error) {
         console.log("[CERTIFICATE-CREATE]", error)
-        return new NextResponse("Internal Errorr", { status: 500 })
+        return new NextResponse("Internal Errorr"+ error, { status: 500 })
     }
 
 }

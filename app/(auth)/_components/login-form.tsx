@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().min(1, {
@@ -70,7 +71,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <Form {...form}>
+    <Form {...form} >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-4">
         <div>
           <FormField
@@ -142,14 +143,14 @@ export const LoginForm = () => {
           {isEditing && <Loader2 className="w-4 h-4 animate-spin" />}
           Entrar
         </Button>
+        <Link
+          href="/recuperar-contrasena"
+          className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+        >
+          Olvidé la contraseña
+        </Link>
         {/* <p className="text-sm font-light text-gray-500 dark:text-gray-400">
           ¿aun no tienes una cuenta?
-          <Link
-            href="/auth/registrarse"
-            className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-          >
-            Registrarse
-          </Link>
         </p> */}
       </form>
     </Form>

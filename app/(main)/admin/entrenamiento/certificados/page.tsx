@@ -9,14 +9,14 @@ const crumbs = [{ label: "certificados", path: "certificados" }];
 const CertificatePage = async () => {
   const certificates = await db.certificate.findMany({
     where: {
-      active: true
+      active: true,
     },
     include: {
       courseLevel: {
         select: {
           monthsToExpire: true,
-        }
-      }
+        },
+      },
     },
     orderBy: {
       collaboratorId: "desc",
@@ -29,18 +29,15 @@ const CertificatePage = async () => {
   //   ),
   // });
 
-
   return (
     <div>
       <TitleOnPage text="Certificados" bcrumb={crumbs} />
 
       <TabsCertificates certificates={certificates} />
       <div>
-      <div className="min-h-[2000px]">
-        
-    
-      {/* <CertificateExample name={name} id={id} date={date} reentrenamiento={reentrenamiento} /> */}
-      </div>
+        <div className="min-h-[2000px]">
+          {/* <CertificateExample name={name} id={id} date={date} reentrenamiento={reentrenamiento} /> */}
+        </div>
       </div>
     </div>
   );

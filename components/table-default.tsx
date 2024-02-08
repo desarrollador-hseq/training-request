@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useState } from "react";
@@ -15,11 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  ChevronDown,
-  MoreHorizontal,
-  Pencil,
-} from "lucide-react";
+import { ChevronDown, MoreHorizontal, Pencil } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -45,17 +39,18 @@ import TableColumnFiltering from "@/components/table-column-filtering";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  editHref?: {btnText: string; href: string};
 }
 
-export function AdminCertificateTable<TData, TValue>({
+export function TableDefault<TData, TValue>({
   data,
   columns,
+  editHref,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [idOpenCollapsible, setIdOpenCollapsible] = useState("");
   const [filtering, setFiltering] = useState("");
 
   const table = useReactTable({
@@ -79,14 +74,6 @@ export function AdminCertificateTable<TData, TValue>({
       globalFilter: filtering,
     },
   });
-
-  const handleCollapsible = (idOpen: string) => {
-    if (idOpenCollapsible === idOpen) {
-      setIdOpenCollapsible("");
-    } else {
-      setIdOpenCollapsible(idOpen);
-    }
-  };
 
   return (
     <div className="w-full">
@@ -177,30 +164,32 @@ export function AdminCertificateTable<TData, TValue>({
                     </TableCell>
                   ))}
 
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-4 w-8 p-0">
-                          <span className="sr-only">abrir menu</span>
-                          <MoreHorizontal />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="flex flex-col"
-                      >
-                        <DropdownMenuItem asChild className="cursor-pointer">
-                          <Link
-                            className="flex justify-center"
-                            href={`/admin/entrenamiento/empresas/${row.original.id}`}
-                          >
-                            <Pencil className="w-4 h-4 mr-2" />
-                            Editar
-                          </Link>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+                  {!!editHref && (
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-4 w-8 p-0">
+                            <span className="sr-only">abrir menu</span>
+                            <MoreHorizontal />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="flex flex-col"
+                        >
+                          <DropdownMenuItem asChild className="cursor-pointer">
+                            <Link
+                              className="flex justify-center"
+                              href={`${editHref.href}/${row.original.id}`}
+                            >
+                              <Pencil className="w-4 h-4 mr-2" />
+                              {editHref.btnText}
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
             ) : (

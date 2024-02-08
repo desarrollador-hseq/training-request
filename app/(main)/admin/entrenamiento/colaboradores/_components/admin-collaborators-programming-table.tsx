@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -21,11 +21,8 @@ import {
   ChevronDownSquare,
   ChevronUpSquare,
   GraduationCap,
-  GraduationCapIcon,
   MoreHorizontal,
-  Star,
 } from "lucide-react";
-import { Certificate } from "@prisma/client";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -46,7 +43,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import TableColumnFiltering from "@/components/table-column-filtering";
 import { AdminCollaboratorTableCollapsibleContent } from "./admin-collaborator-table-collapsible-content";
@@ -62,7 +58,7 @@ interface DataTableProps<TData, TValue> {
     }[];
 }
 
-export function AdminCollaboratorsTable<TData, TValue>({
+export function AdminCollaboratorsProgrammingTable<TData, TValue>({
   data: initialData,
   columns,
 }: DataTableProps<TData, TValue>) {

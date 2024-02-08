@@ -26,7 +26,6 @@ import { InputForm } from "@/components/input-form";
 import { SelectForm } from "@/components/select-form";
 import { TooltipInfo } from "@/components/tooltip-info";
 import { useLoading } from "@/components/providers/loading-provider";
-import { ModalWaitValidation } from "./modal-wait-validation";
 import { Company } from "@prisma/client";
 
 const formSchema = z
@@ -313,7 +312,7 @@ export const RegisterForm = ({
                       <FormDescription className="text-sm font-normal text-slate-400 ">
                         ver terminos y condiciones{" "}
                         <PdfFullscreen
-                          fileUrl=""
+                          fileUrl="/politica-proteccion-datos.pdf"
                           icon="aquí"
                           btnClass="p-0 font-normal text-sm hover:bg-ihnerit text-blue-400"
                         />

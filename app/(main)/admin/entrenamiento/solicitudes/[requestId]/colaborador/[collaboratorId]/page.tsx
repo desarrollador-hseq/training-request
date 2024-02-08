@@ -85,7 +85,7 @@ const AdminScheduleCollaborator = async ({
   return (
     <div>
       <TitleOnPage
-        text="Programar Entrenamiento de colaborador"
+        text="Programar entrenamiento"
         bcrumb={crumbs}
       />
       {trainingRequestCollaborator ? (

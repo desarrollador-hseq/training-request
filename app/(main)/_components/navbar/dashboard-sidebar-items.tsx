@@ -19,22 +19,16 @@ export const DashboardSidebarItems = ({
   const pathname = usePathname();
   const router = useRouter();
 
+  console.log({ pathname, href });
+
   const isActive = useMemo(
     () =>
-      (href === "/dashboard" &&
-        pathname === "/dashboard" &&
-        href === "/dashboard") ||
       pathname === href ||
-      pathname?.startsWith(`/dashboard${href}/`) &&
-        !href.startsWith('/admin') ||
-      href.startsWith('/admin') &&
-        pathname?.startsWith(href),
+      (href !== "/dashboard" && pathname?.startsWith(`${href}`)) &&
+      (href !== "/admin" && pathname?.startsWith(`${href}`)),
     [pathname, href]
   );
-  
 
-
-  
   const onClick = () => {
     router.push(href);
   };
@@ -52,10 +46,12 @@ export const DashboardSidebarItems = ({
       <div className="flex items-center gap-x-2 py-4">
         <Icon
           size={22}
-          className={cn("text-slate-500", isActive && "text-blue-950")}
+          className={cn("text-slate-400", isActive && "text-slate-200")}
         />
 
-        {label}
+        <span className={cn("text-slate-400", isActive && "text-slate-200")}>
+          {label}
+        </span>
       </div>
       <div
         className={cn(

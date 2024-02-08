@@ -18,7 +18,7 @@ import {
   CourseLevel,
 } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { DocumentCertificateTemplate } from "./document-certificate-template";
+import { DocumentCertificateTemplate } from "../../../../../../../_components/document-certificate-template";
 import { pdf } from "@react-pdf/renderer";
 import { formatDateOf } from "@/lib/utils";
 
@@ -38,7 +38,9 @@ interface ButtonCreateCertificateProps {
   level: string | null;
   course: string | null;
   resolution: string | null;
+  monthsToExpire: number | null;
   levelHours: string | null;
+  trainingRequestId: string | null;
   endDate: Date | null;
   expeditionDate: Date | null;
   expireDate: Date | null;
@@ -64,6 +66,8 @@ export const ButtonCreateCertificate = ({
   expeditionDate,
   endDate,
   expireDate,
+  monthsToExpire,
+  trainingRequestId
 }: ButtonCreateCertificateProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -90,6 +94,8 @@ export const ButtonCreateCertificate = ({
           expeditionDate,
           certificateDate: endDate,
           dueDate: expireDate,
+          monthsToExpire,
+          trainingRequestId
         }
       );
       router.push(`/admin/entrenamiento/certificados/${data.id}`);
@@ -97,7 +103,7 @@ export const ButtonCreateCertificate = ({
       toast.success("Certificado guardado correctamente");
     } catch (error) {
       toast.error(
-        "Ocurrió un errro al registrar la certificación , por favor intentalo nuevamente"
+        "Ocurrió un error al registrar la certificación , por favor intentalo nuevamente"
       );
     }
 

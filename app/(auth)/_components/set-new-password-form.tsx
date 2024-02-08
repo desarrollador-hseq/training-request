@@ -106,6 +106,7 @@ export const SetNewPasswordForm = ({
   return (
     <Card className="flex flex-col items-center w-full max-w-[400px]">
       <CardHeader>
+       <h2 className="font-bold text-xl"> Ingresar nueva contraseña</h2>
         {!!msg && <Banner variant="danger" label={msg} />}
         {wasSend && !!!msg && (
           <Banner
@@ -133,6 +134,7 @@ export const SetNewPasswordForm = ({
               className="space-y-8 mt-4 w-full "
             >
               <div>
+               
                 {!tokenInvalid && (
                   <div className="space-y-3">
                     <div>
@@ -145,7 +147,7 @@ export const SetNewPasswordForm = ({
                               className="font-semibold"
                               htmlFor="password"
                             >
-                              Contraseña
+                              Nueva contraseña
                             </FormLabel>
 
                             <FormControl>
@@ -180,7 +182,7 @@ export const SetNewPasswordForm = ({
                         control={form.control}
                         isSubmitting={isSubmitting}
                         disabled={tokenInvalid}
-                        label="Repetir contraseña"
+                        label="Repetir nueva contraseña"
                         name="repeatPassword"
                         type="password"
                       />

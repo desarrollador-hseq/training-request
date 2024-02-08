@@ -1,12 +1,16 @@
 "use client";
+import Link from "next/link";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Pencil } from "lucide-react";
-import { Collaborator, Company, Course, TrainingRequest } from "@prisma/client";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Collaborator, Company, Course, TrainingRequest } from "@prisma/client";
+import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const stateEsp = {
   PENDING: { text: "No enviada", icon: "🕒" },
@@ -17,7 +21,11 @@ const stateEsp = {
 };
 
 export const adminRequestTablecolumns: ColumnDef<
-  TrainingRequest & { course?: Course | null; company: Company | null; collaborators?: Collaborator[] | null }
+  TrainingRequest & {
+    course?: Course | null;
+    company: Company | null;
+    collaborators?: Collaborator[] | null;
+  }
 >[] = [
   {
     accessorKey: "companyId",
@@ -35,12 +43,14 @@ export const adminRequestTablecolumns: ColumnDef<
     },
     cell: ({ row }) => {
       const company = row.original.company;
-      return <div className="capitalize font-bold">{company?.businessName}</div>;
+      return (
+        <div className="capitalize font-bold">{company?.businessName}</div>
+      );
     },
   },
   {
     accessorKey: "courseId",
-    accessorFn: value => value.course?.name,
+    accessorFn: (value) => value.course?.name,
     header: ({ column }) => {
       return (
         <Button
@@ -59,7 +69,7 @@ export const adminRequestTablecolumns: ColumnDef<
   },
   {
     accessorKey: "state",
-    accessorFn: value => value.state,
+    accessorFn: (value) => value.state,
     header: ({ column }) => {
       return (
         <Button
@@ -107,7 +117,7 @@ export const adminRequestTablecolumns: ColumnDef<
     cell: ({ row }) => {
       const numCol = row.original.collaborators?.length;
 
-      return <span className="font-semibold">{numCol}</span>
+      return <span className="font-semibold">{numCol}</span>;
     },
   },
   {
@@ -116,15 +126,26 @@ export const adminRequestTablecolumns: ColumnDef<
     cell: ({ row }) => {
       const { id } = row.original;
       return (
-        <Link
-          href={`/dashboard/entrenamiento/solicitudes/editar/${id}`}
-        >
-          <Button variant="default">
-            <Pencil className="w-5 h-5" />
-          </Button>
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-4 w-8 p-0">
+              <span className="sr-only">Abrir menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <Link
+              href={`/admin/entrenamiento/solicitudes/${id}`}
+              className="w-full"
+            >
+              <Button variant="default" className="w-full flex gap-3">
+                <Pencil className="w-5 h-5" />
+                Editar
+              </Button>
+            </Link>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },
-  
 ];

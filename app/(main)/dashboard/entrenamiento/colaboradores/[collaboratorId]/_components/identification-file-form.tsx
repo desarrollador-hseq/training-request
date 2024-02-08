@@ -1,8 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { CollaboratorCourseLevelDocument } from "@prisma/client";
+import { useForm } from "react-hook-form";
 import axios from "axios";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import ModalImage from "react-modal-image";
+import { toast } from "sonner";
+import { z } from "zod";
 import {
   Cloud,
   ImageIcon,
@@ -11,20 +18,11 @@ import {
   PlusCircle,
   UploadCloud,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import ModalImage from "react-modal-image";
-import { toast } from "sonner";
-import { z } from "zod";
-import { FileInputForm } from "@/components/file-input-form";
+import { Form } from "@/components/ui/form";
 import PdfRenderer from "@/components/pdf-renderer";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import { db } from "@/lib/db";
 import { useLoading } from "@/components/providers/loading-provider";
-import { useDropzone } from "react-dropzone";
 import { Progress } from "@/components/ui/progress";
 
 interface fileFormProps {

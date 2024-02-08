@@ -5,6 +5,11 @@ import { db } from "@/lib/db";
 import { DeactivateCollaborator } from "./_components/deactivate-collaborator";
 import { AddCollaboratorForm } from "../_components/add-collaborator-form";
 
+const bcrumbs = [
+  { label: "Colaboradores", path: "/dashboard/entrenamiento/colaboradores" },
+  { label: "Editar", path: "/editar" },
+];
+
 const EditCollaborator = async ({
   params,
 }: {
@@ -25,13 +30,14 @@ const EditCollaborator = async ({
 
   return (
     <div className="">
-      <div className="w-full flex justify-between items-center">
-        <div className="w-full flex justify-between items-center">
+      <TitleOnPage text={`Editar Colaborador`} bcrumb={bcrumbs}>
+        <DeactivateCollaborator collaborator={collaborator} />
+      </TitleOnPage>
+      <div className="w-full ">
+        <div className="w-full ">
           <div>
-            <TitleOnPage text={`Editar Colaborador`} />
             <span className="text-slte-300"></span>
           </div>
-          <DeactivateCollaborator collaborator={collaborator} />
         </div>
       </div>
       <div className="w-full flex flex-col gap-3">

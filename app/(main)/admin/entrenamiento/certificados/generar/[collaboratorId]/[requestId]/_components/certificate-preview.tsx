@@ -12,11 +12,14 @@ import { cn, formatDateOf } from "@/lib/utils";
 import { PDFViewer, pdf } from "@react-pdf/renderer";
 import { addMonths } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { DocumentCertificateTemplate } from "./document-certificate-template";
 import { CalendarIcon } from "lucide-react";
 import { Collaborator, Company, Course, CourseLevel } from "@prisma/client";
 import { Label } from "@/components/ui/label";
 import { ButtonCreateCertificate } from "./button-create-certificate";
+import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
+
+
+
 interface CertificatePreviewProps {
   collaborator:
     | (Collaborator & { company: Company | null | undefined })
@@ -27,11 +30,13 @@ interface CertificatePreviewProps {
     | null
     | undefined;
   endDate: Date | null;
+  trainingRequestId: string;
 }
 export const CertificatePreview = ({
   collaborator,
   courseLevel,
   endDate,
+  trainingRequestId,
 }: CertificatePreviewProps) => {
   const [expeditionDate, setExpeditionDate] = useState<Date | undefined>(
     new Date()
@@ -95,6 +100,8 @@ export const CertificatePreview = ({
         expeditionDate={expeditionDate}
         typeDoc={typeDoc}
         levelId={courseLevel.id}
+        monthsToExpire={courseLevel?.monthsToExpire}
+        trainingRequestId={trainingRequestId}
       />
       <div className="flex flex-col gap-2">
         <Label>Fecha de expedición</Label>

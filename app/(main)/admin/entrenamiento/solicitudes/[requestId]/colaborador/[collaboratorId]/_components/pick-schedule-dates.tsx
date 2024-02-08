@@ -27,6 +27,7 @@ import { useLoading } from "@/components/providers/loading-provider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ButtonScheduleCollaborator } from "./button-schedule-collaborator";
 import { Company } from "@prisma/client";
+import { Card } from "@/components/ui/card";
 
 interface PickDatesProps {
   isDisallowed: boolean;
@@ -108,7 +109,7 @@ export const PickScheduleDates = ({
   };
 
   return (
-    <div className="w-full bg-blue-300 p-3 flex flex-col lg:flex-row gap-3">
+    <Card className="w-full bg-blue-200 border-2 border-secondary p-3 flex flex-col lg:flex-row gap-3">
       <div className={cn("flex items-center ")}>
         {isFiltering ? (
           <div className="flex items-center relative transition">
@@ -197,6 +198,6 @@ export const PickScheduleDates = ({
       </div>
 
       
-    </div>
+    </Card>
   );
 };

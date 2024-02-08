@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { AddCertificateForm } from "./add-certificate-form";
 import { db } from "@/lib/db";
 import { CertificatePreview } from "../generar/[collaboratorId]/[requestId]/_components/certificate-preview";
-import { DocumentCertificateTemplate } from "../generar/[collaboratorId]/[requestId]/_components/document-certificate-template";
+import { DocumentCertificateTemplate } from "../../../../_components/document-certificate-template";
 import { formatDateOf } from "@/lib/utils";
 import { PDFViewer } from "@react-pdf/renderer";
 

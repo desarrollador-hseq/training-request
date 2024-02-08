@@ -6,6 +6,7 @@ import { Ban } from "lucide-react";
 import { DashboardNavbar } from "./_components/navbar/dashboard-navbar";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { ScrollUp } from "@/components/scroll-up";
+import { CollaboratorsCartProvider } from "@/components/providers/collaborators-cart-provider";
 
 const MainLayout = async ({ children }: { children: ReactNode }) => {
   const session = await getServerSession(authOptions);
@@ -15,15 +16,20 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <main className="relative flex flex-col h-full min-h-screen m-0 p-0 mx-auto bg-blue-100/50">
-      <DashboardNavbar isAdmin={session.user.role === "ADMIN"} businessName={session.user.businessName} />
-      <div className="mt-1 md:pl-[223px] min-h-screen xl:flex justify-center items-start xl:w-full">
-        <div className="mx-1 min-h-full mt-[56px] max-w-[1200px] w-full">
-          {session.user.isValid ? children : <NotValidCompany />}
+    <CollaboratorsCartProvider>
+      <main className="relative flex flex-col h-full min-h-screen m-0 p-0 mx-auto bg-blue-100/50">
+        <DashboardNavbar
+          isAdmin={session.user.role === "ADMIN"}
+          businessName={session.user.businessName}
+        />
+        <div className="mt-1 md:pl-[223px] min-h-screen xl:flex justify-center items-start xl:w-full relative">
+          <div className="mx-1 min-h-full mt-[56px] max-w-[1200px] w-full">
+            {session.user.isValid ? children : <NotValidCompany />}
+          </div>
         </div>
-      </div>
-      <ScrollUp />
-    </main>
+        <ScrollUp />
+      </main>
+    </CollaboratorsCartProvider>
   );
 };
 

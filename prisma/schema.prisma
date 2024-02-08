@@ -193,6 +193,7 @@ model Certificate {
   levelName  String?
   resolution String?
   levelHours Int?
+  monthsToExpire Int? 
 
   certificateDate DateTime?
   expeditionDate  DateTime?

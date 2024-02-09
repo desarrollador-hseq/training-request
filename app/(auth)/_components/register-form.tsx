@@ -1,7 +1,6 @@
 "use client";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,7 +25,7 @@ import { InputForm } from "@/components/input-form";
 import { SelectForm } from "@/components/select-form";
 import { TooltipInfo } from "@/components/tooltip-info";
 import { useLoading } from "@/components/providers/loading-provider";
-import { Company } from "@prisma/client";
+
 
 const formSchema = z
   .object({
@@ -50,6 +49,9 @@ const formSchema = z
       .optional()
       .or(z.literal("")),
     phoneContact: z.string().min(5, {
+      message: "digite al menos 5 caracteres",
+    }),
+    legalRepresentative: z.string().min(2, {
       message: "digite al menos 5 caracteres",
     }),
     password: z.string().min(5, {
@@ -93,7 +95,6 @@ export const RegisterForm = ({
   const { setLoadingApp } = useLoading();
   const [isEditing, setIsEditing] = useState(false);
   const [viewPass, setViewPass] = useState(false);
-  const [datas, setDatas] = useState<Company | null>(null);
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -103,6 +104,7 @@ export const RegisterForm = ({
       businessName: "",
       nit: "",
       sector: "",
+      legalRepresentative: "",
       nameContact: "",
       email: "",
       phoneContact: "",
@@ -128,11 +130,11 @@ export const RegisterForm = ({
       } catch (error) {
         console.log("[404] email notification sent");
       }
-  
+
       toggleEdit();
       router.refresh();
       setTabSelected("login");
-      setShowModal(true)
+      setShowModal(true);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const serverResponse = error.response;
@@ -169,7 +171,7 @@ export const RegisterForm = ({
         className="space-y-1"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-8">
-          <div className="bg-green-50/30 border-2 border-green-100 p-3 flex flex-col">
+          <div className="bg-green-50/30 space-y-3 border-2 border-green-100 p-3 flex flex-col">
             <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
               Datos de la empresa
             </h4>
@@ -191,6 +193,7 @@ export const RegisterForm = ({
                 name="nit"
               />
             </div>
+            {/* nit */}
             <div>
               <SelectForm
                 control={form.control}
@@ -200,8 +203,17 @@ export const RegisterForm = ({
                 options={sectorsItem}
               />
             </div>
+            {/* legalRepresentative */}
+            <div>
+              <InputForm
+                control={form.control}
+                isSubmitting={isSubmitting}
+                label="Representante legal"
+                name="legalRepresentative"
+              />
+            </div>
           </div>
-          <div className="bg-blue-50/30 border-2 border-blue-100  p-3 flex flex-col">
+          <div className="bg-blue-50/30 space-y-3 border-2 border-blue-100  p-3 flex flex-col">
             <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
               Datos de persona de contacto
             </h4>
@@ -236,7 +248,7 @@ export const RegisterForm = ({
             </div>
           </div>
 
-          <div className="bg-slate-50/30 border-2 border-slate-100 p-3 flex flex-col">
+          <div className="bg-slate-50/30 space-y-3 border-2 border-slate-100 p-3 flex flex-col">
             <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
               Credenciales de inicio de sesión
             </h4>
@@ -256,7 +268,6 @@ export const RegisterForm = ({
                         id="password"
                         type={viewPass ? "text" : "password"}
                         disabled={isSubmitting}
-                        placeholder="•••••••••"
                         {...field}
                       />
                     </FormControl>

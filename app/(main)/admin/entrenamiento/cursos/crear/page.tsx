@@ -9,14 +9,8 @@ const crumbs = [
 const CreateCollaborator = async () => {
   return (
     <div className="">
-      <div className="w-full flex justify-between items-center">
-        <div className="w-full flex justify-between items-center">
-          <div>
-            <TitleOnPage text={`Crear Curso`} bcrumb={crumbs} />
-            <span className="text-slte-300"></span>
-          </div>
-        </div>
-      </div>
+      <TitleOnPage text={`Crear Curso`} bcrumb={crumbs} />
+
       <div className="w-full flex flex-col gap-3">
         <AddCourseForm />
       </div>

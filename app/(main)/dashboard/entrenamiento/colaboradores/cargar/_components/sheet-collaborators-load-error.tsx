@@ -1,7 +1,8 @@
+import { Dispatch, SetStateAction } from "react";
+import { ArrowBigDownDash } from "lucide-react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -17,12 +18,9 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 //   import { useReactToPrint } from "react-to-print";
-import { Dispatch, SetStateAction, useRef } from "react";
-import { ArrowBigDownDash, ArrowBigLeftDash, ArrowBigUpDash, XOctagon } from "lucide-react";
 
 export const SheetCollaboratorsLoadError = ({
   failedInserts,

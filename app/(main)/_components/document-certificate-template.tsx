@@ -76,7 +76,15 @@ export const DocumentCertificateTemplate = ({
   expireDate,
 }: CertificateTemplateProps) => {
   return (
-    <Document style={{ height: "100%" }}>
+    <Document
+      style={{ height: "100%" }}
+      title={`Certificado de ${fullname} - ${course}`}
+      author="Grupo HSEQ"
+      producer="A. Innovacion - Grupo HSEQ"
+      creationDate={new Date()}
+      creator="Grupo HSEQ"
+      language="es"
+    >
       <Page size="A4" style={styles.page}>
         <View
           style={{
@@ -189,9 +197,18 @@ export const DocumentCertificateTemplate = ({
                       Afiliado a la{" "}
                       <Text style={{ fontWeight: "semibold" }}>{arlName}</Text>{" "}
                       contratado por{" "}
-                      <Text style={{ fontWeight: "semibold" }}>{companyName}</Text>{" "}
-                      registrada bajo NIT  <Text style={{ fontWeight: "semibold" }}>{companyNit}</Text>, representante legal{" "}
-                      <Text style={{ fontWeight: "semibold" }}>{legalRepresentative}</Text>.
+                      <Text style={{ fontWeight: "semibold" }}>
+                        {companyName}
+                      </Text>{" "}
+                      registrada bajo NIT{" "}
+                      <Text style={{ fontWeight: "semibold" }}>
+                        {companyNit}
+                      </Text>
+                      , representante legal{" "}
+                      <Text style={{ fontWeight: "semibold" }}>
+                        {legalRepresentative}
+                      </Text>
+                      .
                     </Text>
                   )}
 
@@ -251,7 +268,23 @@ export const DocumentCertificateTemplate = ({
                   width: "80%",
                 }}
               >
-                <View style={{ display: "flex", flexDirection: "column" }}>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    position: "relative",
+                    paddingTop: 35,
+                  }}
+                >
+                  <Image
+                    src="/NESTOR_T.png"
+                    style={{
+                      width: 140,
+                      position: "absolute",
+                      top: -40,
+                      left: 0,
+                    }}
+                  />
                   <Text
                     style={{
                       borderTop: "1px solid red",
@@ -266,7 +299,23 @@ export const DocumentCertificateTemplate = ({
                     Lic. En SST No. 5596 - 2014
                   </Text>
                 </View>
-                <View style={{ display: "flex", flexDirection: "column" }}>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    position: "relative",
+                    paddingTop: 32,
+                  }}
+                >
+                  <Image
+                    src="/JAIME_R.png"
+                    style={{
+                      width: 140,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    }}
+                  />
                   <Text
                     style={{
                       borderTop: "1px solid #a30e0c",
@@ -359,7 +408,7 @@ const styles = StyleSheet.create({
     color: "white",
     transform: "rotate(-90deg)",
     padding: "18px",
-    paddingTop: "10px"
+    paddingTop: "10px",
   },
   textContent: {
     width: "80%",

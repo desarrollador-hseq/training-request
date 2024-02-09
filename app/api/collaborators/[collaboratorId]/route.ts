@@ -13,10 +13,11 @@ export async function PATCH(req: Request, { params }: { params: { collaboratorId
         if (!session) return new NextResponse("Unauthorized", { status: 401 })
         const companyId = session.user.id
 
+        console.log({values})
+
         const collaborator = await db.collaborator.update({
             where: {
                 id: collaboratorId,
-                companyId: companyId
             },
             data: {
                 ...values
@@ -26,8 +27,8 @@ export async function PATCH(req: Request, { params }: { params: { collaboratorId
         return NextResponse.json(collaborator)
 
     } catch (error) {
-        console.log("[COURSES_ID]", error)
-        return new NextResponse("Internal Errorr", { status: 500 })
+        console.log("[COLLABORATOR_PATCH_ID]", error)
+        return new NextResponse("Internal Errorr" + error, { status: 500 })
     }
 }
 export async function DELETE(req: Request, { params }: { params: { collaboratorId: string } }) {

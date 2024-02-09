@@ -10,9 +10,7 @@ import { TitleOnPage } from "@/components/title-on-page";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const crumbs = [
-  {label: "solicitudes", path: "solicitudes"}
-]
+const crumbs = [{ label: "Solicitudes", path: "solicitudes" }];
 
 const RequestTrainingPage = async () => {
   const session = await getServerSession(authOptions);
@@ -30,25 +28,23 @@ const RequestTrainingPage = async () => {
       collaborators: {
         include: {
           collaborator: true,
-          courseLevel: true
+          courseLevel: true,
         },
       },
     },
   });
 
-
   return (
     <div>
       <div className="flex items-center">
-        <TitleOnPage text="Listado de solicitudes" bcrumb={crumbs} />
-        <div>
+        <TitleOnPage text="Listado de solicitudes" bcrumb={crumbs}>
           <Link
             href="/dashboard/entrenamiento/solicitudes/crear"
             className={cn(buttonVariants())}
           >
             Crear
           </Link>
-        </div>
+        </TitleOnPage>
       </div>
 
       <Card className="min-h-screen">

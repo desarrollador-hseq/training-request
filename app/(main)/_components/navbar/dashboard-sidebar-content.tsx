@@ -1,18 +1,19 @@
-import { LucideIcon } from "lucide-react";
-// import { LogoGrupoHseq } from "@/components/logo-grupo-hseq";
+import { LucideIcon, Outdent } from "lucide-react";
 import { DashboardSidebarItems } from "./dashboard-sidebar-items";
-// import { LogoClaro } from "@/components/logo-claro";
+import { ModalLogout } from "@/app/(auth)/_components/modal-logout";
+
 
 interface DashboardSidebarContentProps {
   routes: { href: string; icon: LucideIcon; label: string }[];
 }
 
-export const DashboardSidebarContent = ({ routes }: DashboardSidebarContentProps) => (
-  <div className="h-full w-full border-r flex flex-col overflow-y-auto bg-primary">
-    <div className="flex flex-col w-full">
-      <div className="md:hidden h-14 flex justify-start items-center pl-7">
-        {/* <LogoGrupoHseq goRoot className="flex" /> */}
-        {/* <LogoClaro goRoot className="flex" /> */}
+export const DashboardSidebarContent = ({
+  routes,
+}: DashboardSidebarContentProps) => (
+  <div className="h-full w-full border-r flex flex-col overflow-y-auto bg-primary ">
+    <div className="flex flex-col w-full h-full max-h-[calc(100vh-60px)] md:max-h-[calc(100vh-120px)]">
+      <div className="md:hidden flex justify-start items-center pl-7 ">
+        logo
       </div>
       {routes.map((route) => (
         <DashboardSidebarItems
@@ -23,5 +24,6 @@ export const DashboardSidebarContent = ({ routes }: DashboardSidebarContentProps
         />
       ))}
     </div>
+    <ModalLogout />
   </div>
 );

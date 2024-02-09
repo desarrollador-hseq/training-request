@@ -47,7 +47,7 @@ export const SelectForm: React.FC<SelectFormProps<any>> = ({
               <SelectTrigger className="bg-slate-100 border-slate-300">
                 <SelectValue
                   className="text-red-500"
-                  placeholder="Selecciona el sector de la empresa"
+                  placeholder="Selecciona una opción"
                 />
               </SelectTrigger>
             </FormControl>

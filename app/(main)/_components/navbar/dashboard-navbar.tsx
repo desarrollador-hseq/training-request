@@ -4,9 +4,10 @@ import { Menu } from "lucide-react";
 import { DashboardSidebar } from "./dashboard-sidebar";
 import { Button } from "@/components/ui/button";
 import { SheetCollaboratorsCart } from "../sheet-collaborators-cart";
-import { ModalLogout } from "@/app/(auth)/_components/modal-logout";
 import { LogoMain } from "@/components/logo-main";
 import { cn } from "@/lib/utils";
+import { DropdownCompany } from "./dropdown-company";
+
 
 export const DashboardNavbar = ({
   businessName,
@@ -45,9 +46,10 @@ export const DashboardNavbar = ({
 
           {isAdmin && <span>Admin</span>}
           {!isAdmin && <span className="text-white">{businessName}</span>}
+          <DropdownCompany CompanyName={businessName} />
           {isAdmin && <SheetCollaboratorsCart />}
 
-          <ModalLogout />
+          
         </div>
       </div>
     </div>

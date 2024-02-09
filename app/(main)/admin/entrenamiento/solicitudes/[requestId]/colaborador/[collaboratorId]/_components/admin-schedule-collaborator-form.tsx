@@ -30,6 +30,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { IdentificationFileForm } from "@/app/(main)/dashboard/entrenamiento/colaboradores/[collaboratorId]/_components/identification-file-form";
 import { DateRange } from "react-day-picker";
 import { ButtonScheduleCollaborator } from "./button-schedule-collaborator";
+import { ArlForm } from "./arl-form";
 
 interface AdminScheduleCollaboratorFormProps {
   trainingRequestCollaborator:
@@ -297,6 +298,12 @@ export const AdminScheduleCollaboratorForm = ({
                     label="Teléfono movil"
                     text={collaborator?.phone}
                   />
+                  <div>
+                    <ArlForm
+                      arlName={trainingRequestCollaborator?.collaborator?.arlName}
+                      collaboratorId={collaborator?.id}
+                    />
+                  </div>
                 </div>
               </div>
 

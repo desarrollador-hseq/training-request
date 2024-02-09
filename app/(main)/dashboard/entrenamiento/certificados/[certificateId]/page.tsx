@@ -1,9 +1,6 @@
-import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
+
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { db } from "@/lib/db";
-import { formatDateOf } from "@/lib/utils";
-import { PDFViewer } from "@react-pdf/renderer";
-import { addMonths } from "date-fns";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import React from "react";

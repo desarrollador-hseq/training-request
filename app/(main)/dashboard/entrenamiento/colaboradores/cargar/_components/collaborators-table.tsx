@@ -2,7 +2,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { useDropzone } from "react-dropzone";
-import { Cloud } from "lucide-react";
+import { Cloud, X } from "lucide-react";
 import { toast } from "sonner";
 import {
   Table,
@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 export const CollaboratorsExcelTable = ({
   setUsersLoaded,
@@ -178,6 +179,7 @@ export const CollaboratorsExcelTable = ({
                 <TableHead># Documento</TableHead>
                 <TableHead>Correo Electrónico</TableHead>
                 <TableHead>Teléfono móvil</TableHead>
+                <TableHead>Acción</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -188,6 +190,7 @@ export const CollaboratorsExcelTable = ({
                     {Object.values(row!).map((value, index) => (
                       <TableCell key={index}>{value}</TableCell>
                     ))}
+                      <TableCell key={index}><Button><X /></Button></TableCell>
                   </TableRow>
                 );
               })}

@@ -18,7 +18,7 @@ export const CardItemInfo = ({
       <div>
         <h5 className="text-lg font-bold text-center ">{label}</h5>
         <p
-          className={`"text-normal text-center text-sm ${
+          className={`font-[500] text-center text-sm ${
             highlight && "text-[15px]"
           }`}
         >

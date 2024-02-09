@@ -3,12 +3,14 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
-import { FileDown, Loader2, UploadCloud } from "lucide-react";
+import { FileDown, Info, Loader2, UploadCloud } from "lucide-react";
 import { TitleOnPage } from "@/components/title-on-page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { SheetCollaboratorsLoadError } from "./_components/sheet-collaborators-load-error";
 import { CollaboratorsExcelTable } from "./_components/collaborators-table";
+import { TooltipInfo } from "@/components/tooltip-info";
+import { useLoading } from "@/components/providers/loading-provider";
 
 const bcrumbs = [
   { label: "Colaboradores", path: "/dashboard/entrenamiento/colaboradores" },
@@ -19,10 +21,12 @@ const UploadCollaboratorsExcel = () => {
   const [listError, setListError] = useState([]);
   const [wasError, setWasError] = useState(false);
   const [isSubmitting, setisSubmitting] = useState(false);
+  const { setLoadingApp } = useLoading();
+
 
   const onClick = async () => {
     setisSubmitting(true);
-
+    setLoadingApp(true)
     const values = usersLoaded;
     try {
       const { data } = await axios.post(
@@ -30,20 +34,23 @@ const UploadCollaboratorsExcel = () => {
         values
       );
 
+      console.log({valuesdata: data})
+
       if (data.failedInserts) {
         setListError(data.failedInserts);
         setWasError(true);
       }
 
-      if (data.successfulInserts > 0) {
+      if (data.successfulInserts.length >= 1) {
         toast.success(
-          `Se han añadido: ${data.successfulInserts.length} empleados correctamente.`
+          `Se han añadido: ${data.successfulInserts.length} empleados correctamente. (${data.successfulInserts.length}/${usersLoaded.length})`,
         );
       }
     } catch (error) {
       console.log({ iserror: error });
     } finally {
       setisSubmitting(false);
+      setLoadingApp(false)
     }
   };
 
@@ -62,11 +69,19 @@ const UploadCollaboratorsExcel = () => {
 
   return (
     <div className="">
-      <TitleOnPage text="Cargar collaboradores desdd un EXCEL" bcrumb={bcrumbs}>
-        <Button onClick={handleDownloadTemplate} className="gap-2">
-          <FileDown />
-          Plantilla de excel
-        </Button>
+      <TitleOnPage
+        text="Cargar colaboradores desde un archivo"
+        bcrumb={bcrumbs}
+      >
+        <div className="flex items-center gap-2">
+          <Button onClick={handleDownloadTemplate} className="gap-2">
+            <FileDown />
+            Plantilla de excel
+          </Button>
+          <TooltipInfo text="Se debe descargar y llenar esta plantilla para cargar los colaboradores de la empresa">
+            <Info className="text-white w-6 h-6" />
+          </TooltipInfo>
+        </div>
       </TitleOnPage>
 
       <Card>

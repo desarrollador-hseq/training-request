@@ -1,23 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+import { useState } from "react";
+import { PDFViewer } from "@react-pdf/renderer";
+import { pdfjs } from "react-pdf";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useResizeDetector } from "react-resize-detector";
-import SimpleBar from "simplebar-react";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { addMonths } from "date-fns";
+import { Certificate } from "@prisma/client";
+
+import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
+import { formatDateOf } from "@/lib/utils";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
-export const ViewCertificatePdf = ({ fileUrl }: { fileUrl: string }) => {
-  const [numPages, setNumPages] = useState<number>();
+export const ViewCertificatePdf = ({
+  certificate,
+  baseUrl,
+}: {
+  certificate: Certificate;
+  baseUrl?: string;
+}) => {
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const { width, ref } = useResizeDetector();
 
   const CustomPageValidator = z.object({
     page: z
@@ -37,33 +43,36 @@ export const ViewCertificatePdf = ({ fileUrl }: { fileUrl: string }) => {
   });
 
   return (
-    <div className="flex-1 w-full max-h-fit">
-      <SimpleBar
-        autoHide={false}
-        className="w-full h-full m-auto max-w-[1000px]"
+    <div className="flex-1 w-full min-h-screen min-w-max relative">
+      <div className="absolute top-0 left-0 w-full h-full bg-transparent z-20" />
+      <PDFViewer
+        showToolbar={false}
+        style={{ width: "100%", height: "1200px" }}
       >
-        <div ref={ref} className="m-auto w-full h-fit flex justify-center">
-          <Document
-            onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-            file={fileUrl}
-            loading={
-              <div className="h-full w-full flex items-center mt-10 gap-3">
-                <Loader2 className="my-3 h-6 w-6 animate-spin text-primary" />
-                Cargando...
-              </div>
-            }
-            onError={() => {
-              toast.error("Error al cargar PDF");
-            }}
-          >
-            <Page
-              renderTextLayer={false}
-              width={width}
-              pageNumber={pageNumber}
-            />
-          </Document>
-        </div>
-      </SimpleBar>
+        <DocumentCertificateTemplate
+          fullname={certificate.collaboratorFullname}
+          numDoc={certificate.collaboratorNumDoc}
+          typeDoc={certificate.collaboratorTypeDoc}
+          level={certificate.levelName}
+          course={certificate.courseName}
+          levelHours={"" + certificate.levelHours}
+          resolution={certificate.resolution}
+          endDate={formatDateOf(certificate.certificateDate!)}
+          expeditionDate={formatDateOf(certificate.expeditionDate!)}
+          expireDate={formatDateOf(
+            addMonths(
+              certificate.certificateDate!,
+              certificate?.monthsToExpire!
+            )
+          )}
+          certificateId={certificate.id}
+          companyName={certificate.companyName}
+          companyNit={certificate.companyNit}
+          arlName={certificate.collaboratorArlName}
+          legalRepresentative={certificate.legalRepresentative}
+          fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
+        />
+      </PDFViewer>
     </div>
   );
 };

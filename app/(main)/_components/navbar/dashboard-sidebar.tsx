@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
   Building2,
+  CircleUser,
   Clipboard,
   ClipboardCheck,
   HardHat,
@@ -31,6 +32,7 @@ const dashRoutes = [
     label: "Colaboradores",
     href: "/dashboard/entrenamiento/colaboradores",
   },
+
 ];
 const adminRoutes = [
   { icon: Clipboard, label: "Inicio", href: "/admin" },

@@ -24,8 +24,10 @@ export const DashboardSidebarItems = ({
   const isActive = useMemo(
     () =>
       pathname === href ||
-      (href !== "/dashboard" && pathname?.startsWith(`${href}`)) &&
-      (href !== "/admin" && pathname?.startsWith(`${href}`)),
+      (href !== "/dashboard" &&
+        pathname?.startsWith(`${href}`) &&
+        href !== "/admin" &&
+        pathname?.startsWith(`${href}`)),
     [pathname, href]
   );
 
@@ -55,7 +57,7 @@ export const DashboardSidebarItems = ({
       </div>
       <div
         className={cn(
-          "ml-auto opacity-0 border-2 border-blue-950 h-full transition-all",
+          "ml-auto opacity-0 border-2 border-secondary h-full transition-all animate-in",
           isActive && "opacity-100"
         )}
       />

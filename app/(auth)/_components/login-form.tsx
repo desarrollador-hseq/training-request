@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import * as z from "zod";
@@ -71,8 +71,8 @@ export const LoginForm = () => {
   };
 
   return (
-    <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-4">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-2 w-full">
         <div>
           <FormField
             control={form.control}

@@ -33,7 +33,7 @@ export const TitleOnPage = ({
                 </Link>
               </li>
 
-              {bcrumb?.map((crumb, index) => {
+              {bcrumb.length > 0 && bcrumb?.map((crumb, index) => {
                 if (crumb.label === 'inicio') return <div key={crumb.path}></div>;
                 return (
                   <li key={crumb.path}>

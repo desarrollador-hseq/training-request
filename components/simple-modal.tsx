@@ -51,13 +51,13 @@ export const SimpleModal = ({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        {typeof textBtn === "string" ? (
+        {/* {typeof textBtn === "string" ? ( */}
           <Button disabled={btnDisabled} className={cn("bg-accent", btnClass)}>
             {textBtn}
           </Button>
-        ) : (
+        {/* ) : (
           textBtn
-        )}
+        )} */}
       </AlertDialogTrigger>
 
       <AlertDialogContent

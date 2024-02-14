@@ -32,15 +32,11 @@ const formSchema = z.object({
   collaboratorTypeDoc: z.string().min(1, {
     message: "Tipo de documento es requerido",
   }),
-  collaboratorArlName: z.string().min(1, {
-    message: "Nombre Arl es requerido",
-  }),
+  collaboratorArlName: z.string().optional(),
   companyName: z.string().min(1, {
     message: "Nombre de empresa es requerido",
   }),
-  legalRepresentative: z.string().min(1, {
-    message: "Representante legal de la empresa es requerido",
-  }),
+  legalRepresentative: z.string().optional(),
   companyNit: z.string().min(1, {
     message: "Nit de la empresa requerido",
   }),

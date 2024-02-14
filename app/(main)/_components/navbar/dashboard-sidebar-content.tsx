@@ -1,6 +1,5 @@
-import { LucideIcon, Outdent } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { DashboardSidebarItems } from "./dashboard-sidebar-items";
-import { ModalLogout } from "@/app/(auth)/_components/modal-logout";
 
 
 interface DashboardSidebarContentProps {
@@ -24,6 +23,5 @@ export const DashboardSidebarContent = ({
         />
       ))}
     </div>
-    <ModalLogout />
   </div>
 );

@@ -25,7 +25,7 @@ import { InputForm } from "@/components/input-form";
 import { SelectForm } from "@/components/select-form";
 import { TooltipInfo } from "@/components/tooltip-info";
 import { useLoading } from "@/components/providers/loading-provider";
-
+import { Card } from "@/components/ui/card";
 
 const formSchema = z
   .object({
@@ -170,9 +170,9 @@ export const RegisterForm = ({
         onSubmit={form.handleSubmit(onSubmitRegister)}
         className="space-y-1"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-8">
-          <div className="bg-green-50/30 space-y-3 border-2 border-green-100 p-3 flex flex-col">
-            <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+          <Card className="p-2 flex flex-col">
+            <h4 className="self-center mb-1 text-primary font-bold text-slate-500">
               Datos de la empresa
             </h4>
             {/* businessName */}
@@ -212,9 +212,9 @@ export const RegisterForm = ({
                 name="legalRepresentative"
               />
             </div>
-          </div>
-          <div className="bg-blue-50/30 space-y-3 border-2 border-blue-100  p-3 flex flex-col">
-            <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
+          </Card>
+          <Card className="p-2 flex flex-col">
+            <h4 className="self-center mb-1 text-primary font-bold text-slate-500">
               Datos de persona de contacto
             </h4>
             {/* nameContact */}
@@ -246,10 +246,10 @@ export const RegisterForm = ({
                 />
               </div>
             </div>
-          </div>
+          </Card>
 
-          <div className="bg-slate-50/30 space-y-3 border-2 border-slate-100 p-3 flex flex-col">
-            <h4 className="self-center mb-2 text-primary font-bold text-slate-500">
+          <Card className="p-2 flex flex-col">
+            <h4 className="self-center mb-1 text-primary font-bold text-slate-500">
               Credenciales de inicio de sesión
             </h4>
             {/* -----------password----------- */}
@@ -299,28 +299,25 @@ export const RegisterForm = ({
                 type="password"
               />
             </div>
-          </div>
-        </div>
-
-        <div className="w-full flex flex-col items-center justify-center ">
-          <div className="w-full flex flex-col gap-3 mt-2">
-            {/* -----------accept terms----------- */}
+          </Card>
+             {/* -----------accept terms----------- */}
+          <Card className="w-full h-full flex justify-center items-center gap-2 max-w-max ">
             <div>
               <FormField
                 control={form.control}
                 name="acceptTerms"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-center space-x-3 space-y-0 rounded-md border p-4">
+                  <FormItem className="flex flex-row items-center justify-between gap-3 p-2">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="accent-red-700"
+                        className="accent-red-700 "
                       />
                     </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Aceptar terminos y condiciones</FormLabel>
-                      <FormDescription className="text-sm font-normal text-slate-400 ">
+                    <div className="">
+                      <p className="flex flex-wrap">Aceptar terminos y condiciones sobre uso de datos</p>
+                      <FormDescription className="text-sm font-normal text-slate-400">
                         ver terminos y condiciones{" "}
                         <PdfFullscreen
                           fileUrl="/politica-proteccion-datos.pdf"
@@ -333,6 +330,12 @@ export const RegisterForm = ({
                 )}
               />
             </div>
+          </Card>
+        </div>
+
+        <div className="w-full flex flex-col items-center justify-center ">
+          <div className="w-full flex flex-col gap-2 mt-2">
+         
 
             <TooltipInfo text="Rellena todo el formulario para continuar">
               <div className="w-full h-fit">

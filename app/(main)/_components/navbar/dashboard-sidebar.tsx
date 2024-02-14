@@ -1,19 +1,15 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   Building2,
-  CircleUser,
+  BookOpenText,
   Clipboard,
   ClipboardCheck,
-  HardHat,
-  LucideIcon,
   Users,
 } from "lucide-react";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { DashboardSidebarContent } from "./dashboard-sidebar-content";
-import { useLoading } from "@/components/providers/loading-provider";
 
 const dashRoutes = [
   { icon: Clipboard, label: "Inicio", href: "/dashboard" },
@@ -32,7 +28,6 @@ const dashRoutes = [
     label: "Colaboradores",
     href: "/dashboard/entrenamiento/colaboradores",
   },
-
 ];
 const adminRoutes = [
   { icon: Clipboard, label: "Inicio", href: "/admin" },
@@ -57,7 +52,7 @@ const adminRoutes = [
     href: "/admin/entrenamiento/empresas",
   },
   {
-    icon: HardHat,
+    icon: BookOpenText,
     label: "Cursos",
     href: "/admin/entrenamiento/cursos",
   },

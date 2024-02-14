@@ -1,9 +1,13 @@
-import { db } from "@/lib/db";
-import { User, Users2 } from "lucide-react";
-import { getServerSession } from "next-auth";
-import React from "react";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { Files, ScrollText, Users2 } from "lucide-react";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { db } from "@/lib/db";
+import { TitleOnPage } from "@/components/title-on-page";
+import { Card } from "@/components/ui/card";
+import { ListLatestCollaboratorsAdded } from "./_components/list-latest-collaborators-added";
+import { ListLatestRequestsAdded } from "./_components/list-latest-requests-added";
+import { ListLatestCertificatesAdded } from "./_components/list-latest-certificates-added";
 
 const DashboardPage = async () => {
   const session = await getServerSession(authOptions);
@@ -22,71 +26,84 @@ const DashboardPage = async () => {
   const trainingRequests = await db.trainingRequest.findMany({
     where: {
       companyId: session.user.id,
+      active: true,
+    },
+    include: {
+      course: {
+        select: {
+          name: true,
+        },
+      },
+      collaborators: {
+        select: {
+          collaboratorId: true,
+        },
+      },
+    },
+  });
+  const certificates = await db.certificate.findMany({
+    where: {
+      collaborator: { companyId: session.user.id, active: true },
+      active: true,
     },
   });
 
   return (
-    <div>
-      <h2 className="text-2xl">Panel</h2>
+    <div className="space-y-5">
+      <TitleOnPage text="Panel" bcrumb={[]} />
 
-      <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="p-5 bg-white rounded shadow-sm ">
-          <div className="flex items-center space-x-4 h-[80px]">
-            <div>
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 text-red-400">
-                <Users2 />
-              </div>
+      <div className="grid gap-7 grid-cols-2 xl:grid-cols-3 place-content-center">
+       
+        <Card className="p-3 flex justify-center">
+          <div className="flex items-center space-x-4 h-[150px] lg:flex-row flex-col">
+            <div className="flex items-center justify-center">
+              <Files className=" w-12 h-12 rounded-full bg-red-50 text-red-400" />
             </div>
-            <div>
-              <div className="text-gray-400">Colaboradores</div>
-              <div className="text-2xl font-bold text-gray-900">
-                {collaborators.length}
+            <div className="flex flex-col justify-around  h-24">
+              <div className="text-gray-700 font-bold text-2xl">
+                Solicitudes
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="p-5 bg-white rounded shadow-sm">
-          <div className="flex items-center space-x-4 h-[80px]">
-            <div>
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-cyan-50 text-cyan-400">
-                <User />
-              </div>
-            </div>
-            <div>
-              <div className="text-gray-400">Solicitudes</div>
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-3xl font-bold text-secondary text-center">
                 {trainingRequests.length}
               </div>
             </div>
           </div>
-        </div>
-        <div className="p-5 bg-white rounded shadow-sm">
-          <div className="flex items-center space-x-4 h-[80px]">
-            <div>
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 text-amber-400">
-                <User />
+        </Card>
+        <Card className="p-3 flex justify-center ">
+          <div className="flex items-center space-x-4 h-[150px] lg:flex-row flex-col">
+            <div className="flex items-center justify-center">
+              <Users2 className=" w-12 h-12 rounded-full bg-red-50 text-red-400" />
+            </div>
+            <div className="flex flex-col justify-around  h-24">
+              <div className="text-gray-700 font-bold text-2xl">
+                Colaboradores
+              </div>
+              <div className="text-3xl font-bold text-secondary text-center">
+                {collaborators.length}
               </div>
             </div>
-            <div>
-              <div className="text-gray-400">Customers</div>
-              <div className="text-2xl font-bold text-gray-900">1375</div>
-            </div>
           </div>
-        </div>
-        <div className="p-5 bg-white rounded shadow-sm">
-          <div className="flex items-center space-x-4 h-[80px]">
-            <div>
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 text-emerald-400">
-                <User />
+        </Card>
+        <Card className="p-3 flex justify-center">
+          <div className="flex items-center space-x-4 h-[150px] lg:flex-row flex-col">
+            <div className="flex items-center justify-center">
+              <ScrollText className=" w-12 h-12 rounded-full bg-red-50 text-red-400" />
+            </div>
+            <div className="flex flex-col justify-around  h-24">
+              <div className="text-gray-700 font-bold text-2xl">
+                Certificados
+              </div>
+              <div className="text-3xl font-bold text-secondary text-center">
+                {certificates.length}
               </div>
             </div>
-            <div>
-              <div className="text-gray-400">MRR</div>
-              <div className="text-2xl font-bold text-gray-900">25</div>
-            </div>
           </div>
-        </div>
+        </Card>
       </div>
+
+      <ListLatestRequestsAdded trainingRequests={trainingRequests} />
+      <ListLatestCollaboratorsAdded collaborators={collaborators} />
+      <ListLatestCertificatesAdded certificates={certificates} />
     </div>
   );
 };

@@ -13,39 +13,39 @@ export default function LoginPage() {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="bg-blue-100 min-h-screen">
-      <div className="container w-full flex items-start justify-center pt-4 min-h-full ">
+    <div className="bg-blue-100 min-h-screen  w-full ">
+      <div className="w-full flex items-start min-w-full max-h-fit ">
         <Tabs
           value={tabSelected}
           onValueChange={setTabSelected}
-          className="max-w-full"
+          className="max-w-full w-full mx-10 flex justify-center flex-col items-center mt-3"
         >
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 ">
             <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
             <TabsTrigger value="register">Registrar Empresa</TabsTrigger>
           </TabsList>
           {/* --------login-------- */}
-          <TabsContent value="login" className="max-w-m">
-            <Card className="max-w-2xl">
+          <TabsContent value="login" className="min-w-[400px]">
+            <Card className="w-full">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold leading-tight tracking-tight text-slate-500 text-center">
                   Ingresar
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4 md:space-y-6">
+              <CardContent className="space-y-2 md:space-y-1">
                 <LoginForm />
               </CardContent>
             </Card>
           </TabsContent>
           {/* --------register-------- */}
-          <TabsContent value="register">
+          <TabsContent value="register" className="">
             <Card className="">
-              <CardHeader>
+              <CardHeader className="p-3">
                 <CardTitle className="text-2xl font-bold leading-tight tracking-tight text-slate-500 text-center">
                   Registrar Empresa
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-1 md:space-y-1">
+              <CardContent className="space-y-1 md:space-y-1 ">
                 <RegisterForm
                   setTabSelected={setTabSelected}
                   setShowModal={setShowModal}

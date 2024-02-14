@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
+import { GanttChartSquare } from "lucide-react";
 import { AddCertificateForm } from "./add-certificate-form";
 import { db } from "@/lib/db";
-import { CertificatePreview } from "../generar/[collaboratorId]/[requestId]/_components/certificate-preview";
-import { DocumentCertificateTemplate } from "../../../../_components/document-certificate-template";
-import { formatDateOf } from "@/lib/utils";
-import { PDFViewer } from "@react-pdf/renderer";
+import { CertificateItemTimeline } from "./certificate-item-timeline";
+import { TitleOnPage } from "@/components/title-on-page";
+import { SimpleModal } from "@/components/simple-modal";
 
 const EditCertificate = async ({
   params,
@@ -13,7 +13,7 @@ const EditCertificate = async ({
 }) => {
   const { certificateId } = params;
 
-  const baseUrl = process.env.NEXTAUTH_URL
+  const baseUrl = process.env.NEXTAUTH_URL;
 
   const certificate = await db.certificate.findUnique({
     where: {
@@ -26,10 +26,35 @@ const EditCertificate = async ({
     redirect("/admin/entrenamiento/cursos/");
   }
 
+  const certificateEvents = await db.certificateEvent.findMany({
+    where: {
+      certificateId: certificate.id,
+    },
+    include: {
+      admin: true
+    }
+  })
+
   return (
     <div>
-      <AddCertificateForm certificate={certificate} baseUrl={baseUrl} />
-
+      <TitleOnPage text={`Editar Certificado`}>
+        <SimpleModal
+          textBtn={<GanttChartSquare />}
+          btnClass={`bg-accent text-white`}
+          title="Linea de tiempo"
+        >
+          <div className="mx-5 w-fit">
+            <ol className="relative border-s border-primary ">
+              {
+                certificateEvents.map(event => (
+                  <CertificateItemTimeline event={event} />
+                ))
+              }
+            </ol>
+          </div>
+        </SimpleModal>
+      </TitleOnPage>
+      <AddCertificateForm certificate={certificate} baseUrl={`${baseUrl}`} />
     </div>
   );
 };

@@ -1,26 +1,12 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "sonner";
+import { Certificate } from "@prisma/client";
 import { useLoading } from "@/components/providers/loading-provider";
 import { SimpleModal } from "@/components/simple-modal";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DateRange } from "react-day-picker";
-import { useCollaboratorsCart } from "@/components/providers/collaborators-cart-provider";
-import {
-  Certificate,
-  Collaborator,
-  Company,
-  Course,
-  CourseLevel,
-} from "@prisma/client";
-import { useRouter } from "next/navigation";
-import { DocumentCertificateTemplate } from "../../../../../../../_components/document-certificate-template";
-import { pdf } from "@react-pdf/renderer";
-import { formatDateOf } from "@/lib/utils";
 
 interface ButtonCreateCertificateProps {
   collaboratorId: string;
@@ -49,9 +35,6 @@ interface ButtonCreateCertificateProps {
 export const ButtonCreateCertificate = ({
   collaboratorId,
   levelId,
-  fileUrl,
-  certificateId,
-  consecutive,
   fullname,
   numDoc,
   typeDoc,
@@ -67,7 +50,7 @@ export const ButtonCreateCertificate = ({
   endDate,
   expireDate,
   monthsToExpire,
-  trainingRequestId
+  trainingRequestId,
 }: ButtonCreateCertificateProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -95,9 +78,11 @@ export const ButtonCreateCertificate = ({
           certificateDate: endDate,
           dueDate: expireDate,
           monthsToExpire,
-          trainingRequestId
+          trainingRequestId,
         }
       );
+      
+
       router.push(`/admin/entrenamiento/certificados/${data.id}`);
 
       toast.success("Certificado guardado correctamente");

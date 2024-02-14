@@ -3,12 +3,11 @@
 import {
   Certificate,
 } from "@prisma/client";
+import { isAfter, addMonths } from "date-fns";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useTabManager from "@/hooks/useTabManager";
-import { AdminCertificateTable } from "./admin-certificates-table";
 import { columnsAdminCertificatesTable } from "./admin-certificates-table-columns";
-import { isAfter, addMonths } from "date-fns";
 import { TableDefault } from "@/components/table-default";
 
 interface CertificateWithCourseLevel extends Certificate {

@@ -8,6 +8,7 @@ import { ClientCookiesProvider } from "@/components/providers/cookies-provider";
 import { NextAuthProvider } from "@/components/providers/nextauth-provider";
 import { LoadingProvider } from "@/components/providers/loading-provider";
 import { cn } from "@/lib/utils";
+import { Footer } from "@/components/footer";
 
 const roboto = Roboto({
   weight: '400',
@@ -39,12 +40,7 @@ export default function RootLayout({
             <div className="min-h-[calc(100vh-40px)]">
               {children}
             </div>
-            <footer className="footer h-10 w-full bg-primary flex items-center">
-              <div className="w-[70%] mx-auto flex justify-center gap-1 text-white text-sm">
-                <span>2024</span>
-                <p className="text-sm">&copy; Todos los derechos reservados.</p>
-              </div>
-            </footer>
+           <Footer />
           </LoadingProvider>
         </html>
       </NextAuthProvider>

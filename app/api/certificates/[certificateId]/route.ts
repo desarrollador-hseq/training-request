@@ -25,7 +25,7 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
             "certificateDate",
             "expeditionDate",
             "dueDate",
-            "monthsToExpire",
+            // "monthsToExpire",
         ];
 
         const missingProperty = requiredProperties.find(prop => !(prop in values));
@@ -34,7 +34,7 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
             return new NextResponse(`Missing property: ${missingProperty}`, { status: 400 });
         }
 
-        const courses = await db.certificate.update({
+        const certificate = await db.certificate.update({
             where: {
                 id: params.certificateId
             },
@@ -44,7 +44,16 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
 
         })
 
-        return NextResponse.json(courses)
+        await db.certificateEvent.create({
+            data: {
+                eventType: "UPDATED",
+                adminId:  session.user.id!,
+                certificateId: certificate.id,
+                certificateData: JSON.stringify(certificate),
+            }
+        })
+
+        return NextResponse.json(certificate)
 
     } catch (error) {
         console.log("[CERTIFICATE-CREATE]", error)

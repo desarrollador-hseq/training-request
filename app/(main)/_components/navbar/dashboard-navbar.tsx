@@ -8,7 +8,6 @@ import { LogoMain } from "@/components/logo-main";
 import { cn } from "@/lib/utils";
 import { DropdownCompany } from "./dropdown-company";
 
-
 export const DashboardNavbar = ({
   businessName,
   isAdmin,
@@ -44,12 +43,11 @@ export const DashboardNavbar = ({
             <LogoMain goRoot />
           </div>
 
-          {isAdmin && <span>Admin</span>}
-          {!isAdmin && <span className="text-white">{businessName}</span>}
-          <DropdownCompany CompanyName={businessName} />
-          {isAdmin && <SheetCollaboratorsCart />}
-
-          
+          <div className="flex gap-5 items-center">
+            {isAdmin && <span>Administrador</span>}
+            <DropdownCompany companyName={businessName} />
+            {isAdmin && <SheetCollaboratorsCart />}
+          </div>
         </div>
       </div>
     </div>

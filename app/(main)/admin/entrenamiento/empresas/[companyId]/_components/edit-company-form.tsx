@@ -111,6 +111,16 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
               type: "manual",
               message: "Nit ya registrado en otra empresa",
             });
+          } else if (
+            typeof errorMessage === "string" &&
+            errorMessage.includes(
+              "Email ya se encuentra registrado en una empresa activa"
+            )
+          ) {
+            setError("email", {
+              type: "manual",
+              message: "Email ya se encuentra registrado en una empresa activa",
+            });
           } else {
             toast.error(errorMessage);
           }
@@ -134,19 +144,15 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-1 mb-7 w-full">
             <div className="space-y-4">
-            <div>
-                <InputForm 
-                control={form.control}
-                label="Razón social"
-                name="businessName"
+              <div>
+                <InputForm
+                  control={form.control}
+                  label="Razón social"
+                  name="businessName"
                 />
               </div>
               <div>
-                <InputForm 
-                control={form.control}
-                label="NIT"
-                name="nit"
-                />
+                <InputForm control={form.control} label="NIT" name="nit" />
               </div>
               <div>
                 <FormField
@@ -186,25 +192,25 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
 
             {/* 2 Column */}
             <div className="space-y-4">
-            <div>
-                <InputForm 
-                control={form.control}
-                label="Nombre del contacto"
-                name="nameContact"
+              <div>
+                <InputForm
+                  control={form.control}
+                  label="Nombre del contacto"
+                  name="nameContact"
                 />
               </div>
               <div>
-                <InputForm 
-                control={form.control}
-                label="Correo del contacto"
-                name="email"
+                <InputForm
+                  control={form.control}
+                  label="Correo del contacto"
+                  name="email"
                 />
               </div>
               <div>
-                <InputForm 
-                control={form.control}
-                label="Teléfono del contacto"
-                name="phoneContact"
+                <InputForm
+                  control={form.control}
+                  label="Teléfono del contacto"
+                  name="phoneContact"
                 />
               </div>
             </div>

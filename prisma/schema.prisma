@@ -35,7 +35,9 @@ model Company {
 
   collaborators Collaborator[]
 
-  active Boolean @default(true)
+  certificateEvent CertificateEvent[]
+
+  active           Boolean            @default(true)
 
   passwordResetTokens PasswordResetToken[]
 
@@ -189,11 +191,11 @@ model Certificate {
   legalRepresentative  String?
   companyNit           String?
 
-  courseName String?
-  levelName  String?
-  resolution String?
-  levelHours Int?
-  monthsToExpire Int? 
+  courseName     String?
+  levelName      String?
+  resolution     String?
+  levelHours     Int?
+  monthsToExpire Int?
 
   certificateDate DateTime?
   expeditionDate  DateTime?
@@ -201,11 +203,35 @@ model Certificate {
 
   active Boolean @default(true)
 
+  certificateEvent CertificateEvent[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([collaboratorId])
   @@index([courseLevelId])
+}
+
+enum EventType {
+  UPDATED
+  CREATED
+}
+
+model CertificateEvent {
+  id        String    @id @default(uuid())
+  eventType EventType
+  certificateData  String? @db.Text
+
+  certificateId String
+  certificate   Certificate @relation(fields: [certificateId], references: [id])
+
+  adminId String
+  admin   Company? @relation(fields: [adminId], references: [id])
+  
+  createdAt DateTime @default(now())
+
+  @@index([certificateId])
+  @@index([adminId])
 }
 
 model CourseLevel {

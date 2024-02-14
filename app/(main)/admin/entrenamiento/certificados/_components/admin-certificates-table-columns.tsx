@@ -1,15 +1,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  Certificate,
-  Collaborator,
-  Company,
-  Course,
-  CourseLevel,
-} from "@prisma/client";
+import { Certificate } from "@prisma/client";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatDateOf } from "@/lib/utils";
 
 interface CertificateWithCollaborator extends Certificate {
   courseLevel: { monthsToExpire: number | undefined | null };
@@ -138,40 +133,28 @@ export const columnsAdminCertificatesTable: ColumnDef<CertificateWithCollaborato
       },
     },
     {
-      accessorKey: "fileUrl",
-      accessorFn: (value) => value.fileUrl,
-      enableColumnFilter: false,
+      accessorKey: "certificateDate",
+      accessorFn: (value) =>
+        value.certificateDate && formatDateOf(value.createdAt),
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
-            className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
+            className="font-semibold"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Link
+            Creado
+            <ArrowUpDown className="ml-2 h-3 w-3" />
           </Button>
         );
       },
       cell: ({ row }) => {
-        const name = row.original?.fileUrl;
-        return <div className="capitalize">{name}</div>;
+        const createdAt = row.original?.createdAt;
+        return (
+          <div className="capitalize">
+            {createdAt && formatDateOf(createdAt)}
+          </div>
+        );
       },
     },
-    //   {
-    //     accessorKey: "date",
-    //     header: ({ column }) => {
-    //       return (
-    //         <Button
-    //           variant="ghost"
-    //           className="font-semibold"
-    //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    //         >
-    //           date
-    //           <ArrowUpDown className="ml-2 h-3 w-3" />
-    //         </Button>
-    //       );
-    //     },
-    //     cell: ({ row }) => (
-    //       <div className="capitalize text-center text-sm">{row.getValue("date")}</div>
-    //     ),
-    //   },
   ];

@@ -42,8 +42,8 @@ export const ModalLogout = () => {
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>
-        <Button className={cn("bg-muted hover:bg-muted/80 rounded-none h-[54px]")}>
+      <AlertDialogTrigger asChild className="text-left flex justify-start">
+        <Button className={cn("rounded-none w-full h-9 text-left flex items-start bg-red-600 hover:bg-red-700")}>
           Salir
           <LogOut className="w-4 h-4 ml-2" />
           </Button>

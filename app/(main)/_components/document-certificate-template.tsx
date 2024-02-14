@@ -59,7 +59,6 @@ interface CertificateTemplateProps {
 
 export const DocumentCertificateTemplate = ({
   fileUrl,
-  certificateId,
   arlName,
   companyName,
   companyNit,
@@ -172,6 +171,7 @@ export const DocumentCertificateTemplate = ({
                       style={{
                         fontSize: 18,
                         fontWeight: "black",
+                        textTransform: "uppercase"
                       }}
                     >
                       {fullname}
@@ -349,23 +349,23 @@ export const DocumentCertificateTemplate = ({
               </Link>
             )}
 
-            <Text style={{ fontWeight: "semibold" }}>
+            {/* <Text style={{ fontWeight: "semibold" }}>
               N° de verificación:
               {certificateId && (
                 <View>
                   <Text style={{ fontWeight: "bold" }}>{certificateId}</Text>
-                  {/* {consecutive && (
+                  {consecutive && (
                     <Text style={{ fontWeight: "light" }}>@{consecutive}</Text>
-                  )} */}
+                  )}
                 </View>
               )}
-            </Text>
+            </Text> */}
             <Text style={{}}>
-              La autenticidad de este certificado puede ser verificado al correo
-              info@grupohseq.com tel. 3662030. 3851821-3145468721-3235824200 o
-              en la Pag. www.grupohseq.com
+            Para verificar el presente documento, escanear el código QR. También al correo info@grupohseq.com 
             </Text>
+            <Text style={{}}>tel. (605) 3662030 - (605) 3851821 - 3145468721 - 3235824200 </Text>
             <Text style={{}}>Calle 30 # 10-230 L. 1 y Bodega interna 33</Text>
+            <Text style={{}}>Barranquilla - Atlántico</Text>
           </View>
         </View>
       </Page>

@@ -31,6 +31,17 @@ export async function PATCH(req: Request, { params }: { params: { companyId: str
                 if (result) return new NextResponse("Nit ya registrado en otra empresa", { status: 400 })
             }
         }
+        if (values.email) {
+            if (values.email !== companySaved.email) {
+                const result = await db.company.findFirst({
+                    where: {
+                        email: values.email,
+                        active: true,
+                    }
+                })
+                if (result) return new NextResponse("Email ya se encuentra registrado en una empresa activa", { status: 400 })
+            }
+        }
 
         const company = await db.company.update({
             where: {
@@ -45,7 +56,7 @@ export async function PATCH(req: Request, { params }: { params: { companyId: str
 
     } catch (error) {
         console.log("[COMPANY_PATCH_ID]", error)
-        return new NextResponse("Internal Errorr", { status: 500 })
+        return new NextResponse("Internal Errorr" + error, { status: 500 })
     }
 }
 export async function DELETE(req: Request, { params }: { params: { companyId: string } }) {

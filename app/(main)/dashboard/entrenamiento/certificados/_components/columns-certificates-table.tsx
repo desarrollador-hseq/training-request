@@ -58,46 +58,6 @@ export const columnCertificatesTable: ColumnDef<CertificateWithCollaborator>[] =
       },
     },
     {
-      accessorKey: "companyName",
-      accessorFn: (value) => value.companyName,
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
-          >
-            Empresa
-            <ArrowUpDown className="ml-2 h-3 w-3" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const name = row.original?.companyName;
-        return <div className="capitalize">{name}</div>;
-      },
-    },
-    {
-      accessorKey: "companyNit",
-      accessorFn: (value) => value.companyNit,
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
-          >
-            NIT
-            <ArrowUpDown className="ml-2 h-3 w-3" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const nit = row.original?.companyNit;
-        return <div className="capitalize">{nit}</div>;
-      },
-    },
-    {
       accessorKey: "courseName",
       accessorFn: (value) => value.courseName,
       header: ({ column }) => {
@@ -137,41 +97,4 @@ export const columnCertificatesTable: ColumnDef<CertificateWithCollaborator>[] =
         return <div className="capitalize">{name}</div>;
       },
     },
-    // {
-    //   accessorKey: "fileUrl",
-    //   accessorFn: (value) => value.fileUrl,
-    //   enableColumnFilter: false,
-    //   header: ({ column }) => {
-    //     return (
-    //       <Button
-    //         variant="ghost"
-    //         className="hover:bg-secondary/30 hover:text-secondary-foreground text-xs"
-    //       >
-    //         Link
-    //       </Button>
-    //     );
-    //   },
-    //   cell: ({ row }) => {
-    //     const name = row.original?.fileUrl;
-    //     return <div className="capitalize">{name}</div>;
-    //   },
-    // },
-    //   {
-    //     accessorKey: "date",
-    //     header: ({ column }) => {
-    //       return (
-    //         <Button
-    //           variant="ghost"
-    //           className="font-semibold"
-    //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    //         >
-    //           date
-    //           <ArrowUpDown className="ml-2 h-3 w-3" />
-    //         </Button>
-    //       );
-    //     },
-    //     cell: ({ row }) => (
-    //       <div className="capitalize text-center text-sm">{row.getValue("date")}</div>
-    //     ),
-    //   },
   ];

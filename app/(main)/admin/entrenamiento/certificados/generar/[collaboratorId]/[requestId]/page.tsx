@@ -1,6 +1,6 @@
-import React from "react";
-import { db } from "@/lib/db";
+
 import { redirect } from "next/navigation";
+import { db } from "@/lib/db";
 import { CertificatePreview } from "./_components/certificate-preview";
 
 
@@ -35,11 +35,6 @@ const GenerateCertificatePage = async ({
   if (!trainingCollaborator) {
     redirect("/admin/entrenamiento/certificados");
   }
-  const baseURL = process.env.NEXTAUTH_URL;
-
-  const certificateId = "51fadf8f-6942-4a86-8c8b-7ce519e06b5d";
-
-  const fileUrl = `${baseURL}/verificar-certificado/${certificateId}`;
 
 
   return (

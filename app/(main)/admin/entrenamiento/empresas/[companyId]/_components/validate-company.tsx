@@ -1,13 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "sonner";
+import { Company } from "@prisma/client";
 import { Banner } from "@/components/banner";
 import { useLoading } from "@/components/providers/loading-provider";
 import { SimpleModal } from "@/components/simple-modal";
-import { Company } from "@prisma/client";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { toast } from "sonner";
 
 export const ValidateCompany = ({ company }: { company: Company }) => {
   const { setLoadingApp } = useLoading();
@@ -16,13 +15,19 @@ export const ValidateCompany = ({ company }: { company: Company }) => {
     setLoadingApp(true);
     try {
       await axios.patch(`/api/companies/${company.id}`, { isValid: true });
+
+      await axios.post(`/api/mail/company-validate`, {
+        company,
+      });
+
+
       toast.info("Se ha verificado la empresa correctamente");
       router.refresh();
     } catch (error) {
       toast.error(
         "Ocurrió un error inesperado, por favor intentelo nuevamente"
       );
-      console.log("error al eliminar la empresa" + error);
+      console.log("error activate" + error);
     } finally {
       setLoadingApp(false);
     }

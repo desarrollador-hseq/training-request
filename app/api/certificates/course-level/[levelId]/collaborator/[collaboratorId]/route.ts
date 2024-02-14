@@ -1,6 +1,6 @@
+import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../../../../../auth/[...nextauth]/route"
-import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 
 
@@ -15,7 +15,6 @@ export async function POST(req: Request, { params }: { params: { levelId: string
             "collaboratorFullname",
             "collaboratorNumDoc",
             "collaboratorTypeDoc",
-           
             "companyName",
             "companyNit",
             "courseName",
@@ -37,7 +36,7 @@ export async function POST(req: Request, { params }: { params: { levelId: string
 
   
 
-        const courses = await db.certificate.create({
+        const certificate = await db.certificate.create({
             data: {
                 collaboratorId: params.collaboratorId,
                 courseLevelId: params.levelId,
@@ -58,7 +57,16 @@ export async function POST(req: Request, { params }: { params: { levelId: string
             }
         })
 
-        return NextResponse.json(courses)
+        await db.certificateEvent.create({
+            data: {
+                eventType: "CREATED",
+                adminId:  session.user.id!,
+                certificateId: certificate.id,
+                certificateData: JSON.stringify(certificate),
+            }
+        })
+
+        return NextResponse.json(certificate)
 
     } catch (error) {
         console.log("[CERTIFICATE-CREATE]", error)

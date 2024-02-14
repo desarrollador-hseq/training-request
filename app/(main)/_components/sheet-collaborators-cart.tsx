@@ -106,7 +106,7 @@ export const SheetCollaboratorsCart = () => {
                     </h2>
                   </SimpleModal>
                 </div>
-                {cart.collaborators.map((col, index) => (
+                {cart.collaborators?.map((col, index) => (
                   <div
                     key={col.collaboratorId + index}
                     className="flex justify-between items-center p-2 rounded-sm bg-primary/50 text-white mt-2"

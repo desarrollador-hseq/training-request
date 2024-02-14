@@ -29,25 +29,18 @@ const EditCompanyPage = async ({
     <div>
       {company ? (
         <div className="w-full">
-          <div className="flex justify-between items-center">
-            <div className="w-full flex justify-between items-center">
+          <TitleOnPage
+            text={
               <div>
-                <TitleOnPage
-                  text={
-                    <div>
-                      Editar empresa:
-                      <span className="font-normal">
-                        {company.businessName}
-                      </span>
-                    </div>
-                  }
-                  bcrumb={crumbs}
-                />
+                Editar empresa:
+                <span className="font-normal">{company.businessName}</span>
               </div>
+            }
+            bcrumb={crumbs}
+          >
+            <DeactivateCompany company={company} />
+          </TitleOnPage>
 
-              <DeactivateCompany company={company} />
-            </div>
-          </div>
           <div className="w-full flex flex-col gap-3">
             <Card className="rounded-sm">
               <CardHeader>

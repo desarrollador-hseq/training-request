@@ -6,6 +6,11 @@ import { CertificateItemTimeline } from "./certificate-item-timeline";
 import { TitleOnPage } from "@/components/title-on-page";
 import { SimpleModal } from "@/components/simple-modal";
 
+const bcrumb = [
+  { label: "Certificados", path: "/dashboard/entrenamiento/certificados" },
+  { label: "Editar", path: "editar" },
+];
+
 const EditCertificate = async ({
   params,
 }: {
@@ -31,13 +36,16 @@ const EditCertificate = async ({
       certificateId: certificate.id,
     },
     include: {
-      admin: true
+      admin: true,
+    },
+    orderBy: {
+      createdAt: "desc"
     }
-  })
+  });
 
   return (
     <div>
-      <TitleOnPage text={`Editar Certificado`}>
+      <TitleOnPage text={`Editar Certificado`} bcrumb={bcrumb} >
         <SimpleModal
           textBtn={<GanttChartSquare />}
           btnClass={`bg-accent text-white`}
@@ -45,11 +53,9 @@ const EditCertificate = async ({
         >
           <div className="mx-5 w-fit">
             <ol className="relative border-s border-primary ">
-              {
-                certificateEvents.map(event => (
-                  <CertificateItemTimeline event={event} />
-                ))
-              }
+              {certificateEvents.map((event) => (
+                <CertificateItemTimeline event={event} />
+              ))}
             </ol>
           </div>
         </SimpleModal>

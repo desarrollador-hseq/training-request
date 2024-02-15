@@ -22,8 +22,8 @@ import { useLoading } from "@/components/providers/loading-provider";
 import { CollaboratorsSelectTable } from "../../../../colaboradores/_components/collaborators-select-table";
 import { columnsCollaboratorSelectTable } from "../../../../colaboradores/_components/collaborators-select-table-columns";
 
+
 interface SelectCollaboratorsProps {
-  // courseLevels: CourseLevel[];
   collaborators: Collaborator[];
   collaboratorSelected: Collaborator[];
   trainingRequestId: string;
@@ -81,14 +81,24 @@ export const SelectCollaborators = ({
     <div className="">
       {isPending && (
         <Sheet open={openSheet} onOpenChange={setOpenSheet}>
-          <SheetTrigger asChild>
-            <Button variant="primary">Agregar</Button>
+          <SheetTrigger asChild className="relative">
+            <div>
+              <span className="relative flex w-fit h-fit">
+                {collaboratorSelected.length === 0 && (
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-md bg-sky-400 opacity-75"></span>
+                )}
+                <span className="relative inline-flex rounded-full  bg-sky-500">
+                  <Button variant="primary">Agregar</Button>
+                </span>
+              </span>
+            </div>
           </SheetTrigger>
           <SheetContent side="bottom">
             <SheetHeader>
               <SheetTitle>Seleccionar los colaboradores</SheetTitle>
               <SheetDescription>
-                Make changes to your profile here. Click save when you're done.
+                Selecciona todos los colaboradores que necesites agregar a la
+                solicitud
               </SheetDescription>
             </SheetHeader>
             <div className="grid gap-4 py-4">

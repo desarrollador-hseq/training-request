@@ -13,19 +13,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  ChevronDown,
-  ChevronDownSquare,
-  ChevronUpSquare,
-} from "lucide-react";
+import { ChevronDownSquare, ChevronUpSquare } from "lucide-react";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -41,7 +31,7 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
-import { CollaboratorsSimpleTable } from "../editar/[requestId]/_components/collaborators-simple-table";
+import { CollaboratorListTable } from "./collaborator-list-table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -104,32 +94,7 @@ export function RequestsTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columnas <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+   
       </div>
       <div className="rounded-md border">
         <Table>
@@ -175,21 +140,23 @@ export function RequestsTable<TData, TValue>({
                           )}
                         </TableCell>
                       ))}
-                      <CollapsibleTrigger
-                        onClick={() => handleCollapsible(row.id)}
-                        asChild
-                        className="max-h-max flex items-center my-auto"
-                      >
-                        <TableCell className="flex justify-end">
-                          <Button variant="ghost" className="h-full my-auto">
-                            {idOpenCollapsible !== row.id ? (
-                              <ChevronDownSquare />
-                            ) : (
-                              <ChevronUpSquare />
-                            )}
-                          </Button>
-                        </TableCell>
-                      </CollapsibleTrigger>
+                      {row.original.collaborators.length > 0 && (
+                        <CollapsibleTrigger
+                          onClick={() => handleCollapsible(row.id)}
+                          asChild
+                          className="max-h-max flex items-center my-auto"
+                        >
+                          <TableCell className="flex justify-end">
+                            <Button variant="ghost" className="h-full my-auto text-slate-500">
+                              {idOpenCollapsible !== row.id ? (
+                                <ChevronDownSquare />
+                              ) : (
+                                <ChevronUpSquare />
+                              )}
+                            </Button>
+                          </TableCell>
+                        </CollapsibleTrigger>
+                      )}
                     </TableRow>
                     <CollapsibleContentTable
                       colSpan={7}
@@ -203,10 +170,9 @@ export function RequestsTable<TData, TValue>({
                               className="bg-secondary"
                             />
                           </CardHeader>
-                          <CardContent className="bg-slate-200">
+                          <CardContent className="bg-slate-200 p-0">
                             {row.original?.collaborators && (
-                              <CollaboratorsSimpleTable
-                                trainingRequestId={row.original.id}
+                              <CollaboratorListTable
                                 collaborators={row.original?.collaborators}
                               />
                             )}

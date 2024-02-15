@@ -1,6 +1,13 @@
 "use client";
 
-import { TrainingRequest } from "@prisma/client";
+import {
+  Collaborator,
+  Company,
+  Course,
+  CourseLevel,
+  TrainingRequest,
+  TrainingRequestCollaborator,
+} from "@prisma/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminRequestsTable } from "./admin-requests-table";
@@ -9,17 +16,32 @@ import useTabManager from "@/hooks/useTabManager";
 import { adminRequestsActivesTablecolumns } from "./admin-requests-actives-table-columns";
 
 interface TabsRequestProps {
-  requests: TrainingRequest[];
+  trainingRequest:
+    | (TrainingRequest &
+        {
+          course: Course | null | undefined;
+          company: Company | null | undefined;
+          collaborators:
+            | (TrainingRequestCollaborator &
+                {
+                  collaborator: Collaborator | null | undefined;
+                  courseLevel: CourseLevel | null | undefined;
+                })[]
+            | null
+            | undefined;
+        })[]
+    | null
+    | undefined;
 }
 
-export const TabsRequest = ({ requests }: TabsRequestProps) => {
+export const TabsRequest = ({ trainingRequest }: TabsRequestProps) => {
   const { activeTab, handleTabChange } = useTabManager({
     initialTab: "activas",
   });
 
-  const actives = requests.filter((req) => req.state === "ACTIVE");
-  const executed = requests.filter((req) => req.state === "EXECUTED");
-  const cancelled = requests.filter((req) => req.state === "CANCELLED");
+  const actives = trainingRequest?.filter((req) => req.state === "ACTIVE") || [];
+  const executed = trainingRequest?.filter((req) => req.state === "EXECUTED") || [];
+  const cancelled = trainingRequest?.filter((req) => req.state === "CANCELLED") || [];
 
   return (
     <Tabs

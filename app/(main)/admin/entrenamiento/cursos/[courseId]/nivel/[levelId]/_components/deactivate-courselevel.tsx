@@ -1,6 +1,6 @@
 "use client";
 
-import { Course } from "@prisma/client";
+import { Course, CourseLevel } from "@prisma/client";
 import axios from "axios";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -8,13 +8,13 @@ import { DeleteConfirmModal } from "@/components/delete-confirm-modal";
 import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/providers/loading-provider";
 
-export const DeactivateCourse = ({ course }: { course?: Course | null }) => {
+export const DeactivateCourselevel = ({ level, course }: { level?: CourseLevel | null; course?: string | null }) => {
   const { loadingApp, setLoadingApp } = useLoading();
 
   const handleDelete = async () => {
     setLoadingApp(true);
     try {
-      await axios.delete(`/api/courses/${course?.id}`);
+      await axios.delete(`/api/courses/${course}/course-levels/${level?.id}`);
       toast.info("Se ha eliminado el curso correctamente");
     } catch (error) {
       toast.error(
@@ -28,13 +28,13 @@ export const DeactivateCourse = ({ course }: { course?: Course | null }) => {
 
   const title = (
     <p className="font-normal inline">
-      el curso: <span className="font-bold "> {course?.name}</span>
+      el nivel: <span className="font-bold "> {level?.name}</span>
     </p>
   );
 
   return (
     <div>
-      {course && course.active && (
+      {level && level?.active && (
         <DeleteConfirmModal onConfirm={handleDelete} title={title}>
           <Button
             disabled={loadingApp}

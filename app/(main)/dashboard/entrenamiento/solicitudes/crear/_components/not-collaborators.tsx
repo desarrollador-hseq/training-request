@@ -1,6 +1,8 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -8,8 +10,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export const NotCollaborators = ({ open }: { open: boolean }) => {

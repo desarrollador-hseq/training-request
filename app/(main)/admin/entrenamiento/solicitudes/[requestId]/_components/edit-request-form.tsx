@@ -1,5 +1,15 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import {
+  Collaborator,
+  Company,
+  Course,
+  TrainingRequest,
+  TrainingRequestCollaborator,
+} from "@prisma/client";
+import axios from "axios";
+import { toast } from "sonner";
 import { CardItemInfo } from "@/components/card-item-info";
 import { useLoading } from "@/components/providers/loading-provider";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
@@ -11,24 +21,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Collaborator, Company, Course, TrainingRequest } from "@prisma/client";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { toast } from "sonner";
+
 import { ListCollaboratorsRequest } from "./list-collaborators-request";
+
+interface EditRequestFormProps {
+  trainingRequest:
+    | (TrainingRequest & {
+        company: Company | null | undefined;
+        course: Course | null | undefined;
+        collaborators:
+          | (TrainingRequestCollaborator & {
+              collaborator: Collaborator | null | undefined;
+              courseLevel:
+                | { name: string | null | undefined }
+                | null
+                | undefined;
+            })[]
+          | null
+          | undefined;
+      })
+    | null
+    | undefined;
+  courses: Course[] | null | undefined;
+}
 
 export const EditRequestForm = ({
   trainingRequest,
   courses,
-}: {
-  trainingRequest: TrainingRequest & {
-    company: Company | null;
-    collaborators: Collaborator[] | null;
-    course: Course | null;
-  };
-  courses: Course[] | null;
-}) => {
+}: EditRequestFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
 
@@ -44,7 +64,7 @@ export const EditRequestForm = ({
     try {
       setLoadingApp(true);
       const { data } = await axios.patch(
-        `/api/training-requests/${trainingRequest.id}`,
+        `/api/training-requests/${trainingRequest?.id}`,
         { courseId: courseId }
       );
       toast.success("Colaborador actualizado");
@@ -59,7 +79,7 @@ export const EditRequestForm = ({
     try {
       setLoadingApp(true);
       const { data } = await axios.patch(
-        `/api/training-requests/${trainingRequest.id}`,
+        `/api/training-requests/${trainingRequest?.id}`,
         { state: state }
       );
       toast.success("Colaborador actualizado");
@@ -110,7 +130,7 @@ export const EditRequestForm = ({
                   />
                   <CardItemInfo
                     label="# Colaboradores"
-                    text={trainingRequest.collaborators?.length}
+                    text={trainingRequest?.collaborators?.length}
                   />
                   <CardItemInfo
                     label="Estado"
@@ -144,7 +164,9 @@ export const EditRequestForm = ({
           </div>
         </CardHeader>
         <CardContent>
-          <ListCollaboratorsRequest collaborators={trainingRequest.collaborators}/>
+          <ListCollaboratorsRequest
+            collaborators={trainingRequest?.collaborators}
+          />
         </CardContent>
       </Card>
     </div>

@@ -64,7 +64,7 @@ export async function POST(req: Request, { params }: { params: { trainingRequest
 
   } catch (error) {
     console.log("[TRAINING-REQUEST-CREATE-MANY]", error)
-    return new NextResponse("Internal Errorr", { status: 500 })
+    return new NextResponse("Internal Errorr" + error, { status: 500 })
   }
 }
 
@@ -88,34 +88,7 @@ export async function PATCH(req: Request, { params }: { params: { trainingReques
 
   } catch (error) {
       console.log("[TRAINING-REQUEST-UPDATED]", error)
-      return new NextResponse("Internal Errorr", { status: 500 })
+      return new NextResponse("Internal Errorr" + error, { status: 500 })
   }
 }
-// export async function PATCH(req: Request, { params }: { params: { trainingRequestId: string } }) {
-//   const session = await getServerSession(authOptions)
-//   if (!session) return new NextResponse("Unauthorized", { status: 401 })
-//   const values = await req.json()
-
-//   const {state, activeFrom} = values
-//   if (!state || !activeFrom) return new NextResponse("Bad request", { status: 400 })
-
-//   try {
-//       const request = await db.trainingRequest.update({
-//           where: {
-//             id: params.trainingRequestId,
-//           },
-//           data: {
-//             state: state,
-//             activeFrom: activeFrom
-//           }
-
-//       })
-
-//       return NextResponse.json(request)
-
-//   } catch (error) {
-//       console.log("[TRAINING-REQUEST-UPDATED]", error)
-//       return new NextResponse("Internal Errorr", { status: 500 })
-//   }
-// }
 

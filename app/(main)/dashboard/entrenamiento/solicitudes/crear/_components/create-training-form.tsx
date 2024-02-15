@@ -1,16 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import * as z from "zod";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import * as z from "zod";
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { Course } from "@prisma/client";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -49,7 +48,6 @@ export const CreateTrainingForm = ({ courses }: { courses?: Course[] }) => {
       toast.error("Error al obtener los cursos, por favor recargue la página");
     }
   }, []);
-  
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -72,13 +70,13 @@ export const CreateTrainingForm = ({ courses }: { courses?: Course[] }) => {
           Crear solicitud de entrenamiento
         </h1>
         <p className="text-sm text-slate-600">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maiores
-          beatae fugit natus, rerum culpa iure.
+          El primer paso es elegir el tipo de entrenamiento, posteriormente
+          deberá seleccionar los colaboradores y adjuntar sus documentos
         </p>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 mt-8"
+            className="space-y-8 mt-8 max-w-[600px]"
           >
             <div>
               <FormField
@@ -113,7 +111,7 @@ export const CreateTrainingForm = ({ courses }: { courses?: Course[] }) => {
               />
             </div>
 
-            <div className="flex items-center gap-x-2">
+            <div className="flex items-center gap-x-2 w-full">
               <Link href="/dashboard/">
                 <Button type="button" variant="outline">
                   Cancelar

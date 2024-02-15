@@ -1,8 +1,7 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React, { Suspense } from "react";
 import { RequiredDocument } from "@prisma/client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IdentificationFileForm } from "../../../../colaboradores/[collaboratorId]/_components/identification-file-form";
-import { Loader2 } from "lucide-react";
+
 
 export const TabsDocumentRequired = ({
   documentsRequired,

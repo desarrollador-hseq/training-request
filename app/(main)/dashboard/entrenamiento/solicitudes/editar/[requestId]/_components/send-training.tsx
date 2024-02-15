@@ -28,11 +28,11 @@ export const SendTraining = ({
         });
 
         // Notificacion de correo a admins
-        // try {
-        //   await axios.post(`/api/mail/requests-created`, { trainingRequestId });
-        // } catch (emailError) {
-        //   console.error(emailError);
-        // }
+        try {
+          await axios.post(`/api/mail/requests-created`, { trainingRequestId });
+        } catch (emailError) {
+          console.error(emailError);
+        }
 
         toast.success("Solicitud enviada correctamente");
         router.refresh();

@@ -19,8 +19,8 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
         return NextResponse.json(courses)
 
     } catch (error) {
-        console.log("[INSPECTION-CREATE]", error)
-        return new NextResponse("Internal Errorr", { status: 500 })
+        console.log("[COURSE-CREATE]", error)
+        return new NextResponse("Internal Errorr " +error, { status: 500 })
     }
 
 }

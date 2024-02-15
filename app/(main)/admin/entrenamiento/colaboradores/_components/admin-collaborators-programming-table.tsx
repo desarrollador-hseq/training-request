@@ -51,10 +51,10 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[] &
     {
-      wasCertified: boolean | undefined;
-      isDisallowed: boolean | undefined;
-      isScheduled: boolean | undefined;
-      trainingRequestId: string | undefined;
+      wasCertified: boolean | undefined | null;
+      isDisallowed: boolean | undefined | null;
+      isScheduled: boolean | undefined | null;
+      trainingRequestId: string | undefined | null;
     }[];
 }
 

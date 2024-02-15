@@ -26,8 +26,13 @@ const EditRequestPage = async ({
       company: true,
       collaborators: {
         include: {
-          collaborator: true
-        }
+          collaborator: true,
+          courseLevel: {
+            select: {
+              name: true,
+            },
+          },
+        },
       },
       course: true,
     },
@@ -43,26 +48,22 @@ const EditRequestPage = async ({
     <div>
       {trainingRequest ? (
         <div className="w-full">
-          <div className="flex justify-between items-center">
-            <div className="w-full flex justify-between items-center">
-              <div>
-                <TitleOnPage
-                  text={
-                    <div>
-                      Editar Solicitud de:
-                      <span className="font-normal">
-                        {" "}
-                        {trainingRequest.course.name} -{" "}
-                        {trainingRequest.company.businessName}
-                      </span>
-                    </div>
-                  }
-                  bcrumb={crumbs}
-                />
-              </div>
+          <div>
+            <TitleOnPage
+              text={
+                <div>
+                  Editar Solicitud:
+                  <span className="font-normal">
+                    {" "}
+                    {trainingRequest.course.name} -{" "}
+                    {trainingRequest.company.businessName}
+                  </span>
+                </div>
+              }
+              bcrumb={crumbs}
+            />
 
-              {/* <DeactivateCompany company={company} /> */}
-            </div>
+            {/* <DeactivateCompany company={company} /> */}
           </div>
           <div className="w-full flex flex-col gap-3">
             <Card className="rounded-sm">

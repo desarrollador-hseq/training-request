@@ -32,6 +32,9 @@ const RequestTrainingPage = async () => {
         },
       },
     },
+    orderBy: {
+      createdAt: "desc"
+    }
   });
 
   return (

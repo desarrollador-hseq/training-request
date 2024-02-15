@@ -15,7 +15,11 @@ const CoursesPage = async () => {
       active: true,
     },
     include: {
-      courseLevels: true,
+      courseLevels: {
+        where: {
+          active: true
+        }
+      },
     },
     orderBy: {
       name: "desc",
@@ -23,15 +27,14 @@ const CoursesPage = async () => {
   });
   return (
     <div>
-      <div className="flex items-center">
-        <TitleOnPage text="Cursos" bcrumb={crumbs} />
+      <TitleOnPage text="Cursos" bcrumb={crumbs}>
         <Link
           className={cn(buttonVariants())}
           href={`/admin/entrenamiento/cursos/crear`}
         >
           Crear
         </Link>
-      </div>
+      </TitleOnPage>
 
       <Card>
         <CardContent>

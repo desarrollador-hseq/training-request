@@ -73,13 +73,8 @@ export const AdminScheduleCollaboratorForm = ({
   const router = useRouter();
   const pathname = usePathname();
   const { setLoadingApp } = useLoading();
-  const [fileUrl, setFileUrl] = useState<string | undefined>();
-  const [collaborator, setCollaborator] = useState(
-    trainingRequestCollaborator?.collaborator
-  );
-  const [courseLevel, setCourseLevel] = useState(
-    trainingRequestCollaborator?.courseLevel
-  );
+
+
   const [trainingRequest, setTrainingRequest] = useState(
     trainingRequestCollaborator
   );
@@ -91,10 +86,6 @@ export const AdminScheduleCollaboratorForm = ({
     from: trainingRequestCollaborator?.startDate || undefined,
     to: trainingRequestCollaborator?.endDate || undefined,
   });
-
-  useEffect(() => {
-    console.log({ courseLevel });
-  }, [courseLevel]);
 
   const [document, setDocument] = useState(
     trainingRequestCollaborator?.courseLevel?.requiredDocuments?.map(
@@ -109,10 +100,14 @@ export const AdminScheduleCollaboratorForm = ({
   );
 
   useEffect(() => {
-    setDocument(courseLevel?.requiredDocuments?.map((m) => m) || []);
-  }, [courseLevel]);
+    setDocument(
+      trainingRequestCollaborator?.courseLevel?.requiredDocuments?.map(
+        (m) => m
+      ) || []
+    );
+  }, [trainingRequestCollaborator?.courseLevel?.requiredDocuments]);
 
-  const onChange = async (courseLevelId: string, collaboratorId: string) => {
+  const onChange = async (courseLevelId: string, collaboratorId?: string) => {
     setCourseLevelId(courseLevelId);
     try {
       setLoadingApp(true);
@@ -149,11 +144,19 @@ export const AdminScheduleCollaboratorForm = ({
       <div className="absolute top-2 right-6">
         {!trainingRequestCollaborator?.isScheduled && (
           <MarkCollaboratorDisallowed
-            emailResponsibleCompany={collaborator?.company?.email}
+            emailResponsibleCompany={
+              trainingRequestCollaborator?.collaborator?.company?.email
+            }
             trainingRequestCollaboratorId={
               trainingRequestCollaborator?.trainingRequest?.id
             }
-            collaboratorId={collaborator?.id}
+            trainingRequestId={trainingRequestCollaborator?.trainingRequestId}
+            courseName={trainingRequestCollaborator?.courseLevel?.course?.name}
+            levelName={trainingRequestCollaborator?.courseLevel?.name}
+            toEmail={trainingRequestCollaborator?.collaborator?.email}
+            colDocument={`${trainingRequestCollaborator?.collaborator?.docType} ${trainingRequestCollaborator?.collaborator?.numDoc}`}
+            colName={trainingRequestCollaborator?.collaborator?.fullname}
+            collaboratorId={trainingRequestCollaborator?.collaborator?.id}
             isDisallowed={trainingRequestCollaborator?.isDisallowed}
             setIsDisallowed={setIsDisallowed}
           />
@@ -165,14 +168,14 @@ export const AdminScheduleCollaboratorForm = ({
           isDisallowed={isDisallowed}
           setDate={setDate}
           date={date}
-          collaboratorId={collaborator?.id}
-          collaboratorName={collaborator?.fullname}
-          collaboratorPhone={collaborator?.phone}
-          company={trainingRequest?.collaborator?.company}
-          courseName={trainingRequest?.courseLevel?.course?.name}
-          trainingRequestCollaborator={trainingRequest}
-          courseLevelName={trainingRequest?.courseLevel?.name}
-          trainingRequestId={trainingRequest?.trainingRequestId}
+          collaboratorId={trainingRequestCollaborator?.collaborator?.id}
+          collaboratorName={trainingRequestCollaborator?.collaborator?.fullname}
+          collaboratorPhone={trainingRequestCollaborator?.collaborator?.phone}
+          company={trainingRequestCollaborator?.collaborator?.company}
+          courseName={trainingRequestCollaborator?.courseLevel?.course?.name}
+          trainingRequestCollaborator={trainingRequestCollaborator}
+          courseLevelName={trainingRequestCollaborator?.courseLevel?.name}
+          trainingRequestId={trainingRequestCollaborator?.trainingRequestId}
           scheduledDate={{
             from: trainingRequest?.startDate,
             to: trainingRequest?.endDate,
@@ -187,9 +190,11 @@ export const AdminScheduleCollaboratorForm = ({
           collaboratorName={trainingRequestCollaborator?.collaborator?.fullname}
           trainingRequestCollaborator={trainingRequestCollaborator}
           collaboratorPhone={trainingRequestCollaborator?.collaborator?.phone}
-          courseName={trainingRequestCollaborator?.courseLevel?.course?.name}
-          courseLevelName={trainingRequestCollaborator?.courseLevel?.name}
           trainingRequestId={trainingRequestCollaborator?.trainingRequestId}
+          courseName={
+            trainingRequestCollaborator?.courseLevel?.course?.shortName
+          }
+          levelName={trainingRequestCollaborator?.courseLevel?.name}
           isDisallowed={isDisallowed}
           scheduledDate={{
             to: trainingRequestCollaborator?.endDate,
@@ -210,16 +215,16 @@ export const AdminScheduleCollaboratorForm = ({
                 <div className="w-full grid xs:grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-2 md:gap-3 p-2">
                   <CardItemInfo
                     label="Razón social"
-                    text={collaborator?.company?.businessName}
+                    text={trainingRequestCollaborator?.collaborator?.company?.businessName}
                   />
-                  <CardItemInfo label="Nit" text={collaborator?.company?.nit} />
+                  <CardItemInfo label="Nit" text={trainingRequestCollaborator?.collaborator?.company?.nit} />
                   <CardItemInfo
                     label="Sector"
-                    text={collaborator?.company?.sector}
+                    text={trainingRequestCollaborator?.collaborator?.company?.sector}
                   />
                   <CardItemInfo
                     label="Estado"
-                    text={collaborator?.company?.active ? "Activa" : "Inactiva"}
+                    text={trainingRequestCollaborator?.collaborator?.company?.active ? "Activa" : "Inactiva"}
                   />
                 </div>
               </div>
@@ -239,7 +244,9 @@ export const AdminScheduleCollaboratorForm = ({
                   <CardItemInfo
                     label="Tipo"
                     highlight
-                    text={courseLevel?.course?.name}
+                    text={
+                      trainingRequestCollaborator?.courseLevel?.course?.name
+                    }
                   />
                   <CardItemInfo
                     label="Nivel"
@@ -249,7 +256,7 @@ export const AdminScheduleCollaboratorForm = ({
                         defaultValue={
                           trainingRequestCollaborator?.courseLevelId!
                         }
-                        onValueChange={(e) => onChange(e, collaborator?.id)}
+                        onValueChange={(e) => onChange(e, trainingRequestCollaborator?.collaborator?.id)}
                         // disabled={!isPending}
                       >
                         <SelectTrigger className="w-[180px]">
@@ -266,7 +273,10 @@ export const AdminScheduleCollaboratorForm = ({
                     }
                   />
 
-                  <CardItemInfo label="# Horas" text={courseLevel?.hours} />
+                  <CardItemInfo
+                    label="# Horas"
+                    text={trainingRequestCollaborator?.courseLevel?.hours}
+                  />
                 </div>
               </div>
             </div>
@@ -284,40 +294,40 @@ export const AdminScheduleCollaboratorForm = ({
                 <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 p-2">
                   <CardItemInfo
                     label="Nombre completo"
-                    text={collaborator?.fullname}
+                    text={trainingRequestCollaborator?.collaborator?.fullname}
                   />
                   <CardItemInfo
                     label="N° de documento"
-                    text={`${collaborator?.docType} ${collaborator?.numDoc}`}
+                    text={`${trainingRequestCollaborator?.collaborator?.docType} ${trainingRequestCollaborator?.collaborator?.numDoc}`}
                   />
                   <CardItemInfo
                     label="Correo Electrónico"
-                    text={collaborator?.email}
+                    text={trainingRequestCollaborator?.collaborator?.email}
                   />
                   <CardItemInfo
                     label="Teléfono movil"
-                    text={collaborator?.phone}
+                    text={trainingRequestCollaborator?.collaborator?.phone}
                   />
                   <div>
                     <ArlForm
-                      arlName={trainingRequestCollaborator?.collaborator?.arlName}
-                      collaboratorId={collaborator?.id}
+                      arlName={
+                        trainingRequestCollaborator?.collaborator?.arlName
+                      }
+                      collaboratorId={trainingRequestCollaborator?.collaborator?.id}
                     />
                   </div>
                 </div>
               </div>
 
+                <SubtitleSeparator className="bg-primary" text="Documentos adjuntados"></SubtitleSeparator>
               <div className="px-2 grid md:grid-cols-2 gap-2">
                 {documentsRequired?.map((doc, index) => (
                   <div key={doc.id + index} className="">
                     <div>
                       <IdentificationFileForm
-                        // apiUrl={`/api/upload/file`}
-                        // update={`/api/collaborators/${trainingRequestCollaborator?.collaborator?.id}/course-level/${trainingRequestCollaborator?.courseLevelId}/document-required/${doc.collaboratorCourseLevelDocument[0].requiredDocumentId}`}
                         label={doc.name}
                         field={"documentLink"}
-                        // file={docc.documentLink}
-                        collaboratorId={collaborator?.id}
+                        collaboratorId={trainingRequestCollaborator?.collaborator?.id}
                         courseLevelId={courseLevelId}
                         documentRequiredId={doc.id}
                         ubiPath="colaboradores/documentos"

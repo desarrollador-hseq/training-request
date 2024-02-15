@@ -26,9 +26,9 @@ import { useLoading } from "@/components/providers/loading-provider";
 import { Progress } from "@/components/ui/progress";
 
 interface fileFormProps {
-  collaboratorId: string;
-  courseLevelId: string;
-  documentRequiredId: string;
+  collaboratorId?: string;
+  courseLevelId?: string;
+  documentRequiredId?: string;
   field: string;
   ubiPath?: string;
   label: string;
@@ -69,9 +69,9 @@ export const IdentificationFileForm = ({
   const { setLoadingApp } = useLoading();
   const toggleEdit = () => setIsEditing((current) => !current);
 
-  const [isUploading, setIsUploading] = useState<boolean | null>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [progressInterval, setProgressInterval] = useState<any | null>();
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -91,10 +91,7 @@ export const IdentificationFileForm = ({
     }
   }, [selectedFile]);
 
-  const isPdf = useMemo(
-    () => file?.documentLink.split(".").pop() === "pdf",
-    [file]
-  );
+  const isPdf = useMemo(() => fileUrl?.split(".").pop() === "pdf", [fileUrl]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -123,7 +120,7 @@ export const IdentificationFileForm = ({
   }, [documentRequiredId]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsUploading(true);
+    setFileUrl(undefined);
     const formData = new FormData();
     formData.append("file", values.file);
     ubiPath && formData.append("ubiPath", ubiPath);
@@ -149,6 +146,7 @@ export const IdentificationFileForm = ({
       });
 
       if (fileUrl) {
+        setFileUrl(undefined);
         await axios.patch(
           `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-required/${documentRequiredId}`,
           {
@@ -164,6 +162,8 @@ export const IdentificationFileForm = ({
         );
       }
 
+      setFileUrl(data.url);
+
       toast.success("Documento actualizado");
       toggleEdit();
       router.refresh();
@@ -174,7 +174,8 @@ export const IdentificationFileForm = ({
     } finally {
       clearInterval(progressInterval);
       setUploadProgress(0);
-      setIsUploading(false);
+
+      setSelectedFile(null);
     }
   };
 
@@ -194,9 +195,9 @@ export const IdentificationFileForm = ({
   };
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4 w-full h-full">
+    <div className="mt-6 border bg-blue-100 rounded-md p-4 w-full h-full">
       <div className="font-medium flex items-center justify-between">
-        {label}
+        <span className="text-lg font-semibold"> {label}</span>
         <Button
           onClick={toggleEdit}
           variant="secondary"

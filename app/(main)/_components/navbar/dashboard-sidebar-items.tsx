@@ -19,8 +19,6 @@ export const DashboardSidebarItems = ({
   const pathname = usePathname();
   const router = useRouter();
 
-  console.log({ pathname, href });
-
   const isActive = useMemo(
     () =>
       pathname === href ||

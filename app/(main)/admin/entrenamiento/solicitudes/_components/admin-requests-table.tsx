@@ -34,7 +34,6 @@ import {
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CollapsibleContentTable } from "@/components/collapsible-content-table";
 import { cn } from "@/lib/utils";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { AdminCollaboratorsSimpleTable } from "./admin-collaborators-simple-table";
@@ -196,7 +195,6 @@ export function AdminRequestsTable<TData, TValue>({
                             />
                           </div>
                           <div className="bg-slate-200 p-0">
-                           {console.log({first: row.original})}
                             {row.original?.collaborators && (
                               <AdminCollaboratorsSimpleTable
                                 trainingRequestId={row.original.id}

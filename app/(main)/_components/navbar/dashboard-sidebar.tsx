@@ -7,42 +7,45 @@ import {
   Clipboard,
   ClipboardCheck,
   Users,
+  UsersRound,
+  ScrollText,
+  Home,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { DashboardSidebarContent } from "./dashboard-sidebar-content";
 
 const dashRoutes = [
-  { icon: Clipboard, label: "Inicio", href: "/dashboard" },
+  { icon: Home, label: "Inicio", href: "/dashboard" },
   {
     icon: ClipboardCheck,
     label: "Solicitudes",
     href: "/dashboard/entrenamiento/solicitudes",
   },
   {
-    icon: Users,
+    icon: ScrollText,
     label: "Certificados",
     href: "/dashboard/entrenamiento/certificados",
   },
   {
-    icon: ClipboardCheck,
+    icon: UsersRound,
     label: "Colaboradores",
     href: "/dashboard/entrenamiento/colaboradores",
   },
 ];
 const adminRoutes = [
-  { icon: Clipboard, label: "Inicio", href: "/admin" },
+  { icon: Home, label: "Inicio", href: "/admin" },
   {
     icon: ClipboardCheck,
     label: "Solicitudes",
     href: "/admin/entrenamiento/solicitudes",
   },
   {
-    icon: Users,
+    icon: ScrollText,
     label: "Certificados",
     href: "/admin/entrenamiento/certificados",
   },
   {
-    icon: ClipboardCheck,
+    icon: UsersRound,
     label: "Colaboradores",
     href: "/admin/entrenamiento/colaboradores",
   },

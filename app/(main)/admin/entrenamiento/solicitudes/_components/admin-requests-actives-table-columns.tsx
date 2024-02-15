@@ -3,7 +3,14 @@ import Link from "next/link";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Collaborator, Company, Course, TrainingRequest } from "@prisma/client";
+import {
+  Collaborator,
+  Company,
+  Course,
+  CourseLevel,
+  TrainingRequest,
+  TrainingRequestCollaborator,
+} from "@prisma/client";
 import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,16 +23,23 @@ const stateEsp = {
   PENDING: { text: "No enviada", icon: "🕒" },
   ACTIVE: { text: "Activa", icon: "✅" },
   EXECUTED: { text: "Ejecutada", icon: "✔️" },
-  PROGRAMMED: { text: "Programada", icon: "📅" },
   CANCELLED: { text: "Cancelada", icon: "❌" },
 };
 
+interface AdminRequestsActivesTablecolumnsProps extends TrainingRequest {
+  course: Course | null | undefined;
+  company: Company | null | undefined;
+  collaborators:
+    | (TrainingRequestCollaborator & {
+        collaborator: Collaborator | null | undefined;
+        courseLevel: CourseLevel | null | undefined;
+      })[]
+    | null
+    | undefined;
+}
+
 export const adminRequestsActivesTablecolumns: ColumnDef<
-  TrainingRequest & {
-    course?: Course | null;
-    company: Company | null;
-    collaborators?: Collaborator[] | null;
-  }
+  AdminRequestsActivesTablecolumnsProps | null | undefined
 >[] = [
   {
     accessorKey: "companyId",
@@ -42,7 +56,7 @@ export const adminRequestsActivesTablecolumns: ColumnDef<
       );
     },
     cell: ({ row }) => {
-      const company = row.original.company;
+      const company = row.original?.company;
       return (
         <div className="capitalize font-bold">{company?.businessName}</div>
       );
@@ -50,7 +64,7 @@ export const adminRequestsActivesTablecolumns: ColumnDef<
   },
   {
     accessorKey: "courseId",
-    accessorFn: (value) => value.course?.name,
+    accessorFn: (value) => value?.course?.name,
     header: ({ column }) => {
       return (
         <Button
@@ -63,13 +77,13 @@ export const adminRequestsActivesTablecolumns: ColumnDef<
       );
     },
     cell: ({ row }) => {
-      const course = row.original.course;
+      const course = row.original?.course;
       return <div className="capitalize">{course?.name}</div>;
     },
   },
   {
     accessorKey: "state",
-    accessorFn: (value) => value.state,
+    accessorFn: (value) => value?.state,
     header: ({ column }) => {
       return (
         <Button
@@ -82,12 +96,18 @@ export const adminRequestsActivesTablecolumns: ColumnDef<
       );
     },
     cell: ({ row }) => {
-      const state = row.original.state;
-      const stateTr = stateEsp[state] || state;
-
+      const state = row.original?.state;
+      const stateTr = state && stateEsp[state];
       return (
         <div>
-          {stateTr.icon} {stateTr.text}
+          {stateTr ? (
+            <span>
+              {" "}
+              {stateTr.icon} {stateTr.text}
+            </span>
+          ) : (
+            <span>{state}</span>
+          )}
         </div>
       );
     },
@@ -107,7 +127,12 @@ export const adminRequestsActivesTablecolumns: ColumnDef<
     },
     cell: ({ row }) => (
       <div className="lowercase">
-        {format(new Date(row.original.activeFrom || row.original.createdAt), "dd LLLL y", { locale: es })}
+        {row.original &&
+          format(
+            new Date(row.original?.activeFrom || row.original.createdAt),
+            "dd LLLL y",
+            { locale: es }
+          )}
       </div>
     ),
   },
@@ -115,7 +140,7 @@ export const adminRequestsActivesTablecolumns: ColumnDef<
     id: "numCollaborators",
     header: "# Colaboradores",
     cell: ({ row }) => {
-      const numCol = row.original.collaborators?.length;
+      const numCol = row.original?.collaborators?.length;
 
       return <span className="font-semibold">{numCol}</span>;
     },
@@ -124,7 +149,7 @@ export const adminRequestsActivesTablecolumns: ColumnDef<
     id: "actions",
     header: "Acciones",
     cell: ({ row }) => {
-      const { id } = row.original;
+      const id = row.original?.id;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

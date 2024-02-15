@@ -1,5 +1,4 @@
 
-import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { db } from "@/lib/db";
 import { CreateTrainingForm } from "./_components/create-training-form";
@@ -7,8 +6,6 @@ import { Card } from "@/components/ui/card";
 import { TitleOnPage } from "@/components/title-on-page";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NotCollaborators } from "./_components/not-collaborators";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 
 const bcrumb = [
   { label: "Solicitud", path: "/dashboard/entrenamiento/solicitudes" },
@@ -28,8 +25,7 @@ const CreateTrainingPage = async () => {
   return (
     <div>
       <TitleOnPage text="Crear Solicitud" bcrumb={bcrumb} />
-   
-    
+
       <Card>
         <CreateTrainingForm courses={courses} />
         {collaborators.length < 1 && (

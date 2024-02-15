@@ -43,6 +43,7 @@ const AdminScheduleCollaborator = async ({
               select: {
                 id: true,
                 name: true,
+                shortName: true,
               },
             },
             requiredDocuments: {

@@ -1,17 +1,17 @@
 "use client";
 
-import { useLoading } from "@/components/providers/loading-provider";
-import { SimpleModal } from "@/components/simple-modal";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DateRange } from "react-day-picker";
-import { useCollaboratorsCart } from "@/components/providers/collaborators-cart-provider";
 import { Company } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
+import { useLoading } from "@/components/providers/loading-provider";
+import { useCollaboratorsCart } from "@/components/providers/collaborators-cart-provider";
+import { SimpleModal } from "@/components/simple-modal";
 
 interface ButtonScheduleCollaboratorProps {
   isDisallowed: boolean;
@@ -19,13 +19,11 @@ interface ButtonScheduleCollaboratorProps {
   collaboratorId?: string;
   collaboratorPhone?: string | null;
   collaboratorName?: string;
-  courseName?: string;
-  courseLevelName?: string;
-  collaboratorCourseName?: string;
+  courseName?: string | null;
+  levelName?: string | null;
   trainingRequestCollaborator?: any;
-  company?: Company;
+  company?: Company | null;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
-  dateSelected: DateRange | undefined | null;
   date: DateRange | undefined | null;
 }
 
@@ -34,10 +32,9 @@ export const ButtonScheduleCollaborator = ({
   collaboratorId,
   collaboratorName,
   collaboratorPhone,
-  trainingRequestCollaborator,
   courseName,
-  courseLevelName,
-  dateSelected,
+  levelName,
+  trainingRequestCollaborator,
   scheduledDate,
   isDisallowed,
   date,
@@ -79,14 +76,14 @@ export const ButtonScheduleCollaborator = ({
     if (!!!scheduledDate.from) {
       if (collaboratorPhone) {
         try {
-          // await axios.post("/api/messages/", {
-          //   msisdn: collaboratorPhone,
-          //   message: `fue programado para asistir a una reunion el dia ${format(
-          //     date?.from,
-          //     "P",
-          //     { locale: es }
-          //   )}...`,
-          // });
+          await axios.post("/api/messages/", {
+            msisdn: collaboratorPhone,
+            message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
+              date?.from!,
+              "P",
+              { locale: es }
+            )} ubicacion: calle30#10-232 requisito: https://bit.ly/47gIiOr `,
+          });
           toast.success("SMS enviado");
         } catch (error) {
           toast.error("Error al enviar el mensaje de texto al colaborador");
@@ -97,14 +94,14 @@ export const ButtonScheduleCollaborator = ({
     } else if (notifyReschedule) {
       if (collaboratorPhone) {
         try {
-          // await axios.post("/api/messages/", {
-          //   msisdn: collaboratorPhone,
-          //   message: `fue programado para asistir a una reunion el dia ${format(
-          //     date?.from,
-          //     "P",
-          //     { locale: es }
-          //   )}...`,
-          // });
+          await axios.post("/api/messages/", {
+            msisdn: collaboratorPhone,
+            message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
+              date?.from!,
+              "P",
+              { locale: es }
+            )} ubicacion: calle30#10-232 requisito: https://bit.ly/47gIiOr `,
+          });
           toast.success("SMS enviado");
         } catch (error) {
           toast.error("Error al enviar el mensaje de texto al colaborador");

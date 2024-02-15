@@ -1,13 +1,12 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Ban } from "lucide-react";
 import { TitleOnPage } from "@/components/title-on-page";
 import { db } from "@/lib/db";
 import { AddCourseForm } from "./_components/add-course-form";
 import { Separator } from "@/components/ui/separator";
-import { AdminCoursesTableCollapsibleContent } from "../_components/admin-courses-table-collapsible-content";
 import { AdminSimpleCourselevels } from "../_components/admin-simple-courselevels";
 import { Card } from "@/components/ui/card";
-import { Ban } from "lucide-react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { DeactivateCourse } from "./_components/deactivate-course";
@@ -34,6 +33,8 @@ const EditCoursePage = async ({ params }: { params: { courseId: string } }) => {
     },
   });
 
+  console.log({course})
+
   if (!course) {
     redirect("/admin/entrenamiento/cursos/");
   }
@@ -41,28 +42,25 @@ const EditCoursePage = async ({ params }: { params: { courseId: string } }) => {
   return (
     <div className="">
       <div className="w-full flex justify-between items-center">
-        <div className="w-full flex justify-between items-center">
-          <div className="w-full flex justify-between items-center">
-            <TitleOnPage
-              text={
-                <span>
-                  Editar Curso:{" "}
-                  <span className="font-semibold text-2xl">{course?.name}</span>
-                </span>
-              }
-              bcrumb={crumbs}
-            />
-            <div className="flex gap-5">
-              <DeactivateCourse course={course} />
-              <Link
-                className={cn(buttonVariants())}
-                href={`/admin/entrenamiento/cursos/${course?.id}/nivel/crear`}
-              >
-                Agregar Nivel
-              </Link>
-            </div>
+        <TitleOnPage
+          text={
+            <span>
+              Editar Curso:{" "}
+              <span className="font-semibold text-2xl">{course?.name}</span>
+            </span>
+          }
+          bcrumb={crumbs}
+        >
+          <div className="flex gap-5">
+            <DeactivateCourse course={course} />
+            <Link
+              className={cn(buttonVariants())}
+              href={`/admin/entrenamiento/cursos/${course?.id}/nivel/crear`}
+            >
+              Agregar Nivel
+            </Link>
           </div>
-        </div>
+        </TitleOnPage>
       </div>
       <div className="w-full flex flex-col gap-3">
         <AddCourseForm course={course} />

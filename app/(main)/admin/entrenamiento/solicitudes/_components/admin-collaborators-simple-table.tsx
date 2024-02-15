@@ -1,13 +1,16 @@
 "use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Collaborator,
   CourseLevel,
   TrainingRequestCollaborator,
 } from "@prisma/client";
-import { MoreHorizontal, Trash } from "lucide-react";
+import { CalendarClock, MoreHorizontal, Trash } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+
 import {
   Table,
   TableBody,
@@ -23,16 +26,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useLoading } from "@/components/providers/loading-provider";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+
 
 interface CollaboratorsSimpleTableProps {
   collaborators:
@@ -43,7 +39,7 @@ interface CollaboratorsSimpleTableProps {
     | null
     | undefined;
   trainingRequestId: string;
-  courseId: string| null;
+  courseId: string | null;
   isPending: boolean;
 }
 
@@ -55,10 +51,10 @@ export const AdminCollaboratorsSimpleTable = ({
 }: CollaboratorsSimpleTableProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
-  const [coursesLevel, setCoursesLevel] = useState<CourseLevel[]>([])
+  const [coursesLevel, setCoursesLevel] = useState<CourseLevel[]>([]);
 
   useEffect(() => {
-    setLoadingApp(true)
+    setLoadingApp(true);
     const getCourseLevels = async () => {
       try {
         const { data } = await axios.get<CourseLevel[]>(
@@ -67,30 +63,12 @@ export const AdminCollaboratorsSimpleTable = ({
         setCoursesLevel(data);
       } catch (error) {
         console.log({ "get error": error });
-      }
-      finally {
-        setLoadingApp(false)
-
+      } finally {
+        setLoadingApp(false);
       }
     };
     getCourseLevels();
   }, []);
-
-  const handleRemove = async (id: string) => {
-    setLoadingApp(true);
-    try {
-      const { data } = await axios.delete(
-        `/api/training-requests/${trainingRequestId}/members/${id}`
-      );
-      toast.success("Colaborador removido de la solicitud");
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      toast.error("Ocurrió un error inesperado");
-    } finally {
-      setLoadingApp(false);
-    }
-  };
 
   const onChange = async (courseLevelId: any, id: string) => {
     if (isPending) {
@@ -113,7 +91,6 @@ export const AdminCollaboratorsSimpleTable = ({
 
   return (
     <Table className={cn("bg-blue-100", !isPending && "opacity-70")}>
-      {/* <TableCaption>A list </TableCaption> */}
       <TableHeader>
         <TableRow className="bg-slate-600 hover:bg-slate-600">
           <TableHead className="text-white">Nombre completo</TableHead>
@@ -136,26 +113,7 @@ export const AdminCollaboratorsSimpleTable = ({
             <TableCell>{collaborator.numDoc}</TableCell>
             <TableCell>{collaborator.email}</TableCell>
             <TableCell>{collaborator.phone}</TableCell>
-            {/* <TableCell>{courseLevel?.name}</TableCell> */}
-
-            <TableCell>
-              <Select
-                defaultValue={courseLevel ? courseLevel.id : ""}
-                onValueChange={(e) => onChange(e, collaborator.id)}
-                disabled={!isPending}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="🔴 Sin definir" />
-                </SelectTrigger>
-                <SelectContent>
-                  {coursesLevel?.map((level) => (
-                    <SelectItem key={level.id} value={level.id}>
-                      {level.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </TableCell>
+            <TableCell>{courseLevel.name}</TableCell>
 
             {isPending && (
               <TableCell className="flex justify-end">
@@ -170,14 +128,15 @@ export const AdminCollaboratorsSimpleTable = ({
                     align="center"
                     className="hover:bg-slate-100"
                   >
-                    <Button
-                      variant="ghost"
-                      onClick={() => handleRemove(collaborator.id)}
-                      className="hover:bg-slate-300"
+                    <Link
+                      href={`/admin/entrenamiento/solicitudes/${trainingRequestId}/colaborador/${collaborator.id}`}
+                      className="hover:bg-slate-300 flex"
                     >
-                      <Trash className="w-4 h-4 mr-2 text-red-500" />
-                      Quitar de la lista
-                    </Button>
+                      <Button className="">
+                        <CalendarClock className="w-4 h-4 mr-2 " />
+                        Programar
+                      </Button>
+                    </Link>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

@@ -13,6 +13,9 @@ export async function GET(
         courseLevelId: params.courseLevelId,
         active: true,
       },
+      orderBy: {
+        createdAt: "asc"
+      }
     });
 
     return NextResponse.json(documentsRequired);

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { AddCourseLevelForm } from "./_components/add-courselevel-form";
 import { redirect } from "next/navigation";
 import { TabsCorselevel } from "./_components/tabs-courselevel";
+import { DeactivateCourselevel } from "./_components/deactivate-courselevel";
 
 const EditCourseLevelPage = async ({
   params,
@@ -33,8 +34,8 @@ const EditCourseLevelPage = async ({
           name: true,
         },
         orderBy: {
-          createdAt: "asc"
-        }
+          createdAt: "asc",
+        },
       },
       course: {
         select: {
@@ -56,30 +57,26 @@ const EditCourseLevelPage = async ({
 
   return (
     <div className="">
-      <div className="w-full flex justify-between items-center">
-        <div className="w-full flex justify-between items-center">
-          <div>
-            <TitleOnPage
-              text={
+      <div>
+        <TitleOnPage
+          text={
+            <div>
+              {isEdit ? (
                 <div>
-                  {isEdit ? (
-                    <div>
-                      Editar nivel:{" "}
-                      <span className="font-semibold text-2xl">
-                        {courseLevel?.name}
-                      </span>
-                    </div>
-                  ) : (
-                    <div>Crear nivel</div>
-                  )}
+                  Editar nivel:{" "}
+                  <span className="font-semibold text-2xl">
+                    {courseLevel?.name}
+                  </span>
                 </div>
-              }
-              bcrumb={crumbs}
-            />
-            <span className="text-slte-300"></span>
-          </div>
-          {/* <DeactivateCollaborator collaborator={collaborator} /> */}
-        </div>
+              ) : (
+                <div>Crear nivel</div>
+              )}
+            </div>
+          }
+          bcrumb={crumbs}
+        >
+          <DeactivateCourselevel level={courseLevel} course={courseLevel?.course.name}/>
+        </TitleOnPage>
       </div>
       <div className="w-full flex flex-col gap-3">
         <TabsCorselevel

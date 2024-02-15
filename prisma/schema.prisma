@@ -106,7 +106,6 @@ enum RequestTrainingStatus {
   PENDING
   ACTIVE
   EXECUTED
-  PROGRAMMED
   CANCELLED
 }
 

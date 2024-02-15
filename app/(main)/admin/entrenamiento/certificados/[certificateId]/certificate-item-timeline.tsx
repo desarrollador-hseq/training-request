@@ -27,20 +27,35 @@ export const CertificateItemTimeline = ({
 
       <div className="flex flex-col justify-between p-2 bg-white border border-gray-200 rounded-lg shadow-sm">
         <div className="flex justify-between w-full">
-        <time className="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0">
-          {format(event.createdAt, "Pp", { locale: es })}
-        </time>
-          {event.admin?.businessName}
-        </div>
-        <div className="self-start text-sm font-normal text-gray-500 mt-2">
-          <span className="bg-gray-100 text-gray-800 text-xs font-normal me-2 px-2.5 py-0.5 rounded ">
-            {event.eventType === "CREATED" ? "Generado" : "Actualizado"}
-          </span>
+          <time className="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0">
+            {format(event.createdAt, "Pp", { locale: es })}
+          </time>
+          <div className="flex items-center gap-3">
+            {event.admin?.businessName}
+            <div
+              className={cn(
+                "self-start text-base font-normal text-gray-500 mt-2"
+              )}
+            >
+              <span
+                className={cn(
+                  " text-white text-xs font-semibold me-2 px-2.5 py-0.5 rounded ",
+                  event.eventType === "CREATED"
+                    ? "bg-emerald-600"
+                    : "bg-slate-500"
+                )}
+              >
+                {event.eventType === "CREATED" ? "Creado" : "Actualizado"}
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col gap-1 text-xs">
-          <div className="grid grid-cols-5 place-content-center place-items-center h-full font-bold my-2 text-xs">
+          <div className="grid grid-cols-7 place-content-center place-items-center h-full font-bold my-2 text-xs">
             <span>Colaborador</span>
+            <span>documento</span>
+            <span>Arl</span>
             <span>Curso</span>
             <span>Nivel</span>
             <span>Reentrenamiento</span>
@@ -58,11 +73,17 @@ export const CertificateItemTimeline = ({
               <CardContent className={cn("p-2")}>
                 <div
                   className={cn(
-                    "grid grid-cols-5 place-content-center place-items-center h-full relative text-xs font-medium"
+                    "grid grid-cols-7 place-content-center place-items-center h-full relative text-xs font-medium text-[10px]"
                   )}
                 >
                   <span className="leading-4">
                     {certificateData?.collaboratorFullname}
+                  </span>
+                  <span className="leading-4">
+                    {certificateData?.collaboratorTypeDoc}{" "}{certificateData.collaboratorNumDoc}
+                  </span>
+                  <span className="leading-4">
+                    {certificateData?.collaboratorArlName}
                   </span>
 
                   <span className="flex gap-2">

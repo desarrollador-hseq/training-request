@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -10,7 +10,7 @@ import {
   Eraser,
   X,
 } from "lucide-react";
-// import { useDashboard } from "@/components/providers/dashboard-provider";
+import { Company } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
@@ -20,60 +20,38 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { SimpleModal } from "@/components/simple-modal";
-import { toast } from "sonner";
-import axios from "axios";
-import { useLoading } from "@/components/providers/loading-provider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ButtonScheduleCollaborator } from "./button-schedule-collaborator";
-import { Company } from "@prisma/client";
-import { Card } from "@/components/ui/card";
+
 
 interface PickDatesProps {
   isDisallowed: boolean;
   trainingRequestId?: string;
   collaboratorId?: string;
-  courseLevelName?: string;
-  courseName?: string;
-  collaboratorPhone?: string | undefined;
+  courseLevelName?: string | null;
+  courseName?: string | null;
+  collaboratorPhone?: string | null;
   collaboratorName?: string;
   trainingRequestCollaborator?: any;
   setDate: Dispatch<SetStateAction<DateRange | undefined>>;
   date: DateRange | undefined;
-  company?: Company;
+  company?: Company | null;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
 }
 
 export const PickScheduleDates = ({
-  trainingRequestId,
-  collaboratorId,
-  collaboratorName,
   trainingRequestCollaborator,
-  company,
   setDate,
   date,
   scheduledDate,
   isDisallowed,
-  collaboratorPhone,
-  courseName,
-  courseLevelName,
 }: PickDatesProps) => {
   // const { date, setDate } = useDashboard();
 
   const [calendarOpen, setCalendarOpen] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
-  const [trainingRequest, setTrainingRequest] = useState(
-    trainingRequestCollaborator
-  );
   const [dateSelected, setDateSelected] = useState<DateRange | undefined>({
     from: scheduledDate.from || undefined,
     to: scheduledDate.to || undefined,
   });
-
-  useEffect(() => {
-    setTrainingRequest(trainingRequestCollaborator);
-    console.log({ picktraiingreques: trainingRequestCollaborator });
-  }, [trainingRequestCollaborator]);
 
   useEffect(() => {
     if (!calendarOpen) {

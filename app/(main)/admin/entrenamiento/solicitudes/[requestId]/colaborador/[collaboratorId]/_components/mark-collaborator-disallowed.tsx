@@ -1,17 +1,15 @@
 "use client";
 
+import React, { Dispatch, SetStateAction, useState } from "react";
+import axios from "axios";
+import { CheckCircle, XCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { useLoading } from "@/components/providers/loading-provider";
 import { SimpleModal } from "@/components/simple-modal";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import axios from "axios";
-import { CheckCircle, XCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { DateRange } from "react-day-picker";
-import { toast } from "sonner";
 
 interface MarkCollaboratorDisallowedProps {
   setIsDisallowed: Dispatch<SetStateAction<boolean>>;
@@ -19,6 +17,12 @@ interface MarkCollaboratorDisallowedProps {
   trainingRequestCollaboratorId?: string;
   collaboratorId?: string;
   emailResponsibleCompany?: string;
+  colName?: string;
+  colDocument?: string;
+  courseName?: string | null;
+  trainingRequestId?: string;
+  levelName?: string | null;
+  toEmail?: string | null;
 }
 
 export const MarkCollaboratorDisallowed = ({
@@ -26,6 +30,12 @@ export const MarkCollaboratorDisallowed = ({
   setIsDisallowed,
   trainingRequestCollaboratorId,
   collaboratorId,
+  colName,
+  toEmail,
+  colDocument,
+  courseName,
+  levelName,
+  trainingRequestId,
   emailResponsibleCompany,
 }: MarkCollaboratorDisallowedProps) => {
   const router = useRouter();
@@ -59,6 +69,16 @@ export const MarkCollaboratorDisallowed = ({
     if (notifyEmailDisallowed) {
       try {
         console.log("disallowed");
+
+        await axios.post(`/api/mail/collaborator-disallowed`, {
+          textContent: disallowedMessage,
+          toEmail,
+          name: colName,
+          document: colDocument,
+          level: levelName,
+          course: courseName,
+          link: `/dashboard/entrenamiento/solicitudes/editar/${trainingRequestId}`,
+        });
         toast.info("Correo enviado correctamente");
       } catch (error) {
         toast.error(
@@ -80,10 +100,11 @@ export const MarkCollaboratorDisallowed = ({
     <SimpleModal
       onClose={() => resetFieldsModal()}
       onAcept={() => handleDisallowed()}
-      btnClass={`p-2 bg-red-500 ${isDisallowed
-            ? "bg-green-600 hover:bg-green-800"
-            : "bg-red-500 hover:bg-red-700"
-        }`}
+      btnClass={`p-2 bg-red-500 ${
+        isDisallowed
+          ? "bg-green-600 hover:bg-green-800"
+          : "bg-red-500 hover:bg-red-700"
+      }`}
       textBtn={
         isDisallowed ? (
           <CheckCircle className="h-5 w-5" />

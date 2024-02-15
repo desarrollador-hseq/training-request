@@ -1,28 +1,24 @@
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader, X } from "lucide-react";
-import { IdentificationFileForm } from "../../../../colaboradores/[collaboratorId]/_components/identification-file-form";
-import { Suspense, useEffect, useState } from "react";
-import { Collaborator, CourseLevel, RequiredDocument } from "@prisma/client";
-import { useLoading } from "@/components/providers/loading-provider";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { Collaborator, CourseLevel, RequiredDocument } from "@prisma/client";
+import { AlertOctagon, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useLoading } from "@/components/providers/loading-provider";
+import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 import { TabsDocumentRequired } from "./tabs-document-requrired";
+import { TooltipInfo } from "@/components/tooltip-info";
 
 interface ModalUploadDocumentProps {
   courseLevel: CourseLevel | null | undefined;
   collaborator: Collaborator | null | undefined;
+  isDisallowed: boolean;
 }
 
 export const ModalUploadDocument = ({
   courseLevel,
   collaborator,
+  isDisallowed,
 }: ModalUploadDocumentProps) => {
   const { setLoadingApp } = useLoading();
 
@@ -65,7 +61,12 @@ export const ModalUploadDocument = ({
   };
 
   return (
-    <div className="w-full max-w-[70%]">
+    <div
+      className={cn(
+        "w-full max-w-[70%] flex items-center gap-2",
+        isDisallowed && "z-40"
+      )}
+    >
       {courseLevel?.id && (
         <AlertDialog
           open={openModals[`${collaborator?.id}-${courseLevel.id}`]}
@@ -75,7 +76,11 @@ export const ModalUploadDocument = ({
         >
           <Button
             onClick={() => handleOpenModal(collaborator?.id!, courseLevel.id)}
-            className={cn("bg-accent ")}
+            className={cn(
+              isDisallowed
+                ? "bg-orange-400 shadow-md border-2 border-white "
+                : "bg-accent "
+            )}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -122,6 +127,13 @@ export const ModalUploadDocument = ({
             )}
           </AlertDialogContent>
         </AlertDialog>
+      )}
+      {isDisallowed && (
+        <TooltipInfo  text="Este colaborador fue marcado como inhabilitado para el entrenamiento. Por favor, verifique los datos y documentos.">
+          <div className="w-7 h-7 bg-yellow-500 flex justify-center items-center rounded-full animate-bounce">
+            <AlertOctagon className="w-5 h-5 text-white" />
+          </div>
+        </TooltipInfo>
       )}
     </div>
   );

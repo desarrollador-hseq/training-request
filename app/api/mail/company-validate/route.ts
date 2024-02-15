@@ -80,18 +80,12 @@ export async function POST(req: Request) {
       if (!values) {
         return new NextResponse("Bad request", { status: 400 });
       }
-      // const config = await db.configurationSettings.findFirst({});
+
       const { company } = values;
-  
-      // if (!config || !config.emailForNotifications) {
-      //   emailFormNotification = process.env.EMAILSENDER!;
-      // }
+
       if (!company) {
         return new NextResponse("Bad request", { status: 400 });
       }
-  
-      // console.log({trainingRequest: trainingRequest?.collaborators.map(m => m.collaborator)});
-    //   generateEmailContent(company);
       await transporter.sendMail({
         ...mailOptions,
         to: `${company.email}`,

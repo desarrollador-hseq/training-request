@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 const crumbs = [{ label: "solicitudes", path: "solicitudes" }];
 
 const AdminRequestPage = async () => {
-  const requests = await db.trainingRequest.findMany({
+  const trainingRequest = await db.trainingRequest.findMany({
     where: { active: true },
     include: {
       course: true,
@@ -24,13 +24,10 @@ const AdminRequestPage = async () => {
     },
   });
 
-
   return (
     <div>
       <TitleOnPage text="Solicitudes" bcrumb={crumbs} />
-      <TabsRequest
-        requests={requests}
-      />
+      <TabsRequest trainingRequest={trainingRequest} />
     </div>
   );
 };

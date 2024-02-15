@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatDateOf } from "@/lib/utils";
 import {
   Collaborator,
+  TrainingRequestCollaborator,
 } from "@prisma/client";
 import {
   Ban,
@@ -14,34 +16,32 @@ import {
   Loader2,
   Pencil,
 } from "lucide-react";
-import Link from "next/link";
+
+interface ListCollaboratorsRequestProps {
+  collaborators:
+    | (TrainingRequestCollaborator & {
+        collaborator: Collaborator | null | undefined;
+        courseLevel: { name: string | null | undefined } | null | undefined;
+      })[]
+    | null
+    | undefined;
+}
 
 export const ListCollaboratorsRequest = ({
   collaborators,
-}: {
-  collaborators: {
-    collaborator?: Collaborator | null | undefined;
-    isScheduled: boolean | null | undefined;
-    wasCertified: boolean | null | undefined;
-    isDisallowed: boolean | null | undefined;
-    startDate: Date | undefined | null;
-    endDate: Date | undefined | null;
-    trainingRequestId: string | null | undefined;
-  }[];
-}) => {
-  console.log({ collaborators });
-
+}: ListCollaboratorsRequestProps) => {
   return (
     <div className="flex flex-col gap-1">
-      <div className="grid grid-cols-5 place-content-center place-items-center h-full font-bold">
+      <div className="grid grid-cols-6 place-content-center place-items-center h-full font-bold">
         <span>Nombre</span>
         <span>Documento</span>
+        <span>Nivel</span>
         <span>Email</span>
         <span>Teléfono</span>
-        <span>Programado para:</span>
+        <span>Programación</span>
         <span>{"   "}</span>
       </div>
-      {collaborators.map(({ collaborator: col }, index) => (
+      {collaborators?.map(({ collaborator: col, courseLevel }, index) => (
         <Card key={col?.id} className="overflow-hidden">
           <CardContent
             className={cn(
@@ -51,12 +51,12 @@ export const ListCollaboratorsRequest = ({
                 "bg-blue-50 ",
               collaborators[index].isScheduled && "bg-emerald-600 text-white",
               collaborators[index].isDisallowed && "bg-red-600 text-white",
-              collaborators[index].wasCertified && "bg-blue-600 text-white",
+              collaborators[index].wasCertified && "bg-blue-600 text-white"
             )}
           >
             <div
               className={cn(
-                "grid grid-cols-5 place-content-center place-items-center h-full relative"
+                "grid grid-cols-6 place-content-center place-items-center h-full relative"
               )}
             >
               <div className="flex justify-center items-center max-w-[10px] absolute left-0 top-0 bottom-0">
@@ -78,7 +78,7 @@ export const ListCollaboratorsRequest = ({
                 </span>
                 <span className="font-semibold">
                   {!collaborators[index].isScheduled &&
-                    !collaborators[index].wasCertified && 
+                    !collaborators[index].wasCertified &&
                     !collaborators[index].isDisallowed && (
                       <Loader2 className="w-4 h-4 animate-spin text-secondary" />
                     )}
@@ -95,8 +95,12 @@ export const ListCollaboratorsRequest = ({
                 </span>
               </div>
               <div className="flex flex-col">
+                <span className="text-xs">{courseLevel?.name}</span>
+              </div>
+              <div className="flex flex-col">
                 <span className="text-xs">{col?.email}</span>
               </div>
+
               <div className="flex flex-col">
                 <span className="text-xs">{col?.phone}</span>
               </div>

@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { Info } from "lucide-react";
 import { db } from "@/lib/db";
 import { TrainingCreationData } from "./_components/training-creation-data";
 import { TitleOnPage } from "@/components/title-on-page";
@@ -11,7 +12,6 @@ import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-tab
 import { SelectCollaborators } from "./_components/select-collaborators";
 import { SendTraining } from "./_components/send-training";
 import { TooltipInfo } from "@/components/tooltip-info";
-import { Info } from "lucide-react";
 
 const crumbs = [
   { label: "solicitudes", path: "/dashboard/entrenamiento/solicitudes" },
@@ -37,13 +37,20 @@ const TrainingRequestPage = async ({
       course: true,
       collaborators: {
         include: {
-          collaborator: true,
+          collaborator: {
+            include: {
+              documents: true,
+              trainingRequestsCollaborators: {
+                where: { trainingRequestId: params.requestId },
+              },
+            },
+          },
           courseLevel: {
             include: {
               requiredDocuments: {
-                select: {
-                  id: true,
-                },
+                where: {
+                  active: true
+                }
               },
             },
           },
@@ -61,6 +68,9 @@ const TrainingRequestPage = async ({
       courseId: trainingRequest.courseId!,
       active: true,
     },
+    include: {
+      requiredDocuments: true,
+    },
   });
   const collaborators = await db.collaborator.findMany({
     where: {
@@ -75,10 +85,31 @@ const TrainingRequestPage = async ({
     (col) => col.courseLevelId
   );
 
+  let isCompleteDocuments = false;
+
+  // Verificar si todos los colaboradores tienen los documentos adjuntados para el nivel de curso correspondiente
+  if (trainingRequest && courseLevels && courseLevels.length > 0 && trainingRequest.collaborators) {
+    isCompleteDocuments = trainingRequest.collaborators.length === 0 ? false : trainingRequest.collaborators.every(({ collaborator, courseLevel }) => {
+      if (!collaborator || !courseLevel) {
+        return false; // Si no hay colaborador o nivel de curso, no está completo
+      }
+      // Obtener los documentos requeridos para este nivel de curso
+      const requiredDocuments = courseLevel.requiredDocuments;
+  
+      // Verificar si el colaborador tiene adjuntados todos los documentos requeridos para este nivel de curso
+      return requiredDocuments.every((document) => {
+        return collaborator.documents && collaborator.documents.some((attachedDocument) => {
+          return attachedDocument.requiredDocumentId === document.id;
+        });
+      });
+    });
+  }
+
   const requiredFields = [
     trainingRequest.courseId,
     trainingRequest.collaborators.length,
     hasCourseLevelIds,
+    isCompleteDocuments,
   ];
 
   const totalFields = requiredFields.length;
@@ -88,6 +119,8 @@ const TrainingRequestPage = async ({
 
   const isComplete = requiredFields.every(Boolean);
   const isPending = trainingRequest.state === "PENDING";
+
+  console.log({ isCompleteDocuments });
 
   return (
     <div className="">
@@ -99,22 +132,19 @@ const TrainingRequestPage = async ({
         </Banner>
       )}
 
-      <div className="flex justify-between items-center">
-        <div>
-          <TitleOnPage
-            text={`Editar solicitud de entrenamiento `}
-            bcrumb={crumbs}
+      <TitleOnPage text={`Editar solicitud de entrenamiento `} bcrumb={crumbs}>
+        <div className="flex flex-col items-end">
+          <SendTraining
+            trainingRequestId={params.requestId}
+            disabled={isComplete}
+            isPending={isPending}
           />
-          <span className="text-slte-300">
-            complete todos los item {completionText}{" "}
+          <span className="text-slate-200 text-xs">
+            completar todos los requisitos {completionText}{" "}
           </span>
         </div>
-        <SendTraining
-          trainingRequestId={params.requestId}
-          disabled={isComplete}
-          isPending={isPending}
-        />
-      </div>
+      </TitleOnPage>
+
       <div className="flex flex-col gap-3">
         <Card>
           <CardHeader className="mb-3">
@@ -150,9 +180,11 @@ const TrainingRequestPage = async ({
                 <CollaboratorsSimpleTable
                   collaborators={trainingRequest.collaborators}
                   trainingRequestId={trainingRequest.id}
-                  courseId={trainingRequest.courseId}
+                  // courseId={trainingRequest.courseId}
                   coursesLevel={courseLevels}
                   isPending={isPending}
+                  trainingRequest={trainingRequest}
+                  courseLevels={courseLevels}
                 />
               </div>
             </div>

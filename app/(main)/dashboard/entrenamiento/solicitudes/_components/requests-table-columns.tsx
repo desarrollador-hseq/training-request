@@ -12,13 +12,14 @@ const stateEsp = {
   PENDING: { text: "No enviada", icon: "🕒" },
   ACTIVE: { text: "Activo", icon: "✅" },
   EXECUTED: { text: "Ejecutado", icon: "✔️" },
-  PROGRAMMED: { text: "Programado", icon: "📅" },
   CANCELLED: { text: "Cancelado", icon: "❌" },
-  // Agrega más estados según sea necesario
 };
 
 export const columnsRequestTable: ColumnDef<
-  TrainingRequest & { course?: Course | null; collaborators?: Collaborator[] | null }
+  TrainingRequest & {
+    course?: Course | null;
+    collaborators?: { collaborator: Collaborator | null | undefined }[];
+  }
 >[] = [
   {
     accessorKey: "courseId",
@@ -88,7 +89,7 @@ export const columnsRequestTable: ColumnDef<
     cell: ({ row }) => {
       const numCol = row.original.collaborators?.length;
 
-      return <span className="font-semibold">{numCol}</span>
+      return <span className="font-semibold">{numCol}</span>;
     },
   },
   {
@@ -97,9 +98,7 @@ export const columnsRequestTable: ColumnDef<
     cell: ({ row }) => {
       const { id } = row.original;
       return (
-        <Link
-          href={`/dashboard/entrenamiento/solicitudes/editar/${id}`}
-        >
+        <Link href={`/dashboard/entrenamiento/solicitudes/editar/${id}`}>
           <Button variant="default">
             <Pencil className="w-5 h-5" />
           </Button>
@@ -107,5 +106,4 @@ export const columnsRequestTable: ColumnDef<
       );
     },
   },
-  
 ];

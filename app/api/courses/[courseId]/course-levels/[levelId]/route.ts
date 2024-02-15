@@ -27,3 +27,29 @@ export async function PATCH(req: Request, { params }: { params: { courseId: stri
     }
 
 }
+
+
+export async function DELETE(req: Request, { params }: { params: { levelId: string } }) {
+    try {
+        const session = await getServerSession(authOptions)
+        const { levelId } = params;
+
+        if (!session || session.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
+
+        const deactivateLevels = await db.courseLevel.update({
+            where: {
+                id: levelId,
+            },
+            data: {
+                active: false
+            }
+        })
+
+
+        return NextResponse.json(deactivateLevels)
+
+    } catch (error) {
+        console.log("[COURSELEVEL-DELETE]", error)
+        return new NextResponse("Internal Errorr" + error, { status: 500 })
+    }
+}

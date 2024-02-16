@@ -12,7 +12,7 @@ export const ListLatestCertificatesAdded = ({
 }) => {
   return (
     <Card className="overflow-hidden">
-      <SubtitleSeparator text="Ultimos Certificados" />
+      <SubtitleSeparator text="Últimos Certificados" />
 
       <CardContent>
         <div className="flex flex-col gap-1">
@@ -37,7 +37,7 @@ export const ListLatestCertificatesAdded = ({
                 <CardContent className={cn("p-3")}>
                   <div
                     className={cn(
-                      "grid grid-cols-5 place-content-center place-items-center h-full relative text-sm font-medium"
+                      "grid grid-cols-5 place-content-center place-items-center h-full relative text-sm font-medium text-blue-900"
                     )}
                   >
                     <span className="leading-4">
@@ -59,7 +59,7 @@ export const ListLatestCertificatesAdded = ({
                       <Link
                         href={`/dashboard/entrenamiento/certificados/${cert.id}`}
                       >
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-4 h-4 text-secondary" />
                       </Link>
                     </div>
                   </div>

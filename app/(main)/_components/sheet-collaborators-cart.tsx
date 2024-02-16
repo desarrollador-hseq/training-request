@@ -157,7 +157,7 @@ export const SheetCollaboratorsCart = () => {
                     variant="ghost"
                     className="bg-accent hover:bg-accent/80 text-white h-[60px] w-full"
                   >
-                    Notificar
+                    Notificar a empresas
                   </Button>
                 }
               >

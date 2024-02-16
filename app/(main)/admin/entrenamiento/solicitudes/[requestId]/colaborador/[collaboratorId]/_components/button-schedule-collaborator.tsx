@@ -82,7 +82,7 @@ export const ButtonScheduleCollaborator = ({
               date?.from!,
               "P",
               { locale: es }
-            )} ubicacion: calle30#10-232 requisito: https://bit.ly/47gIiOr `,
+            )} ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/47gIiOr `,
           });
           toast.success("SMS enviado");
         } catch (error) {
@@ -100,7 +100,7 @@ export const ButtonScheduleCollaborator = ({
               date?.from!,
               "P",
               { locale: es }
-            )} ubicacion: calle30#10-232 requisito: https://bit.ly/47gIiOr `,
+            )} ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/47gIiOr `,
           });
           toast.success("SMS enviado");
         } catch (error) {

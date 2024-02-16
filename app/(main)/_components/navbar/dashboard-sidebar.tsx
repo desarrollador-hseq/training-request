@@ -14,6 +14,8 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { DashboardSidebarContent } from "./dashboard-sidebar-content";
 
+
+
 const dashRoutes = [
   { icon: Home, label: "Inicio", href: "/dashboard" },
   {
@@ -58,6 +60,11 @@ const adminRoutes = [
     icon: BookOpenText,
     label: "Cursos",
     href: "/admin/entrenamiento/cursos",
+  },
+  {
+    icon: BookOpenText,
+    label: "Entrenadores",
+    href: "/admin/entrenamiento/entrenadores",
   },
 ];
 

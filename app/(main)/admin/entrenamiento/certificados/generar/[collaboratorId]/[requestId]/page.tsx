@@ -32,6 +32,12 @@ const GenerateCertificatePage = async ({
     },
   });
 
+  const coaches = await db.coach.findMany({
+    where: {
+      active: true
+    }
+  })
+
   if (!trainingCollaborator) {
     redirect("/admin/entrenamiento/certificados");
   }
@@ -44,6 +50,7 @@ const GenerateCertificatePage = async ({
         courseLevel={trainingCollaborator.courseLevel}
         endDate={trainingCollaborator.endDate}
         trainingRequestId={trainingCollaborator.trainingRequestId}
+        coaches={coaches}
       />
       
     </div>

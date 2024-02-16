@@ -11,6 +11,7 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import QRCode from "qrcode";
+import { DocumentSignatureCertificate } from "./document-signature-certificate";
 
 Font.register({
   family: "Open Sans",
@@ -52,9 +53,15 @@ interface CertificateTemplateProps {
   course: string | null;
   resolution: string | null;
   levelHours: string | null;
+
+  coachName?: string | null;
+  coachPosition?: string | null;
+  coachLicence?: string | null;
+  coachImgSignatureUrl?: string | null;
+
   endDate: string;
   expeditionDate: string | null;
-  expireDate: string | null;
+  expireDate?: string | null;
 }
 
 export const DocumentCertificateTemplate = ({
@@ -70,6 +77,12 @@ export const DocumentCertificateTemplate = ({
   course,
   resolution,
   levelHours,
+
+  coachName,
+  coachPosition,
+  coachLicence,
+  coachImgSignatureUrl,
+
   expeditionDate,
   endDate,
   expireDate,
@@ -171,7 +184,7 @@ export const DocumentCertificateTemplate = ({
                       style={{
                         fontSize: 18,
                         fontWeight: "black",
-                        textTransform: "uppercase"
+                        textTransform: "uppercase",
                       }}
                     >
                       {fullname}
@@ -194,7 +207,7 @@ export const DocumentCertificateTemplate = ({
                   companyNit &&
                   legalRepresentative && (
                     <Text style={{ ...styles.text, marginBottom: 10 }}>
-                      Afiliado a la{" "}
+                      Afiliado a la ARL{" "}
                       <Text style={{ fontWeight: "semibold" }}>{arlName}</Text>{" "}
                       contratado por{" "}
                       <Text style={{ fontWeight: "semibold" }}>
@@ -255,8 +268,10 @@ export const DocumentCertificateTemplate = ({
                     marginTop: 15,
                   }}
                 >
-                  Se expide en Barranquilla a los {expeditionDate}, con
-                  reentrenamiento mínimo programado para el {expireDate}
+                  Se expide en Barranquilla a los {expeditionDate}
+                  {expireDate
+                    ? `, con reentrenamiento mínimo programado para el ${expireDate}`
+                    : "."}
                 </Text>
               </View>
 
@@ -268,37 +283,14 @@ export const DocumentCertificateTemplate = ({
                   width: "80%",
                 }}
               >
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    paddingTop: 35,
-                  }}
-                >
-                  <Image
-                    src="/NESTOR_T.png"
-                    style={{
-                      width: 140,
-                      position: "absolute",
-                      top: -40,
-                      left: 0,
-                    }}
+                {coachName && coachImgSignatureUrl && coachPosition && (
+                  <DocumentSignatureCertificate
+                    licence={coachLicence}
+                    name={coachName}
+                    position={coachPosition}
+                    imageUrl={coachImgSignatureUrl}
                   />
-                  <Text
-                    style={{
-                      borderTop: "1px solid red",
-                      fontSize: 10,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Nestor Torrejano Mendoza
-                  </Text>
-                  <Text style={{ fontSize: 10 }}>Entrenador TSA</Text>
-                  <Text style={{ fontSize: 10 }}>
-                    Lic. En SST No. 5596 - 2014
-                  </Text>
-                </View>
+                )}
                 <View
                   style={{
                     display: "flex",
@@ -361,9 +353,12 @@ export const DocumentCertificateTemplate = ({
               )}
             </Text> */}
             <Text style={{}}>
-            Para verificar el presente documento, escanear el código QR. También al correo info@grupohseq.com 
+              Para verificar el presente documento, escanear el código QR.
+              También al correo info@grupohseq.com
             </Text>
-            <Text style={{}}>tel. (605) 3662030 - (605) 3851821 - 3145468721 - 3235824200 </Text>
+            <Text style={{}}>
+              tel. (605) 3662030 - (605) 3851821 - 3145468721 - 3235824200{" "}
+            </Text>
             <Text style={{}}>Calle 30 # 10-230 L. 1 y Bodega interna 33</Text>
             <Text style={{}}>Barranquilla - Atlántico</Text>
           </View>

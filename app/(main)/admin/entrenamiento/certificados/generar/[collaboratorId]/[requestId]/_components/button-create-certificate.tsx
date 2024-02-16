@@ -27,6 +27,13 @@ interface ButtonCreateCertificateProps {
   monthsToExpire: number | null;
   levelHours: string | null;
   trainingRequestId: string | null;
+
+  coachId?: string | null;
+  coachName?: string | null;
+  coachPosition?: string | null;
+  coachLicence?: string | null;
+  coachImgSignatureUrl?: string | null;
+
   endDate: Date | null;
   expeditionDate: Date | null;
   expireDate: Date | null;
@@ -46,6 +53,13 @@ export const ButtonCreateCertificate = ({
   course,
   resolution,
   levelHours,
+
+  coachId,
+  coachName,
+  coachPosition,
+  coachLicence,
+  coachImgSignatureUrl,
+
   expeditionDate,
   endDate,
   expireDate,
@@ -74,6 +88,13 @@ export const ButtonCreateCertificate = ({
           resolution,
           levelName: level,
           levelHours,
+
+          coachId,
+          coachName,
+          coachPosition,
+          coachLicence,
+          coachImgSignatureUrl,
+
           expeditionDate,
           certificateDate: endDate,
           dueDate: expireDate,
@@ -82,7 +103,6 @@ export const ButtonCreateCertificate = ({
         }
       );
       
-
       router.push(`/admin/entrenamiento/certificados/${data.id}`);
 
       toast.success("Certificado guardado correctamente");
@@ -91,28 +111,6 @@ export const ButtonCreateCertificate = ({
         "Ocurrió un error al registrar la certificación , por favor intentalo nuevamente"
       );
     }
-
-    // const pdfCertificate = pdf({} as any);
-    // pdfCertificate.updateContainer(
-    //   <DocumentCertificateTemplate
-    //     fullname={fullname}
-    //     numDoc={numDoc}
-    //     typeDoc={typeDoc}
-    //     level={level}
-    //     course={course}
-    //     levelHours={levelHours}
-    //     resolution={resolution}
-    //     endDate={endDate}
-    //     expeditionDate={expeditionDate}
-    //     expireDate={expireDate}
-    //     certificateId={certificate?.id}
-    //   />
-    // );
-    // const blobCertificate = await pdfCertificate.toBlob();
-
-    // const formData = new FormData();
-    // formData.append('file', blobCertificate);
-    // formData.append('ubiPath', "" );
 
     setLoadingApp(false);
   };

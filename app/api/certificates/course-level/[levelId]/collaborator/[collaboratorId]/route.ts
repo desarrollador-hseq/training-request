@@ -24,6 +24,11 @@ export async function POST(req: Request, { params }: { params: { levelId: string
             "expeditionDate",
             "dueDate",
             "trainingRequestId",
+            "coachId",
+            "coachName",
+            "coachPosition",
+            "coachLicence",
+            "coachImgSignatureUrl",
         ];
 
         const missingProperty = requiredProperties.find(prop => !(prop in values));

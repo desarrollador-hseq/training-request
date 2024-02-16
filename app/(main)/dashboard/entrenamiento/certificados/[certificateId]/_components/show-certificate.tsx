@@ -4,8 +4,7 @@ import React from "react";
 import { PDFViewer } from "@react-pdf/renderer";
 import { Certificate } from "@prisma/client";
 import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
-import { formatDateOf } from "@/lib/utils";
-import { addMonths } from "date-fns";
+import { formatDateCert, formatDateOf } from "@/lib/utils";
 
 export const ShowCertificate = ({
   certificate,
@@ -14,6 +13,7 @@ export const ShowCertificate = ({
   certificate: Certificate;
   baseUrl: string;
 }) => {
+  console.log({certificatearl: certificate.collaboratorArlName, legal: certificate.legalRepresentative})
   return (
     <div>
       <PDFViewer style={{ width: "100%", height: "1200px" }}>
@@ -29,13 +29,12 @@ export const ShowCertificate = ({
           arlName={certificate.collaboratorArlName}
           certificateId={certificate.id}
           fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-          expeditionDate={formatDateOf(certificate.expeditionDate!)}
-          expireDate={formatDateOf(
-            addMonths(
-              certificate.certificateDate || certificate.createdAt,
-              certificate?.monthsToExpire!
-            )
-          )}
+          expeditionDate={formatDateCert(certificate.expeditionDate!)}
+          expireDate={certificate.dueDate && formatDateOf(certificate.dueDate)}
+          coachName={certificate.coachName}
+          coachPosition={certificate.coachPosition}
+          coachImgSignatureUrl={certificate.coachImgSignatureUrl}
+          coachLicence={certificate.coachLicence}
         />
       </PDFViewer>
     </div>

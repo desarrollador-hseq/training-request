@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Certificate, Course } from "@prisma/client";
+import { Certificate, Coach, Course } from "@prisma/client";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -13,13 +13,15 @@ import { InputForm } from "@/components/input-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { CalendarInputForm } from "@/components/calendar-input-form";
-import { DocumentCertificateTemplate } from "../../../../_components/document-certificate-template";
-import { formatDateOf } from "@/lib/utils";
+import { DocumentCertificateTemplate } from "../../../../../_components/document-certificate-template";
+import { formatDateCert, formatDateOf } from "@/lib/utils";
 import { PDFViewer } from "@react-pdf/renderer";
+import { SelectCoachCertificate } from "./select-coach-certificate";
 
 interface AddCourseFormProps {
   certificate?: Certificate | null;
   baseUrl: string ;
+  coaches: Coach[] | null
 }
 
 const formSchema = z.object({
@@ -55,7 +57,7 @@ const formSchema = z.object({
   dueDate: z.date(),
 });
 
-export const AddCertificateForm = ({ certificate, baseUrl }: AddCourseFormProps) => {
+export const AddCertificateForm = ({ certificate, baseUrl, coaches }: AddCourseFormProps) => {
   const router = useRouter();
   const isEdit = useMemo(() => certificate, [certificate]);
 
@@ -191,6 +193,7 @@ export const AddCertificateForm = ({ certificate, baseUrl }: AddCourseFormProps)
                   type="number"
                 />
               </div>
+              <SelectCoachCertificate coaches={coaches} certificateId={certificate?.id} coachId={certificate?.coachId} />
               <div>
                 <CalendarInputForm
                   control={form.control}
@@ -244,7 +247,12 @@ export const AddCertificateForm = ({ certificate, baseUrl }: AddCourseFormProps)
               certificateId={certificate.id}
               expireDate={formatDateOf(certificate.dueDate!)}
               endDate={formatDateOf(certificate.certificateDate!)}
-              expeditionDate={formatDateOf(certificate.expeditionDate!)}
+              expeditionDate={formatDateCert(certificate.expeditionDate!)}
+
+              coachName={certificate.coachName}
+              coachPosition={certificate.coachPosition}
+              coachLicence={certificate.coachLicence}
+              coachImgSignatureUrl={certificate.coachImgSignatureUrl}
             />
           </PDFViewer>
         )}

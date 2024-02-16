@@ -14,12 +14,19 @@ interface ListLatestRequestsAddedProps {
   trainingRequests: CollaboratorAndCourse[];
 }
 
+const stateEsp = {
+  PENDING: { text: "No enviada", icon: "🕒" },
+  ACTIVE: { text: "Activa", icon: "✅" },
+  EXECUTED: { text: "Ejecutada", icon: "✔️" },
+  CANCELLED: { text: "Cancelada", icon: "❌" },
+};
+
 export const ListLatestRequestsAdded = ({
   trainingRequests,
 }: ListLatestRequestsAddedProps) => {
   return (
     <Card className="overflow-hidden">
-      <SubtitleSeparator text="Ultimas solicitudes" />
+      <SubtitleSeparator text="Últimas solicitudes" />
 
       <CardContent>
         <div className="flex flex-col gap-1">
@@ -41,14 +48,16 @@ export const ListLatestRequestsAdded = ({
                 <CardContent className={cn("p-3")}>
                   <div
                     className={cn(
-                      "grid grid-cols-5 place-content-center place-items-center h-full relative text-sm font-medium"
+                      "grid grid-cols-5 place-content-center place-items-center h-full relative text-sm font-medium text-blue-900"
                     )}
                   >
                     <span className="">{req?.course?.name}</span>
 
                     <span className="">{req?.collaborators?.length}</span>
 
-                    <span className="">{req?.state}</span>
+             
+                   
+                    <span> {stateEsp[`${req?.state}`].text}</span>
 
                     <span className="">{formatDateOf(req?.createdAt!)}</span>
 
@@ -57,7 +66,7 @@ export const ListLatestRequestsAdded = ({
                         href={`/dashboard/entrenamiento/solicitudes/editar/${req.id}`}
                       >
                         {" "}
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-4 h-4 text-blue-700" />
                       </Link>
                     </div>
                   </div>

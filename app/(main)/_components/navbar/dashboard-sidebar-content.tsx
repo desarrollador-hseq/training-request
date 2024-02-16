@@ -1,7 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { DashboardSidebarItems } from "./dashboard-sidebar-items";
 
-
 interface DashboardSidebarContentProps {
   routes: { href: string; icon: LucideIcon; label: string }[];
 }
@@ -15,12 +14,15 @@ export const DashboardSidebarContent = ({
         logo
       </div>
       {routes.map((route) => (
+    
         <DashboardSidebarItems
           key={route.href}
           href={route.href}
           icon={route.icon}
           label={route.label}
         />
+      
+      
       ))}
     </div>
   </div>

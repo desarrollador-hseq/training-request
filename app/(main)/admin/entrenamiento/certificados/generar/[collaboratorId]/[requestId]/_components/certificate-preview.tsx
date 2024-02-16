@@ -13,12 +13,18 @@ import { PDFViewer, pdf } from "@react-pdf/renderer";
 import { addMonths } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { CalendarIcon } from "lucide-react";
-import { Collaborator, Company, Course, CourseLevel } from "@prisma/client";
+import {
+  Coach,
+  Collaborator,
+  Company,
+  Course,
+  CourseLevel,
+} from "@prisma/client";
 import { Label } from "@/components/ui/label";
 import { ButtonCreateCertificate } from "./button-create-certificate";
 import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
-
-
+import { SelectCoachCertificate } from "../../../../[certificateId]/_components/select-coach-certificate";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface CertificatePreviewProps {
   collaborator:
@@ -31,12 +37,14 @@ interface CertificatePreviewProps {
     | undefined;
   endDate: Date | null;
   trainingRequestId: string;
+  coaches: Coach[] | null;
 }
 export const CertificatePreview = ({
   collaborator,
   courseLevel,
   endDate,
   trainingRequestId,
+  coaches,
 }: CertificatePreviewProps) => {
   const [expeditionDate, setExpeditionDate] = useState<Date | undefined>(
     new Date()
@@ -61,9 +69,13 @@ export const CertificatePreview = ({
     setExpeditionDateFormated(formatDateOf(expeditionDate!));
   }, [expeditionDate]);
 
-  const expireDate = addMonths(endDate || new Date(), courseLevel?.monthsToExpire!)
-  const expireDateFormated = formatDateOf (addMonths(endDate || new Date(), courseLevel?.monthsToExpire!))
-
+  const expireDate = addMonths(
+    endDate || new Date(),
+    courseLevel?.monthsToExpire!
+  );
+  const expireDateFormated = formatDateOf(
+    addMonths(endDate || new Date(), courseLevel?.monthsToExpire!)
+  );
 
   const [fullname] = useState(collaborator?.fullname.toUpperCase());
   const [numDoc] = useState(collaborator?.numDoc);
@@ -80,6 +92,21 @@ export const CertificatePreview = ({
   const [course] = useState(courseLevel?.course?.name);
   const [resolution] = useState(courseLevel?.course?.resolution);
   const [levelHours] = useState(courseLevel?.hours);
+  
+  
+  
+  const [coachId, setCoachId] = useState<string | undefined>();
+  const [coach, setCoach] = useState<Coach | null>();
+
+  console.log({coaches})
+
+  useEffect(() => {
+
+    const coachSelected = coaches?.find(coach => coach.id === coachId)
+    setCoach(coachSelected)
+    
+  }, [coachId])
+  
 
   return (
     <div>
@@ -102,6 +129,12 @@ export const CertificatePreview = ({
         levelId={courseLevel.id}
         monthsToExpire={courseLevel?.monthsToExpire}
         trainingRequestId={trainingRequestId}
+
+        coachId={coach?.id}
+        coachName={coach?.fullname}
+        coachPosition={coach?.position}
+        coachLicence={coach?.licence}
+        coachImgSignatureUrl={coach?.imgSignatureUrl}
       />
       <div className="flex flex-col gap-2">
         <Label>Fecha de expedición</Label>
@@ -135,6 +168,22 @@ export const CertificatePreview = ({
             )}
           </PopoverContent>
         </Popover>
+
+        <Select
+        value={coachId}
+        onValueChange={setCoachId}
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="🔴 Sin definir" />
+        </SelectTrigger>
+        <SelectContent>
+          {coaches?.map((coach) => (
+            <SelectItem key={coach.id} value={coach.id}>
+              {coach.fullname} - {coach.position}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       </div>
 
       <PDFViewer style={{ width: "100%", height: "1200px" }}>
@@ -149,6 +198,12 @@ export const CertificatePreview = ({
           endDate={endDateFormated}
           expeditionDate={expeditionDateFormated}
           expireDate={expireDateFormated}
+
+          coachName={coach?.fullname}
+          coachPosition={coach?.position}
+          coachLicence={coach?.licence}
+          coachImgSignatureUrl={coach?.imgSignatureUrl}
+
         />
       </PDFViewer>
     </div>

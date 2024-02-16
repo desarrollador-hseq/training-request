@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+
 import { Company } from "@prisma/client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import qs from "query-string";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useTabManager from "@/hooks/useTabManager";
-import { AdminCollaboratorsTable } from "./admin-companies-table";
 import { columnsAdminCompaniesTable } from "./admin-companies-table-columns";
+import { TableDefault } from "@/components/table-default";
 
 export const TabsCompanies = ({ companies }: { companies: Company[] }) => {
   const { activeTab, handleTabChange } = useTabManager({
@@ -48,19 +46,19 @@ export const TabsCompanies = ({ companies }: { companies: Company[] }) => {
         </CardHeader>
         <CardContent>
           <TabsContent value="validar">
-            <AdminCollaboratorsTable
+            <TableDefault
               columns={columnsAdminCompaniesTable}
               data={toValidate}
             />
           </TabsContent>
           <TabsContent value="activas">
-            <AdminCollaboratorsTable
+            <TableDefault
               columns={columnsAdminCompaniesTable}
               data={actives}
             />
           </TabsContent>
           <TabsContent value="inactivas">
-            <AdminCollaboratorsTable
+            <TableDefault
               columns={columnsAdminCompaniesTable}
               data={inactives}
             />

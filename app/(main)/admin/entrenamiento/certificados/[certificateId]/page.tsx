@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { GanttChartSquare } from "lucide-react";
-import { AddCertificateForm } from "./add-certificate-form";
+import { AddCertificateForm } from "./_components/add-certificate-form";
 import { db } from "@/lib/db";
-import { CertificateItemTimeline } from "./certificate-item-timeline";
+import { CertificateItemTimeline } from "./_components/certificate-item-timeline";
 import { TitleOnPage } from "@/components/title-on-page";
 import { SimpleModal } from "@/components/simple-modal";
 
@@ -39,13 +39,19 @@ const EditCertificate = async ({
       admin: true,
     },
     orderBy: {
-      createdAt: "desc"
-    }
+      createdAt: "desc",
+    },
+  });
+
+  const coaches = await db.coach.findMany({
+    where: {
+      active: true,
+    },
   });
 
   return (
     <div>
-      <TitleOnPage text={`Editar Certificado`} bcrumb={bcrumb} >
+      <TitleOnPage text={`Editar Certificado`} bcrumb={bcrumb}>
         <SimpleModal
           textBtn={<GanttChartSquare />}
           btnClass={`bg-accent text-white`}
@@ -60,7 +66,11 @@ const EditCertificate = async ({
           </div>
         </SimpleModal>
       </TitleOnPage>
-      <AddCertificateForm certificate={certificate} baseUrl={`${baseUrl}`} />
+      <AddCertificateForm
+        coaches={coaches}
+        certificate={certificate}
+        baseUrl={`${baseUrl}`}
+      />
     </div>
   );
 };

@@ -12,7 +12,7 @@ export const ListLatestCollaboratorsAdded = ({
 }) => {
   return (
     <Card className="overflow-hidden">
-      <SubtitleSeparator text="Ultimos colaboradores registrados" />
+      <SubtitleSeparator text="Últimos colaboradores registrados" />
       <CardContent>
         <div className="flex flex-col gap-1">
           <div className="grid grid-cols-5 place-content-center place-items-center h-full font-bold my-2">
@@ -35,7 +35,7 @@ export const ListLatestCollaboratorsAdded = ({
                 <CardContent className={cn("p-3")}>
                   <div
                     className={cn(
-                      "grid grid-cols-5 place-content-center place-items-center h-full relative text-sm font-medium"
+                      "grid grid-cols-5 place-content-center place-items-center h-full relative text-sm font-medium text-blue-900"
                     )}
                   >
                     <span className=" leading-4">{col?.fullname}</span>
@@ -56,7 +56,7 @@ export const ListLatestCollaboratorsAdded = ({
                         href={`/dashboard/entrenamiento/colaboradores/${col.id}`}
                       >
                         {" "}
-                        <Pencil className="w-4 h-4" />
+                        <Pencil className="w-4 h-4 text-secondary" />
                       </Link>
                     </div>
                   </div>

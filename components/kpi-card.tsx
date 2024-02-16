@@ -1,30 +1,36 @@
-import React from "react";
-import { Card } from "./ui/card";
-import { LucideIcon } from "lucide-react";
+"use client";
+
+import React, { ReactNode } from "react";
+import { Card, CardHeader } from "./ui/card";
 
 interface KpiCardProps {
-  icon: LucideIcon;
+  icon: ReactNode;
   title: string;
   color: string;
   number: number | string;
 }
 
-export const KpiCard = ({ icon: Icon, title, number, color }: KpiCardProps) => {
+export const KpiCard = ({ number, title, color, icon: Icon }: KpiCardProps) => {
   return (
-    <Card className="p-3 flex justify-center">
-      <div className="flex items-center space-x-4 h-[150px] lg:flex-row flex-col">
-        <div
-          className={`flex items-center justify-center rounded-full bg-${color}-50 text-${color}-400 p-2`}
-        >
-          <Icon className=" w-10 h-10 " />
-        </div>
-        <div className="flex flex-col justify-around  h-24">
-          <div className="text-gray-700 font-bold text-2xl">{title}</div>
-          <div className="text-3xl font-bold text-secondary text-center">
-            {number}
+    <Card className="p-1 flex flex-col justify-center  border-secondary rounded-xl">
+      <CardHeader className="p-2">
+        <div className="grid grid-cols-3 grid-rows-2 gap-2 place-content-center place-items-center">
+          <div
+            className={`row-span-2 rounded-xl bg-${color}-50 p-1 flex justify-center items-center w-20 h-20`}
+          >
+            {Icon}
+          </div>
+
+          <div className="text-gray-700 font-bold text-xl md:text-2xl col-span-2 row-span-2 flex flex-col ">
+            {title}
+            <div className="flex flex-col justify-around  h-14">
+              <div className="text-3xl font-bold text-secondary text-center">
+                {number}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </CardHeader>
     </Card>
   );
 };

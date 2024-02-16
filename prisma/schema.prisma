@@ -37,7 +37,7 @@ model Company {
 
   certificateEvent CertificateEvent[]
 
-  active           Boolean            @default(true)
+  active Boolean @default(true)
 
   passwordResetTokens PasswordResetToken[]
 
@@ -180,6 +180,9 @@ model Certificate {
   courseLevelId String
   courseLevel   CourseLevel @relation(fields: [courseLevelId], references: [id])
 
+  coachId String?
+  coach   Coach?  @relation(fields: [coachId], references: [id])
+
   fileUrl String?
 
   collaboratorFullname String?
@@ -196,6 +199,11 @@ model Certificate {
   levelHours     Int?
   monthsToExpire Int?
 
+  coachName String?
+  coachPosition String?
+  coachLicence String?
+  coachImgSignatureUrl String?
+
   certificateDate DateTime?
   expeditionDate  DateTime?
   dueDate         DateTime?
@@ -209,6 +217,7 @@ model Certificate {
 
   @@index([collaboratorId])
   @@index([courseLevelId])
+  @@index([coachId])
 }
 
 enum EventType {
@@ -217,16 +226,16 @@ enum EventType {
 }
 
 model CertificateEvent {
-  id        String    @id @default(uuid())
-  eventType EventType
-  certificateData  String? @db.Text
+  id              String    @id @default(uuid())
+  eventType       EventType
+  certificateData String?   @db.Text
 
   certificateId String
   certificate   Certificate @relation(fields: [certificateId], references: [id])
 
   adminId String
   admin   Company? @relation(fields: [adminId], references: [id])
-  
+
   createdAt DateTime @default(now())
 
   @@index([certificateId])
@@ -309,4 +318,20 @@ model CollaboratorCourseLevelDocument {
 
   @@index([collaboratorId])
   @@index([requiredDocumentId])
+}
+
+model Coach {
+  id String @id @default(uuid())
+
+  fullname        String
+  position        String
+  licence         String?
+  imgSignatureUrl String?
+
+  certificates Certificate[]
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

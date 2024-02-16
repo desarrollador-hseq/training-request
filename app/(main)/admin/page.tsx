@@ -120,31 +120,31 @@ const AdminPage = async () => {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 w-full">
             <KpiCard
               color="yellow"
-              icon={Building2}
+              icon={<Building2 className="text-yellow-500 w-8 h-8" />}
               title="Empresas"
               number={companies.length}
             />
             <KpiCard
               color="cyan"
-              icon={ScrollText}
+              icon={<ScrollText className="text-cyan-500 w-8 h-8" />}
               title="Solicitudes"
               number={trainingRequests.length}
             />
             <KpiCard
               color="blue"
-              icon={ScrollText}
+              icon={<ScrollText className="text-blue-500 w-8 h-8" />}
               title="Certificados"
               number={certificates.length}
             />
             <KpiCard
               color="red"
-              icon={BookOpen}
+              icon={< BookOpen className="text-red-500 w-8 h-8" />}
               title="Cursos"
               number={courses.length}
             />
             <KpiCard
               color="emerald"
-              icon={PersonStanding}
+              icon={<PersonStanding className="text-emerald-500 w-8 h-8" />}
               title="Administradores"
               number={admins.length}
             />

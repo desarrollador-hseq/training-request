@@ -2,13 +2,13 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { ClipboardCheck, ScrollText, UsersRound } from "lucide-react";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { db } from "@/lib/db";
 import { TitleOnPage } from "@/components/title-on-page";
 import { KpiCard } from "@/components/kpi-card";
 import { ListLatestCollaboratorsAdded } from "./_components/list-latest-collaborators-added";
 import { ListLatestRequestsAdded } from "./_components/list-latest-requests-added";
 import { ListLatestCertificatesAdded } from "./_components/list-latest-certificates-added";
+import { authOptions } from "@/lib/authOptions";
 
 const DashboardPage = async () => {
   const session = await getServerSession(authOptions);

@@ -1,7 +1,8 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { db } from "@/lib/db";
-import { getServerSession } from "next-auth";
+
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { db } from "@/lib/db";
+import { authOptions } from "@/lib/authOptions";
 
 export async function GET(
   req: Request,

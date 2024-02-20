@@ -50,7 +50,7 @@ export const AddDocumentRequiredForm = ({
 
   useEffect(() => {
     !isEdit && setIsEditing(true);
-  }, []);
+  }, [isEdit]);
 
   const { isSubmitting, isValid } = form.formState;
 

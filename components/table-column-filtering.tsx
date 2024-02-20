@@ -13,7 +13,7 @@ function TableColumnFiltering({ column, table }: any) {
       typeof firstValue === "number"
         ? []
         : Array.from(column.getFacetedUniqueValues().keys()).sort(),
-    [column.getFacetedUniqueValues()]
+    [column.getFacetedUniqueValues(), firstValue]
   );
 
   return typeof firstValue === "number" ? (

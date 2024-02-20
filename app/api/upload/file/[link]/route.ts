@@ -7,8 +7,6 @@ export async function DELETE(req: Request, { params }: { params: { link: string 
     if (!params.link) return new NextResponse("", { status: 400 })
 
 
-
-    
     const bucket = process.env.DO_BUCKET || "hseq"
     try {
         const { ubiPath } = await req.json()

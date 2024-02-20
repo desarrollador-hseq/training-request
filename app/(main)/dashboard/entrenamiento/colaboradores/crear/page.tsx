@@ -10,7 +10,7 @@ const bcrumbs = [
   { label: "Registrar", path: "/registrar" },
 ];
 
-export const AddCollaboratorPage = () => {
+const AddCollaboratorPage = () => {
   return (
     <div className="w-full">
       <div>

@@ -1,6 +1,5 @@
 "use client";
 
-
 import { Company } from "@prisma/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -47,18 +46,30 @@ export const TabsCompanies = ({ companies }: { companies: Company[] }) => {
         <CardContent>
           <TabsContent value="validar">
             <TableDefault
+              editHref={{
+                btnText: "Editar",
+                href: `/admin/entrenamiento/empresas`,
+              }}
               columns={columnsAdminCompaniesTable}
               data={toValidate}
             />
           </TabsContent>
           <TabsContent value="activas">
             <TableDefault
+              editHref={{
+                btnText: "Editar",
+                href: `/admin/entrenamiento/empresas`,
+              }}
               columns={columnsAdminCompaniesTable}
               data={actives}
             />
           </TabsContent>
           <TabsContent value="inactivas">
             <TableDefault
+              editHref={{
+                btnText: "Editar",
+                href: `/admin/entrenamiento/empresas`,
+              }}
               columns={columnsAdminCompaniesTable}
               data={inactives}
             />

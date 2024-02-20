@@ -1,11 +1,11 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CollaboratorCourseLevelDocument } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import React, { useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import ModalImage from "react-modal-image";
 import { toast } from "sonner";
@@ -58,7 +58,6 @@ export const IdentificationFileForm = ({
   collaboratorId,
   courseLevelId,
   documentRequiredId,
-  field,
   ubiPath,
   label,
 }: fileFormProps) => {
@@ -117,7 +116,7 @@ export const IdentificationFileForm = ({
     };
     getDocumentCollaborator();
     setLoadingApp(false);
-  }, [documentRequiredId]);
+  }, [documentRequiredId, courseLevelId, documentRequiredId]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setFileUrl(undefined);

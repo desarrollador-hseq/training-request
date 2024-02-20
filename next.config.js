@@ -7,6 +7,11 @@ const nextConfig = {
         hostname: "sfo2.digitaloceanspaces.com",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "grupohseq.com",
+        pathname: "**",
+      },
     ],
   },
     webpack: (config, { buildId, def, isServer, defaultLoaders, webpack }) => {

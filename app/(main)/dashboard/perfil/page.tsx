@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { TitleOnPage } from "@/components/title-on-page";
 import { EditProfileCompanyForm } from "./_components/edit-profile-company-form";
 import { db } from "@/lib/db";
+import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [{ label: "Perfil", path: "perfil" }];
 

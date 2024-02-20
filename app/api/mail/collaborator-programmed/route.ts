@@ -1,7 +1,9 @@
 
+import { authOptions } from "@/lib/authOptions";
 import { mailOptions, transporter } from "@/lib/nodemailer";
 import { templateMail } from "@/lib/template-mail";
 import { formatDateOf } from "@/lib/utils";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { DateRange } from "react-day-picker";
 
@@ -86,14 +88,18 @@ interface CollaboratorData {
 
 export async function POST(req: Request) {
   let emailFormNotification: string | null = null;
+  const session = await getServerSession(authOptions)
+
+
   try {
+    if (!session || session.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
     const values = (await req.json()) as any;
 
     if (!values) {
       return new NextResponse("Bad request", { status: 400 });
     }
     // const config = await db.configurationSettings.findFirst({});
-    const { collaborator , rescheduled} = values;
+    const { collaborator, rescheduled } = values;
 
     // if (!config || !config.emailForNotifications) {
     //   emailFormNotification = process.env.EMAILSENDER!;
@@ -106,8 +112,8 @@ export async function POST(req: Request) {
     // generateEmailContent(collaborator);
     await transporter.sendMail({
       ...mailOptions,
-      // to: collaborator.email!,
-      to: "kingj3su@gmail.com",
+       to: collaborator.email!,
+      // to: "kingj3su@gmail.com",
       ...generateEmailContent(collaborator, rescheduled ? rescheduled : false),
       subject: `Confirmación de Inscripción en Curso - [${collaborator.companyName}]`,
     });

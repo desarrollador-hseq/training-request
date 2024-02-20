@@ -47,7 +47,7 @@ export const CreateTrainingForm = ({ courses }: { courses?: Course[] }) => {
     if (!courses || courses.length === 0) {
       toast.error("Error al obtener los cursos, por favor recargue la página");
     }
-  }, []);
+  }, [courses]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {

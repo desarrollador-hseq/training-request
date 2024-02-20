@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -36,7 +36,6 @@ export const ButtonScheduleCollaborator = ({
   courseName,
   levelName,
   collaboratorMail,
-  trainingRequestCollaborator,
   scheduledDate,
   isDisallowed,
   date,
@@ -84,14 +83,14 @@ export const ButtonScheduleCollaborator = ({
   
       if (collaboratorPhone) {
         try {
-          // await axios.post("/api/messages/", {
-          //   msisdn: collaboratorPhone,
-          //   message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
-          //     date?.from!,
-          //     "P",
-          //     { locale: es }
-          //   )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/47gIiOr `,
-          // });
+          await axios.post("/api/messages/", {
+            msisdn: collaboratorPhone,
+            message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
+              date?.from!,
+              "P",
+              { locale: es }
+            )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/47gIiOr `,
+          });
           toast.success("SMS enviado");
         } catch (error) {
           toast.error("Error al enviar el mensaje de texto al colaborador");
@@ -114,14 +113,14 @@ export const ButtonScheduleCollaborator = ({
     } else if (notifyReschedule) {
       if (collaboratorPhone) {
         try {
-          // await axios.post("/api/messages/", {
-          //   msisdn: collaboratorPhone,
-          //   message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
-          //     date?.from!,
-          //     "P",
-          //     { locale: es }
-          //   )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/47gIiOr `,
-          // });
+          await axios.post("/api/messages/", {
+            msisdn: collaboratorPhone,
+            message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
+              date?.from!,
+              "P",
+              { locale: es }
+            )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/47gIiOr `,
+          });
           toast.success("SMS reprogramacion enviado");
         } catch (error) {
           toast.error("Error al enviar el mensaje de texto al colaborador");

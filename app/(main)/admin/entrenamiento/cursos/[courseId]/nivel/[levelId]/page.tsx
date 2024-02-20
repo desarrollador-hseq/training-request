@@ -1,7 +1,6 @@
+import { redirect } from "next/navigation";
 import { TitleOnPage } from "@/components/title-on-page";
 import { db } from "@/lib/db";
-import { AddCourseLevelForm } from "./_components/add-courselevel-form";
-import { redirect } from "next/navigation";
 import { TabsCorselevel } from "./_components/tabs-courselevel";
 import { DeactivateCourselevel } from "./_components/deactivate-courselevel";
 

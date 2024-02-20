@@ -1,8 +1,10 @@
 
 
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { transporter, mailOptions } from "@/lib/nodemailer";
 import { templateMail } from "@/lib/template-mail"
+import { authOptions } from "@/lib/authOptions";
 
 interface generateEmailContentProps {
   textContent: string;
@@ -269,7 +271,10 @@ const generateEmailContent = ({ textContent, link, name, document, course, }: ge
 export async function POST(req: Request) {
   const baseUrl = process.env.NEXTAUTH_URL
 
+  const session = await getServerSession(authOptions)
   try {
+
+    if (!session || session.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
     const values = (await req.json()) as any;
 
     if (!values) {
@@ -283,8 +288,8 @@ export async function POST(req: Request) {
     }
     await transporter.sendMail({
       ...mailOptions,
-      // to: `${toEmail}`,
-      to: `kingj3su@gmail.com`,
+      to: `${toEmail}`,
+      // to: `kingj3su@gmail.com`,
       ...generateEmailContent({ textContent, link: `${baseUrl}${link}`, name, document, course }),
       subject: `Colaborador inhabilitado en una solicitud`,
     });

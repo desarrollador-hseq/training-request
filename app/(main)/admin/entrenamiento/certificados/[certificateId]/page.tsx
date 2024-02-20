@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import { GanttChartSquare } from "lucide-react";
-import { AddCertificateForm } from "./_components/add-certificate-form";
 import { db } from "@/lib/db";
 import { CertificateItemTimeline } from "./_components/certificate-item-timeline";
 import { TitleOnPage } from "@/components/title-on-page";
 import { SimpleModal } from "@/components/simple-modal";
+import { TabsEditCertificate } from "./_components/tabs-edit-certificate";
 
 const bcrumb = [
   { label: "Certificados", path: "/dashboard/entrenamiento/certificados" },
@@ -60,13 +60,13 @@ const EditCertificate = async ({
           <div className="mx-5 w-fit">
             <ol className="relative border-s border-primary ">
               {certificateEvents.map((event) => (
-                <CertificateItemTimeline event={event} />
+                <CertificateItemTimeline key={event.id} event={event} />
               ))}
             </ol>
           </div>
         </SimpleModal>
       </TitleOnPage>
-      <AddCertificateForm
+      <TabsEditCertificate
         coaches={coaches}
         certificate={certificate}
         baseUrl={`${baseUrl}`}

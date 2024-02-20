@@ -4,8 +4,8 @@ import { db } from "@/lib/db";
 import { CreateTrainingForm } from "./_components/create-training-form";
 import { Card } from "@/components/ui/card";
 import { TitleOnPage } from "@/components/title-on-page";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NotCollaborators } from "./_components/not-collaborators";
+import { authOptions } from "@/lib/authOptions";
 
 const bcrumb = [
   { label: "Solicitud", path: "/dashboard/entrenamiento/solicitudes" },

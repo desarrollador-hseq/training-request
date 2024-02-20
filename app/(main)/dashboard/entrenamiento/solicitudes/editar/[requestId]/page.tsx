@@ -6,12 +6,12 @@ import { TrainingCreationData } from "./_components/training-creation-data";
 import { TitleOnPage } from "@/components/title-on-page";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Banner } from "@/components/banner";
 import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-table";
 import { SelectCollaborators } from "./_components/select-collaborators";
 import { SendTraining } from "./_components/send-training";
 import { TooltipInfo } from "@/components/tooltip-info";
+import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [
   { label: "solicitudes", path: "/dashboard/entrenamiento/solicitudes" },

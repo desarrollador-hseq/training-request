@@ -71,11 +71,7 @@ export const PickScheduleDates = ({
     setDate(undefined);
   };
 
-  useEffect(() => {
-    if (!date) {
-      // setIsFiltering(false);
-    }
-  }, [date]);
+
   useEffect(() => {
     setIsFiltering(!!dateSelected);
     setCalendarOpen(false);

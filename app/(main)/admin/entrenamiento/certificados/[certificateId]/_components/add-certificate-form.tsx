@@ -9,13 +9,13 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { PDFViewer } from "@react-pdf/renderer";
 import { InputForm } from "@/components/input-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { CalendarInputForm } from "@/components/calendar-input-form";
 import { DocumentCertificateTemplate } from "../../../../../_components/document-certificate-template";
 import { formatDateCert, formatDateOf } from "@/lib/utils";
-import { PDFViewer } from "@react-pdf/renderer";
 import { SelectCoachCertificate } from "./select-coach-certificate";
 
 interface AddCourseFormProps {

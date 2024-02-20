@@ -34,7 +34,7 @@ export function DropdownCompany({ companyName }: { companyName?: string }) {
         </svg>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-fit max-w-[150px]">
-        <DropdownMenuLabel className="text-center font-bold text-base uppercase p-0 bg-primary text-white">{companyName}</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center font-bold text-base uppercase p-0  text-primary">{companyName}</DropdownMenuLabel>
         
         <DropdownMenuItem
           className="cursor-pointer border-none hover:bg-secondary hover:text-white"
@@ -42,7 +42,7 @@ export function DropdownCompany({ companyName }: { companyName?: string }) {
         >
           Perfil
         </DropdownMenuItem>
-        <DropdownMenuItem >
+        <DropdownMenuItem asChild >
           <ModalLogout />
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -85,7 +85,6 @@ export const AdminScheduleCollaboratorForm = ({
   courseLevels,
 }: AdminScheduleCollaboratorFormProps) => {
   const router = useRouter();
-  const pathname = usePathname();
   const { setLoadingApp } = useLoading();
 
   const [courseLevelId, setCourseLevelId] = useState<string | undefined>(
@@ -108,7 +107,6 @@ export const AdminScheduleCollaboratorForm = ({
   const [isDisallowed, setIsDisallowed] = useState<boolean>(
     trainingRequestCollaborator?.isDisallowed || false
   );
-  const [training, setTraining] = useState(trainingRequestCollaborator);
 
   useEffect(() => {
     setDocument(
@@ -120,8 +118,8 @@ export const AdminScheduleCollaboratorForm = ({
 
   const onChange = async (courseLevelId: string, collaboratorId?: string) => {
     setCourseLevelId(courseLevelId);
+    setLoadingApp(true);
     try {
-      setLoadingApp(true);
       const { data } = await axios.patch(
         `/api/training-requests/${trainingRequestCollaborator?.trainingRequestId}/members/${collaboratorId}`,
         { courseLevelId }
@@ -132,8 +130,10 @@ export const AdminScheduleCollaboratorForm = ({
     } catch (error) {
       console.error(error);
       toast.error("Ocurrió un error inesperado");
+    } finally {
+
+      setLoadingApp(false);
     }
-    setLoadingApp(false);
   };
 
   useEffect(() => {
@@ -148,7 +148,7 @@ export const AdminScheduleCollaboratorForm = ({
     getdocumentsRequired();
     router.refresh();
     setLoadingApp(false);
-  }, [courseLevelId]);
+  }, [courseLevelId, router]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -164,7 +164,7 @@ export const AdminScheduleCollaboratorForm = ({
             trainingRequestId={trainingRequestCollaborator?.trainingRequestId}
             courseName={trainingRequestCollaborator?.courseLevel?.course?.name}
             levelName={trainingRequestCollaborator?.courseLevel?.name}
-            toEmail={trainingRequestCollaborator?.collaborator?.email}
+            toEmail={trainingRequestCollaborator?.collaborator?.company?.email}
             colDocument={`${trainingRequestCollaborator?.collaborator?.docType} ${trainingRequestCollaborator?.collaborator?.numDoc}`}
             colName={trainingRequestCollaborator?.collaborator?.fullname}
             collaboratorId={trainingRequestCollaborator?.collaborator?.id}

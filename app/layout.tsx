@@ -11,20 +11,14 @@ import { cn } from "@/lib/utils";
 import { Footer } from "@/components/footer";
 
 const roboto = Roboto({
-  weight: '400',
-  subsets: ['latin'],
-})
-
-// const open_Sans = Open_Sans({
-//   weight: "400",
-//   subsets: ["latin"],
-// });
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "HSEQ Entrenamiento",
   description: "empresas",
 };
-
 
 export default function RootLayout({
   children,
@@ -37,10 +31,8 @@ export default function RootLayout({
         <html lang="es" className={cn(roboto.className, "min-h-screen")}>
           <LoadingProvider>
             <Toaster richColors position="top-right" />
-            <div className="min-h-[calc(100vh-40px)]">
-              {children}
-            </div>
-           <Footer />
+            <div className="min-h-[calc(100vh-40px)]">{children}</div>
+            <Footer />
           </LoadingProvider>
         </html>
       </NextAuthProvider>

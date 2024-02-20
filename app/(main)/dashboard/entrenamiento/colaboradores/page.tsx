@@ -1,7 +1,6 @@
 import React from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { columnsCollaboratorTable } from "./_components/table-collaborator-page/collaborators-table-columns";
@@ -9,6 +8,7 @@ import { TitleOnPage } from "@/components/title-on-page";
 import { CollaboratorsTable } from "./_components/table-collaborator-page/collaborators-table";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
+import { authOptions } from "@/lib/authOptions";
 
 const ListCollaboratorsPage = async () => {
   const session = await getServerSession(authOptions);

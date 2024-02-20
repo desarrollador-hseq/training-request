@@ -3,15 +3,12 @@
 import {
   Dispatch,
   SetStateAction,
-  useCallback,
   useEffect,
   useState,
 } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
-  Row,
-  RowSelectionState,
   SortingState,
   VisibilityState,
   flexRender,
@@ -22,6 +19,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDown, ChevronDownSquare, ChevronUpSquare } from "lucide-react";
+import { Collaborator, CourseLevel } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -44,8 +42,7 @@ import { CollapsibleContentTable } from "@/components/collapsible-content-table"
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTablePagination } from "@/components/datatable-pagination";
-import { Collaborator, CourseLevel } from "@prisma/client";
-import axios from "axios";
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -74,9 +71,6 @@ export function CollaboratorsSelectTable<TData, TValue>({
   const [rowSelection, setRowSelection] = useState({});
   const [idOpenCollapsible, setIdOpenCollapsible] = useState("");
   const [data, setData] = useState(initialData);
-  const [levelsCourse, setLevelCourses] = useState();
-  const [collaboratorsSelectedTable, setCollaboratorsSelectedTable] =
-    useState();
   const [selectedRows, setSelectedRows] = useState<any>([]);
   const table = useReactTable({
     data,
@@ -116,14 +110,13 @@ export function CollaboratorsSelectTable<TData, TValue>({
     setSelectedRows(
       table.getGroupedSelectedRowModel().rows.map((ma) => ma.original)
     );
-
-   
   }, [table.getGroupedSelectedRowModel().rows]);
 
   useEffect(() => {
-    setCollaboratorsSelected(table.getGroupedSelectedRowModel().rows.map((ma) => ma.original))
-  }, [  table.getGroupedSelectedRowModel().rows])
-  
+    setCollaboratorsSelected(
+      table.getGroupedSelectedRowModel().rows.map((ma) => ma.original)
+    );
+  }, [table.getGroupedSelectedRowModel().rows]);
 
   const initialSelection = collaboratorsSelected?.reduce(
     (acc: any, row: any) => {

@@ -26,10 +26,12 @@ export const SheetCollaboratorsCart = () => {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<number>(0);
 
-  const onRemoveCompany = (id: string) => {
+  const onRemoveCompany = (id: string | null) => {
+    if(!id) return
     removeCartItem(id);
   };
-  const onRemoveCollaborator = (id: string) => {
+  const onRemoveCollaborator = (id: string | null)  => {
+    if(!id) return
     removeCollaboratorItem(id);
   };
 
@@ -104,7 +106,7 @@ export const SheetCollaboratorsCart = () => {
                 </div>
                 {cart.collaborators?.map((col, index) => (
                   <div
-                    key={col.collaboratorId + index}
+                    key={col?.collaboratorId && col?.collaboratorId  + index}
                     className="flex justify-between items-center p-2 rounded-sm bg-primary/50 text-white mt-2"
                   >
                     <div className="flex flex-col">

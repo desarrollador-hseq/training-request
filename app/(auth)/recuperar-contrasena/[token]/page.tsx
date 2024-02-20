@@ -1,5 +1,4 @@
 import React from "react";
-import { AuthNavbar } from "../../_components/auth-navbar";
 import { SetNewPasswordForm } from "../../_components/set-new-password-form";
 import { db } from "@/lib/db";
 
@@ -29,8 +28,7 @@ const SetNewPasswordPage = async ({
   }
 
   return (
-    <div className="min-h-[calc(100vh-40px)]">
-      <AuthNavbar />
+    <div className="min-h-[calc(100vh)] w-full flex justify-center bg-blue-50">
       <div className="container w-full flex items-center justify-center h-fit pt-10">
         <SetNewPasswordForm
           token={params.token}

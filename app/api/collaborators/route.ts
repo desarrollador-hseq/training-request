@@ -1,9 +1,8 @@
 
-import { db } from "@/lib/db"
+import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
-import { NextRequest, NextResponse } from "next/server"
-import { authOptions } from "../auth/[...nextauth]/route"
-import axios from "axios"
+import { authOptions } from "@/lib/authOptions"
+import { db } from "@/lib/db"
 
 
 export async function POST(req: Request, { params }: { params: { courseId: string } }) {

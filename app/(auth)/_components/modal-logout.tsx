@@ -31,7 +31,7 @@ export const ModalLogout = () => {
         redirect("/");
       }
     }
-  }, []);
+  }, [status]);
 
   const onClickAcept = () => {
     signOut({
@@ -43,10 +43,14 @@ export const ModalLogout = () => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild className="p-0 m-0">
-        <Button className={cn("rounded-none w-full p-0 m-0 h-8 bg-red-600 hover:bg-red-500")}>
+        <Button
+          className={cn(
+            "rounded-none w-full p-0 m-0 h-8 bg-red-600 hover:bg-red-500"
+          )}
+        >
           Salir
           <LogOut className="w-4 h-4 ml-2" />
-          </Button>
+        </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent className="max-w-[600px]">

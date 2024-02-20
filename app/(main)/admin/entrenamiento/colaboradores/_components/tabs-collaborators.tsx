@@ -3,8 +3,6 @@
 import {
   Certificate,
   Collaborator,
-  Company,
-  Course,
   CourseLevel,
   TrainingRequestCollaborator,
 } from "@prisma/client";
@@ -14,14 +12,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useTabManager from "@/hooks/useTabManager";
 
 import { columnsAdminCollaboratorTable } from "./admin-collaborators-table-columns";
-import { TableDefault } from "@/components/table-default";
 import { AdminCollaboratorsCertificateTable } from "./admin-collaborators-certificate-table";
 
 interface TrainingRequestCollaboratorWithCourseLevel extends TrainingRequestCollaborator {
   courseLevel?: {
     name?: string | null ;
     course?: {
-      name?: string | null;
+      shortName?: string | null;
     } | null ;
   } | null ;
 
@@ -37,13 +34,13 @@ interface CertificateWithCourseLevel extends Certificate {
   courseLevel?: CourseLevel & {
     course: {
       name?: string | null | undefined;
-    }
+    } | null | undefined
   } | null ;
 }
 
 
 interface trainingRequestCollaborator {
-  trainingRequestCollaborator: TrainingRequestCollaboratorWithCourseLevel[];
+  trainingRequestCollaborator: TrainingRequestCollaboratorWithCourseLevel[] | null | undefined;
 }
 
 export const TabsCollaborators = ({
@@ -53,11 +50,9 @@ export const TabsCollaborators = ({
     initialTab: "por-certificar",
   });
 
-  console.log({ fir: trainingRequestCollaborator });
-
-  const toCertificate = trainingRequestCollaborator.filter(
+  const toCertificate = trainingRequestCollaborator ? trainingRequestCollaborator.filter(
     (col) => col?.isScheduled && !col?.wasCertified
-  );
+  ) : [];
 
   return (
     <Tabs
@@ -88,7 +83,7 @@ export const TabsCollaborators = ({
           <TabsContent value="todos">
             <AdminCollaboratorsCertificateTable
               columns={columnsAdminCollaboratorTable}
-              data={trainingRequestCollaborator}
+              data={trainingRequestCollaborator || []}
             />
           </TabsContent>
         </CardContent>

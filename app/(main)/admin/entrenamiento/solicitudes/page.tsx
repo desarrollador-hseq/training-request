@@ -2,7 +2,6 @@ import { TitleOnPage } from "@/components/title-on-page";
 import { db } from "@/lib/db";
 
 import { TabsRequest } from "./_components/tabs-request";
-import { Card, CardContent } from "@/components/ui/card";
 
 const crumbs = [{ label: "solicitudes", path: "solicitudes" }];
 

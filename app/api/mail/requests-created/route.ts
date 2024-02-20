@@ -1,6 +1,8 @@
+import { authOptions } from "@/lib/authOptions";
 import { db } from "@/lib/db";
 import { mailOptions, transporter } from "@/lib/nodemailer";
 import { Collaborator } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 const generateEmailContent = (trainingRequest: any) => {
@@ -53,6 +55,10 @@ const generateEmailContent = (trainingRequest: any) => {
 
 export async function POST(req: Request) {
   let emailFormNotification: string | null = null;
+  const session = await getServerSession(authOptions)
+
+
+  if (!session) return new NextResponse("Unauthorized", { status: 401 })
   try {
     const values = (await req.json()) as any;
 

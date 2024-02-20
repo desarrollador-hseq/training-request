@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoginForm } from "./_components/login-form";
-// import { LogoGrupoHseq } from "@/components/logo-grupo-hseq";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RegisterForm } from "./_components/register-form";
@@ -13,7 +12,7 @@ export default function LoginPage() {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="bg-blue-100 min-h-screen  w-full ">
+    <div className="bg-blue-50 min-h-screen  w-full ">
       <div className="w-full flex items-start min-w-full max-h-fit ">
         <Tabs
           value={tabSelected}

@@ -12,30 +12,38 @@ import {
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface TrainingRequestCollaboratorWithCourseLevel extends TrainingRequestCollaborator {
+interface TrainingRequestCollaboratorWithCourseLevel
+  extends TrainingRequestCollaborator {
   courseLevel?: {
-    name?: string | null ;
+    name?: string | null;
     course?: {
       shortName?: string | null;
-    } | null ;
-  } | null ;
-
-  collaborator: Collaborator & {
-    certificates?: CertificateWithCourseLevel[] | null;
-    company?: {
-      nit?: string | null;
     } | null;
-  } | null | undefined;
+  } | null;
+
+  collaborator:
+    | (Collaborator & {
+        certificates?: CertificateWithCourseLevel[] | null;
+        company?: {
+          nit?: string | null;
+        } | null;
+      })
+    | null
+    | undefined;
 }
 
 interface CertificateWithCourseLevel extends Certificate {
-  courseLevel?: CourseLevel & {
-    course: {
-      name?: string | null | undefined;
-    }
-  } | null ;
+  courseLevel?:
+    | (CourseLevel & {
+        course:
+          | {
+              name?: string | null | undefined;
+            }
+          | null
+          | undefined;
+      })
+    | null;
 }
-
 
 export const columnsAdminCollaboratorTable: ColumnDef<TrainingRequestCollaboratorWithCourseLevel>[] =
   [

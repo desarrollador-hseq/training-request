@@ -4,7 +4,8 @@ import { getServerSession } from "next-auth";
 import { db } from "@/lib/db";
 import { TabsCertificates } from "./_components/tabs-certificates";
 import { TitleOnPage } from "@/components/title-on-page";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
+
 
 const crumbs = [{ label: "certificados", path: "certificados" }];
 

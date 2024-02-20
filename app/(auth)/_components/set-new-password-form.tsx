@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { PasswordResetToken } from "@prisma/client";
 import { InputForm } from "@/components/input-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -21,7 +22,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Company, PasswordResetToken } from "@prisma/client";
 import { Banner } from "@/components/banner";
 import { useLoading } from "@/components/providers/loading-provider";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -70,7 +70,7 @@ export const SetNewPasswordForm = ({
     setTokenInvalid(invalidToken);
     setMsg(messageError);
     setLoadingApp(false);
-  }, []);
+  }, [invalidToken, messageError, setLoadingApp]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

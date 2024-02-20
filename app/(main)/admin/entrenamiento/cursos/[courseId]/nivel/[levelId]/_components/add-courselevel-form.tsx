@@ -34,8 +34,7 @@ export const AddCourseLevelForm = ({
 }: AddCourseLevelFormProps) => {
   const router = useRouter();
   const isLevel = useMemo(() => courseLevel !== null, [courseLevel]);
-  const isEdit = useMemo(() => isLevel && courseLevel, [courseLevel]);
-  console.log({ courseLevel, isEdit });
+  const isEdit = useMemo(() => isLevel && courseLevel, [courseLevel, isLevel]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { authOptions } from "@/lib/authOptions";
 
 
 export async function PATCH(req: Request, { params }: { params: { companyId: string } }) {

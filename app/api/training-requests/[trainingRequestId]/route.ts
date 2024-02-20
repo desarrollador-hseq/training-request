@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { Collaborator } from '@prisma/client';
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { db } from "@/lib/db"
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { Collaborator } from "@prisma/client";
+import { authOptions } from "@/lib/authOptions";
+import { db } from "@/lib/db";
+
 
 export async function POST(req: Request, { params }: { params: { trainingRequestId: string } }) {
   const session = await getServerSession(authOptions)

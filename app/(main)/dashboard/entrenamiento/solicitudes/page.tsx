@@ -3,12 +3,12 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { RequestsTable } from "./_components/requests-table";
 import { columnsRequestTable } from "./_components/requests-table-columns";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { TitleOnPage } from "@/components/title-on-page";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [{ label: "Solicitudes", path: "solicitudes" }];
 

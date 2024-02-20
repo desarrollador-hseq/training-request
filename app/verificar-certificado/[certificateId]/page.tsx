@@ -33,7 +33,7 @@ const VerifyCertificate = async ({
       </nav>
       {certificate ? (
         <div className="flex flex-col mx-auto max-w-[1200px]">
-          <div className="flex justify-center gap-2 w-full bg-secondary p-2 shadow-sm">
+          <div className="flex justify-center gap-2 w-full bg-primary p-2 shadow-sm">
             <div className="flex flex-col bg-white p-2 rounded-sm text-xs">
               <span className="font-bold">nombre</span>
               {certificate?.collaboratorFullname}

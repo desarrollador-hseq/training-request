@@ -2,11 +2,17 @@
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { CertificatePreview } from "./_components/certificate-preview";
+import { TitleOnPage } from "@/components/title-on-page";
 
 
 interface GenerateCertificatePageProps {
   params: { collaboratorId: string; requestId: string };
 }
+
+const crumbs = [
+  { label: "certificados", path: "certificados" },
+  { label: "Generar", path: "generar" },
+];
 
 const GenerateCertificatePage = async ({
   params,
@@ -45,6 +51,12 @@ const GenerateCertificatePage = async ({
 
   return (
     <div>
+      {trainingCollaborator && (
+        <TitleOnPage
+          text={`Generar certificado: (${trainingCollaborator?.collaborator.fullname} - ${trainingCollaborator?.courseLevel?.course.name} - ${trainingCollaborator.courseLevel?.name})`}
+          bcrumb={crumbs}
+        />
+      )}
       <CertificatePreview 
         collaborator={trainingCollaborator.collaborator}
         courseLevel={trainingCollaborator.courseLevel}

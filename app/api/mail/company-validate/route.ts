@@ -4,6 +4,8 @@ import { Company } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { transporter, mailOptions } from "@/lib/nodemailer";
 import { templateMail } from "@/lib/template-mail"
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 const generateEmailContent = (company: Company) => {
   const { businessName, nameContact } = company;
@@ -73,8 +75,11 @@ const generateEmailContent = (company: Company) => {
 
 
 export async function POST(req: Request) {
-   
-    try {
+  const session = await getServerSession(authOptions)
+
+
+  try {
+  if (!session || session.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
       const values = (await req.json()) as any;
   
       if (!values) {

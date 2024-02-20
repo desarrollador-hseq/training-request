@@ -1,31 +1,27 @@
 "use client";
 
-import { useState } from "react";
+
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
-import { Certificate } from "@prisma/client";
 import { useLoading } from "@/components/providers/loading-provider";
 import { SimpleModal } from "@/components/simple-modal";
 
 interface ButtonCreateCertificateProps {
-  collaboratorId: string;
-  levelId: string;
-  fileUrl: string | null;
-  certificateId: string | null;
-  consecutive: string | null;
+  collaboratorId?: string;
+  levelId?: string;
   fullname: string | null;
   typeDoc: string | null;
-  numDoc: string | null;
-  arlName: string | null;
+  numDoc?: string | null;
+  arlName?: string | null;
   companyName: string | null;
   companyNit: string | null;
-  legalRepresentative: string | null;
+  legalRepresentative?: string | null;
   level: string | null;
   course: string | null;
-  resolution: string | null;
+  resolution?: string | null;
   monthsToExpire: number | null;
-  levelHours: string | null;
+  levelHours?: number | null;
   trainingRequestId: string | null;
 
   coachId?: string | null;
@@ -37,6 +33,8 @@ interface ButtonCreateCertificateProps {
   endDate: Date | null;
   expeditionDate: Date | null;
   expireDate: Date | null;
+
+  btnDisabled: boolean;
 }
 
 export const ButtonCreateCertificate = ({
@@ -65,14 +63,17 @@ export const ButtonCreateCertificate = ({
   expireDate,
   monthsToExpire,
   trainingRequestId,
+
+  btnDisabled,
 }: ButtonCreateCertificateProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
-  const [certificate, setCertificate] = useState<Certificate | null>();
 
   const handleCreateCertificate = async () => {
+    if(!collaboratorId) return
     setLoadingApp(true);
 
+    // Crear certificado
     try {
       const { data } = await axios.post(
         `/api/certificates/course-level/${levelId}/collaborator/${collaboratorId}`,
@@ -117,8 +118,8 @@ export const ButtonCreateCertificate = ({
 
   return (
     <SimpleModal
-      btnDisabled={!!!expeditionDate}
-      btnClass=""
+      btnDisabled={!!!expeditionDate || btnDisabled}
+      btnClass="w-full max-w-[200px] py-8"
       textBtn={"Certificar"}
       onAcept={() => handleCreateCertificate()}
       title={"Certificar al colaborador"}

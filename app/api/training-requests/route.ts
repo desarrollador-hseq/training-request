@@ -1,7 +1,7 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "../auth/[...nextauth]/route"
-import { NextResponse } from "next/server"
-import { db } from "@/lib/db"
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+import { db } from "@/lib/db";
 
 
 export async function POST(req: Request, { params }: { params: { courseId: string } }) {

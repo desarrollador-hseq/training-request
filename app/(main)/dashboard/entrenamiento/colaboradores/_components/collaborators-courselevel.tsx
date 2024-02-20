@@ -31,27 +31,11 @@ export const CollaboratorCourseLevel = ({
   const [levelsCourse, setLevelCourses] = useState<CourseLevel[] | null>();
   const [name, setName] = useState<string | null>();
 
-  useEffect(() => {
-    if (courseId) {
-      const getCourseLevel = async () => {
-        const res = await axios.get(`/api/courses/${courseId}/course-levels`);
-        setLevelCourses(res.data);
-      };
-      getCourseLevel();
-    }
-  }, []);
 
-  useEffect(() => {
-    const name = levelsCourse
-      ?.filter((fil) => {
-        return fil.id == row.original.courseLevelId;
-      })
-      .map((map) => map.name);
-    setName(name);
-  }, [levelsCourse]);
 
   const { updateData } = table.options.meta;
-  const [selectedCourseLevel, setSelectedCourseLevel] = useState<CourseLevel | null>();
+  const [selectedCourseLevel, setSelectedCourseLevel] =
+    useState<CourseLevel | null>();
 
   return (
     <Menubar>

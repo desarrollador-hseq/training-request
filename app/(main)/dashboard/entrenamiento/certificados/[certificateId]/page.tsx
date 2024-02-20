@@ -2,13 +2,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { ArrowLeftIcon } from "lucide-react";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { db } from "@/lib/db";
 import { ShowCertificate } from "./_components/show-certificate";
 import { TitleOnPage } from "@/components/title-on-page";
 import { Card, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [
   { label: "certificados", path: "certificados" },

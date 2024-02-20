@@ -51,7 +51,7 @@ interface CertificateTemplateProps {
   typeDoc: string | null;
   level: string | null;
   course: string | null;
-  resolution: string | null;
+  resolution?: string | null;
   levelHours: string | null;
 
   coachName?: string | null;
@@ -87,7 +87,6 @@ export const DocumentCertificateTemplate = ({
   endDate,
   expireDate,
 }: CertificateTemplateProps) => {
-
   return (
     <Document
       style={{ height: "100%" }}
@@ -122,7 +121,6 @@ export const DocumentCertificateTemplate = ({
               <View style={{ margin: 15 }}></View>
 
               <Image source={`/hseq.png`} />
-              {/* <Image style={{ width: 80, height: 80 }} source={`/qr.png`} /> */}
             </View>
             {/* 2 column  */}
             <View style={styles.textContent}>
@@ -248,9 +246,11 @@ export const DocumentCertificateTemplate = ({
                 >
                   {course}
                 </Text>
-                <Text style={{ ...styles.text, fontSize: 10 }}>
-                  {resolution}
-                </Text>
+                {resolution && (
+                  <Text style={{ ...styles.text, fontSize: 10 }}>
+                    {resolution}
+                  </Text>
+                )}
                 <View style={{ marginBottom: 15 }}>
                   <Text style={styles.text}>
                     Con una intensidad de{" "}

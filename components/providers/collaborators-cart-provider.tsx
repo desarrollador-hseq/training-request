@@ -13,15 +13,15 @@ import { toast } from "sonner";
 import { useLoading } from "./loading-provider";
 
 interface CartItem {
-  companyId: string;
-  companyName: string;
-  companyEmail: string;
+  companyId: string | null;
+  companyName: string | null;
+  companyEmail: string | null;
   collaborators: {
-    collaboratorId: string;
-    courseDate: DateRange;
-    collaboratorName: string;
-    courseName: string;
-    courseLevelName: string;
+    collaboratorId: string | null;
+    courseDate: DateRange | null | undefined;
+    collaboratorName: string | null;
+    courseName: string | null;
+    courseLevelName: string | null;
   }[];
 }
 
@@ -69,73 +69,75 @@ export const CollaboratorsCartProvider = ({
   }, [cartItems]);
 
   const updateCollaboratorBooking = (
-    cartItems: CartItem[],
+    cartItems: CartItem[] | [] | null,
     companyId: string | null,
     collaboratorId: string | null,
     updatedFields: {
-      courseDate?: DateRange | null;
-      courseName?: string | null;
-      courseLevelName?: string | null;
-      collaboratorName?: string | null; // Agregamos collaboratorName aquí
+      courseDate: DateRange | null;
+      courseName: string | null;
+      courseLevelName: string | null;
+      collaboratorName: string | null; // Agregamos collaboratorName aquí
     }
   ) => {
-    return cartItems.map((cartItem) => {
-      if (cartItem.companyId === companyId) {
-        const existingCollaboratorIndex = cartItem.collaborators.findIndex(
-          (booking) => booking.collaboratorId === collaboratorId
-        );
-  
-        if (existingCollaboratorIndex !== -1) {
-          // Actualizar el elemento existente si se encuentra
-          return {
-            ...cartItem,
-            collaborators: cartItem.collaborators.map((booking, index) => {
-              if (index === existingCollaboratorIndex) {
-                return {
-                  ...booking,
-                  ...updatedFields,
-                };
-              }
-              return booking;
-            }),
-          };
-        } else {
-          // Si el colaborador no existe, agregarlo al carrito
-          return {
-            ...cartItem,
-            collaborators: [
-              ...cartItem.collaborators,
-              {
-                collaboratorId,
-                collaboratorName: updatedFields.collaboratorName || '',
-                ...updatedFields,
-              },
-            ],
-          };
-        }
-      }
-      return cartItem;
-    });
+    return cartItems
+      ? cartItems.map((cartItem) => {
+          if (cartItem.companyId === companyId) {
+            const existingCollaboratorIndex = cartItem.collaborators?.findIndex(
+              (booking) => booking.collaboratorId === collaboratorId
+            );
+
+            if (existingCollaboratorIndex !== -1) {
+              // Actualizar el elemento existente si se encuentra
+              return {
+                ...cartItem,
+                collaborators: cartItem.collaborators?.map((booking, index) => {
+                  if (index === existingCollaboratorIndex) {
+                    return {
+                      ...booking,
+                      ...updatedFields,
+                    };
+                  }
+                  return booking;
+                }),
+              };
+            } else {
+              // Si el colaborador no existe, agregarlo al carrito
+              return {
+                ...cartItem,
+                collaborators: [
+                  ...cartItem.collaborators,
+                  {
+                    collaboratorId,
+
+                    ...updatedFields,
+                  },
+                ],
+              };
+            }
+          }
+          return cartItem;
+        })
+      : [];
   };
-  
+
   const addCartItem = async (
-    companyId: string,
-    companyName: string,
-    companyEmail: string,
-    collaboratorId: string,
-    collaboratorName: string,
-    courseName: string,
-    courseLevelName: string,
-    date: DateRange
+    companyId: string | null,
+    companyName: string | null,
+    companyEmail: string | null,
+    collaboratorId: string | null,
+    collaboratorName: string | null,
+    courseName: string | null,
+    courseLevelName: string | null,
+    date: DateRange | null
   ) => {
     setCartItems((prevCartItems) => {
-      let updatedCartItems = [...prevCartItems];
-  
+      let updatedCartItems = prevCartItems ? [...prevCartItems] : [];
+
       // Buscar si hay un carrito existente para la empresa
       const existingIndex = updatedCartItems.findIndex(
         (cart) => cart.companyId === companyId
       );
-  
+
       if (existingIndex === -1) {
         // Si no hay un carrito existente, crear uno nuevo
         updatedCartItems.push({
@@ -145,22 +147,20 @@ export const CollaboratorsCartProvider = ({
           collaborators: [],
         });
       }
-  
+
       // Actualizar el carrito con la información del colaborador
       updatedCartItems = updateCollaboratorBooking(
         updatedCartItems,
         companyId,
         collaboratorId,
-
         {
           courseDate: date,
           courseName,
           courseLevelName,
-          collaboratorName
-
+          collaboratorName,
         }
       );
-  
+
       return updatedCartItems;
     });
   };
@@ -174,18 +174,18 @@ export const CollaboratorsCartProvider = ({
   const removeCollaboratorItem = (itemId: string) => {
     setCartItems((prevCartItems) =>
       prevCartItems.filter((item) => {
-        const hasCollaborator = item.collaborators.some(
+        const hasCollaborator = item.collaborators?.some(
           (col) => col.collaboratorId === itemId
         );
 
         if (hasCollaborator) {
           // Filtrar las colaboraciones del colaborador actual
-          item.collaborators = item.collaborators.filter(
+          item.collaborators = item.collaborators?.filter(
             (col) => col.collaboratorId !== itemId
           );
 
           // Si ya no hay colaboradores, eliminar el ítem completo
-          if (item.collaborators.length === 0) {
+          if (item.collaborators?.length === 0) {
             return false; // No incluir en el nuevo array
           }
         }
@@ -196,16 +196,16 @@ export const CollaboratorsCartProvider = ({
   };
 
   const updateCartItemDate = (companyId: string, date: DateRange) => {
-    setCartItems((prevCartItems) =>
-      prevCartItems.map((item) =>
-        item.companyId === companyId
-          ? {
-              ...item,
-              collaborators: { ...item.collaborators, date },
-            }
-          : item
-      )
-    );
+    // setCartItems((prevCartItems) =>
+    //   prevCartItems.map((item) =>
+    //     item.companyId === companyId
+    //       ? {
+    //           ...item,
+    //           collaborators: { ...item.collaborators, date },
+    //         }
+    //       : item
+    //   )
+    // );
   };
 
   const sendEmailToCompany = async () => {

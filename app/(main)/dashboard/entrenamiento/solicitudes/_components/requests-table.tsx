@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -74,12 +74,6 @@ export function RequestsTable<TData, TValue>({
       setIdOpenCollapsible(idOpen);
     }
   };
-
-  useEffect(() => {
-    const ver = table.getAllColumns();
-
-    console.log(ver);
-  }, [table.getAllColumns()]);
 
   return (
     <div className="w-full">

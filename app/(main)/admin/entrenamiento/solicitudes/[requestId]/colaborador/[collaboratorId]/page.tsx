@@ -77,12 +77,6 @@ const AdminScheduleCollaborator = async ({
     },
   });
 
-  console.log({
-    tra: trainingRequestCollaborator?.courseLevel?.requiredDocuments.map((m) =>
-      m.collaboratorCourseLevelDocument.map((n) => n.documentLink)
-    ),
-  });
-
   return (
     <div>
       <TitleOnPage

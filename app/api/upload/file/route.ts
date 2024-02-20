@@ -10,7 +10,7 @@ export async function POST(req: Request) {
         const file = data.get("file") as File
         const ubiPath = data.get("ubiPath") as string
         const extValid = ["jpeg", "jpg", "png", "pdf"]
-        const bucket = process.env.DO_BUCKET || "hseq"
+        const bucket = process.env.DO_BUCKET || "grupohseq"
         if (!file) return new NextResponse("No ha subido ningun archivo", { status: 400 })
         const fileExt = file.name.split(".").pop()
         const isValid = extValid.some(f => f == fileExt)

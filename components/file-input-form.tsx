@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute, InputHTMLAttributes } from "react";
+import { InputHTMLAttributes } from "react";
 import { Control, FieldValues, UseControllerProps } from "react-hook-form";
 import {
   FormControl,

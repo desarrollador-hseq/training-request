@@ -32,37 +32,51 @@ import { DateRange } from "react-day-picker";
 import { ButtonScheduleCollaborator } from "./button-schedule-collaborator";
 import { ArlForm } from "./arl-form";
 
-interface AdminScheduleCollaboratorFormProps {
-  trainingRequestCollaborator:
-    | (TrainingRequestCollaborator & {
-        courseLevel:
-          | (CourseLevel & {
-              course: Course | null | undefined;
-              requiredDocuments:
+interface CourseLevelWithRequiredDocumentsAndCollaborators
+  extends TrainingRequestCollaborator {
+  courseLevel:
+    | {
+        id: string | null | undefined;
+        name: string | null | undefined;
+        hours: number | null | undefined;
+        course:
+          | {
+              id?: string | null;
+              name?: string | null;
+              shortName?: string | null;
+            }
+          | null
+          | undefined;
+        requiredDocuments:
+          | {
+              id?: string | null;
+              name?: string | null;
+              collaboratorCourseLevelDocument:
                 | {
-                    name: string;
-                    collaboratorCourseLevelDocument:
-                      | {
-                          collaboratorId: string | undefined | null;
-                          requiredDocumentId: string | undefined | null;
-                          documentLink: string | undefined | null;
-                          name: string | undefined | null;
-                        }[]
-                      | null
-                      | undefined;
+                    id: string | undefined | null;
+                    documentLink: string | undefined | null;
+                    requiredDocumentId: string | undefined | null;
                   }[]
                 | null
                 | undefined;
-            })
+            }[]
           | null
           | undefined;
-        trainingRequest: TrainingRequest | null | undefined;
-        collaborator:
-          | (Collaborator & { company: Company | null | undefined })
-          | null
-          | undefined;
-      })
-    | null;
+      }
+    | null
+    | undefined;
+  trainingRequest: TrainingRequest | null | undefined;
+  collaborator:
+    | (Collaborator & { company: Company | null | undefined })
+    | null
+    | undefined;
+}
+
+interface AdminScheduleCollaboratorFormProps {
+  trainingRequestCollaborator:
+    | CourseLevelWithRequiredDocumentsAndCollaborators
+    | null
+    | undefined;
   courseLevels: CourseLevel[] | null | undefined;
 }
 
@@ -74,12 +88,8 @@ export const AdminScheduleCollaboratorForm = ({
   const pathname = usePathname();
   const { setLoadingApp } = useLoading();
 
-
-  const [trainingRequest, setTrainingRequest] = useState(
-    trainingRequestCollaborator
-  );
   const [courseLevelId, setCourseLevelId] = useState<string | undefined>(
-    trainingRequestCollaborator?.courseLevel?.id
+    trainingRequestCollaborator?.courseLevel?.id!
   );
 
   const [date, setDate] = useState<DateRange | undefined>({
@@ -98,6 +108,7 @@ export const AdminScheduleCollaboratorForm = ({
   const [isDisallowed, setIsDisallowed] = useState<boolean>(
     trainingRequestCollaborator?.isDisallowed || false
   );
+  const [training, setTraining] = useState(trainingRequestCollaborator);
 
   useEffect(() => {
     setDocument(
@@ -116,8 +127,8 @@ export const AdminScheduleCollaboratorForm = ({
         { courseLevelId }
       );
       toast.success("Colaborador actualizado");
-      router.replace(pathname);
-      // router.refresh();
+      // router.replace(pathname);
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error("Ocurrió un error inesperado");
@@ -177,12 +188,11 @@ export const AdminScheduleCollaboratorForm = ({
           courseLevelName={trainingRequestCollaborator?.courseLevel?.name}
           trainingRequestId={trainingRequestCollaborator?.trainingRequestId}
           scheduledDate={{
-            from: trainingRequest?.startDate,
-            to: trainingRequest?.endDate,
+            from: trainingRequestCollaborator?.startDate,
+            to: trainingRequestCollaborator?.endDate,
           }}
         />
       </div>
-
       {!!date?.from && (
         <ButtonScheduleCollaborator
           collaboratorId={trainingRequestCollaborator?.collaborator?.id}
@@ -190,6 +200,7 @@ export const AdminScheduleCollaboratorForm = ({
           collaboratorName={trainingRequestCollaborator?.collaborator?.fullname}
           trainingRequestCollaborator={trainingRequestCollaborator}
           collaboratorPhone={trainingRequestCollaborator?.collaborator?.phone}
+          collaboratorMail={trainingRequestCollaborator?.collaborator?.email}
           trainingRequestId={trainingRequestCollaborator?.trainingRequestId}
           courseName={
             trainingRequestCollaborator?.courseLevel?.course?.shortName
@@ -202,6 +213,7 @@ export const AdminScheduleCollaboratorForm = ({
           }}
           date={date}
         />
+        
       )}
 
       <Card className="bg-slate-100 ">
@@ -215,16 +227,30 @@ export const AdminScheduleCollaboratorForm = ({
                 <div className="w-full grid xs:grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-2 md:gap-3 p-2">
                   <CardItemInfo
                     label="Razón social"
-                    text={trainingRequestCollaborator?.collaborator?.company?.businessName}
+                    text={
+                      trainingRequestCollaborator?.collaborator?.company
+                        ?.businessName
+                    }
                   />
-                  <CardItemInfo label="Nit" text={trainingRequestCollaborator?.collaborator?.company?.nit} />
+                  <CardItemInfo
+                    label="Nit"
+                    text={
+                      trainingRequestCollaborator?.collaborator?.company?.nit
+                    }
+                  />
                   <CardItemInfo
                     label="Sector"
-                    text={trainingRequestCollaborator?.collaborator?.company?.sector}
+                    text={
+                      trainingRequestCollaborator?.collaborator?.company?.sector
+                    }
                   />
                   <CardItemInfo
                     label="Estado"
-                    text={trainingRequestCollaborator?.collaborator?.company?.active ? "Activa" : "Inactiva"}
+                    text={
+                      trainingRequestCollaborator?.collaborator?.company?.active
+                        ? "Activa"
+                        : "Inactiva"
+                    }
                   />
                 </div>
               </div>
@@ -256,7 +282,12 @@ export const AdminScheduleCollaboratorForm = ({
                         defaultValue={
                           trainingRequestCollaborator?.courseLevelId!
                         }
-                        onValueChange={(e) => onChange(e, trainingRequestCollaborator?.collaborator?.id)}
+                        onValueChange={(e) =>
+                          onChange(
+                            e,
+                            trainingRequestCollaborator?.collaborator?.id
+                          )
+                        }
                         // disabled={!isPending}
                       >
                         <SelectTrigger className="w-[180px]">
@@ -313,13 +344,18 @@ export const AdminScheduleCollaboratorForm = ({
                       arlName={
                         trainingRequestCollaborator?.collaborator?.arlName
                       }
-                      collaboratorId={trainingRequestCollaborator?.collaborator?.id}
+                      collaboratorId={
+                        trainingRequestCollaborator?.collaborator?.id
+                      }
                     />
                   </div>
                 </div>
               </div>
 
-                <SubtitleSeparator className="bg-primary" text="Documentos adjuntados"></SubtitleSeparator>
+              <SubtitleSeparator
+                className="bg-primary"
+                text="Documentos adjuntados"
+              ></SubtitleSeparator>
               <div className="px-2 grid md:grid-cols-2 gap-2">
                 {documentsRequired?.map((doc, index) => (
                   <div key={doc.id + index} className="">
@@ -327,7 +363,9 @@ export const AdminScheduleCollaboratorForm = ({
                       <IdentificationFileForm
                         label={doc.name}
                         field={"documentLink"}
-                        collaboratorId={trainingRequestCollaborator?.collaborator?.id}
+                        collaboratorId={
+                          trainingRequestCollaborator?.collaborator?.id
+                        }
                         courseLevelId={courseLevelId}
                         documentRequiredId={doc.id}
                         ubiPath="colaboradores/documentos"

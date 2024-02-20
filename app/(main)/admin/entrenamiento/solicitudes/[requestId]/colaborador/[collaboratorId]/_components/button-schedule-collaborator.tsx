@@ -20,6 +20,7 @@ interface ButtonScheduleCollaboratorProps {
   collaboratorPhone?: string | null;
   collaboratorName?: string;
   courseName?: string | null;
+  collaboratorMail?: string | null;
   levelName?: string | null;
   trainingRequestCollaborator?: any;
   company?: Company | null;
@@ -34,6 +35,7 @@ export const ButtonScheduleCollaborator = ({
   collaboratorPhone,
   courseName,
   levelName,
+  collaboratorMail,
   trainingRequestCollaborator,
   scheduledDate,
   isDisallowed,
@@ -43,18 +45,23 @@ export const ButtonScheduleCollaborator = ({
   const router = useRouter();
   const { setLoadingApp } = useLoading();
   const [notifyReschedule, setNotifyReschedule] = useState(false);
-  const [trainingRequest, setTrainingRequest] = useState(
-    trainingRequestCollaborator
-  );
-  const { addCartItem } = useCollaboratorsCart();
+
+  const { addCartItem, cartItems } = useCollaboratorsCart();
   const pathname = usePathname();
-  useEffect(() => {
-    setTrainingRequest(trainingRequestCollaborator);
-  }, [trainingRequestCollaborator]);
+
 
   const handleScheduleDate = async () => {
     setLoadingApp(true);
-    router.refresh();
+    // router.refresh();
+    console.log({collaboratorMail})
+    const colData = {
+      name: collaboratorName,
+      companyName: company?.businessName,
+      courseName: courseName,
+      levelName: levelName,
+      courseDate: date,
+      email: collaboratorMail,
+    };
     try {
       const { data } = await axios.patch(
         `/api/training-requests/${trainingRequestId}/members/${collaboratorId}/schedule`,
@@ -74,42 +81,67 @@ export const ButtonScheduleCollaborator = ({
     }
 
     if (!!!scheduledDate.from) {
+  
       if (collaboratorPhone) {
         try {
-          await axios.post("/api/messages/", {
-            msisdn: collaboratorPhone,
-            message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
-              date?.from!,
-              "P",
-              { locale: es }
-            )} ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/47gIiOr `,
-          });
+          // await axios.post("/api/messages/", {
+          //   msisdn: collaboratorPhone,
+          //   message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
+          //     date?.from!,
+          //     "P",
+          //     { locale: es }
+          //   )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/47gIiOr `,
+          // });
           toast.success("SMS enviado");
         } catch (error) {
           toast.error("Error al enviar el mensaje de texto al colaborador");
           console.log({ errorApiSms: error });
         }
       }
-      // todo: send email
+      if (collaboratorMail) {
+        // send email
+        try {
+          await axios.post(`/api/mail/collaborator-programmed`, {
+            collaborator: colData,
+            rescheduled: false
+          });
+          toast.success("Correo enviado");
+        } catch (error) {
+          toast.error("Error al enviar correo de confirmación al colaborador");
+          console.log({ errorApiSms: error });
+        }
+      }
     } else if (notifyReschedule) {
       if (collaboratorPhone) {
         try {
-          await axios.post("/api/messages/", {
-            msisdn: collaboratorPhone,
-            message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
-              date?.from!,
-              "P",
-              { locale: es }
-            )} ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/47gIiOr `,
-          });
-          toast.success("SMS enviado");
+          // await axios.post("/api/messages/", {
+          //   msisdn: collaboratorPhone,
+          //   message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
+          //     date?.from!,
+          //     "P",
+          //     { locale: es }
+          //   )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/47gIiOr `,
+          // });
+          toast.success("SMS reprogramacion enviado");
         } catch (error) {
           toast.error("Error al enviar el mensaje de texto al colaborador");
           console.log({ errorApiSms: error });
         }
       }
-
-      // todo: send email
+      console.log("enviando email")
+      if(collaboratorMail) {
+        // send email reprogrammed
+      try {
+        await axios.post(`/api/mail/collaborator-programmed`, {
+          collaborator: colData,
+          rescheduled: true
+        });
+        toast.success("Correo de reprogramación enviado");
+      } catch (error) {
+        toast.error("Error al enviar correo de confirmación al colaborador");
+        console.log({ errorApiSms: error });
+      }
+      }
     }
 
     setLoadingApp(false);
@@ -120,10 +152,12 @@ export const ButtonScheduleCollaborator = ({
       company?.email!,
       collaboratorId!,
       collaboratorName!,
-      trainingRequestCollaborator.courseLevel.course.name!,
-      trainingRequestCollaborator.courseLevel.name!,
+      courseName!,
+      levelName!,
       date!
     );
+
+    console.log({ cartItems });
   };
 
   return (

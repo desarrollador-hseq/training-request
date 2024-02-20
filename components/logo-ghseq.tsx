@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-export const LogoMain = ({
+export const LogoGHseq = ({
   goRoot,
   className,
   height = 100,
@@ -36,7 +36,7 @@ export const LogoMain = ({
     >
       <Image
         className={cn("inline", goRoot && "cursor-pointer", className)}
-        src="/hseq-entrenamiento-white.png"
+        src="/hseq.png"
         alt="logo de Claro"
         height={height}
         width={width}

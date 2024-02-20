@@ -34,6 +34,7 @@ const CoachesPage = async () => {
           <TableDefault
             columns={columnsAdminCoachesTable}
             data={coaches}
+            editHref={{btnText: "Editar", href: `/admin/entrenamiento/entrenadores`}}
           />
         </CardContent>
       </Card>

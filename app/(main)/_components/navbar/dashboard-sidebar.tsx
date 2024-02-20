@@ -4,12 +4,11 @@ import React, { Dispatch, SetStateAction } from "react";
 import {
   Building2,
   BookOpenText,
-  Clipboard,
   ClipboardCheck,
-  Users,
   UsersRound,
   ScrollText,
   Home,
+  Contact2,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { DashboardSidebarContent } from "./dashboard-sidebar-content";
@@ -62,7 +61,7 @@ const adminRoutes = [
     href: "/admin/entrenamiento/cursos",
   },
   {
-    icon: BookOpenText,
+    icon: Contact2,
     label: "Entrenadores",
     href: "/admin/entrenamiento/entrenadores",
   },

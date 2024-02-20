@@ -33,8 +33,6 @@ const EditCoursePage = async ({ params }: { params: { courseId: string } }) => {
     },
   });
 
-  console.log({course})
-
   if (!course) {
     redirect("/admin/entrenamiento/cursos/");
   }

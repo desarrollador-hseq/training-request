@@ -23,6 +23,7 @@ interface ConfirmModalProps {
   large?: boolean;
   onAcept?: () => void | Promise<void> | undefined;
   onClose?: () => void | undefined;
+  btnAsChild?: boolean;
 }
 
 export const SimpleModal = ({
@@ -34,6 +35,7 @@ export const SimpleModal = ({
   onAcept,
   onClose,
   large = true,
+  btnAsChild,
 }: ConfirmModalProps) => {
   const [open, setOpen] = useState(false);
 
@@ -52,7 +54,7 @@ export const SimpleModal = ({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         {/* {typeof textBtn === "string" ? ( */}
-          <Button disabled={btnDisabled} className={cn("bg-accent", btnClass)}>
+          <Button asChild={btnAsChild} disabled={btnDisabled} className={cn("bg-accent", btnClass)}>
             {textBtn}
           </Button>
         {/* ) : (

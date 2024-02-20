@@ -87,6 +87,7 @@ export const DocumentCertificateTemplate = ({
   endDate,
   expireDate,
 }: CertificateTemplateProps) => {
+
   return (
     <Document
       style={{ height: "100%" }}

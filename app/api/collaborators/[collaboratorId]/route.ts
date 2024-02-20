@@ -11,9 +11,6 @@ export async function PATCH(req: Request, { params }: { params: { collaboratorId
         const values = await req.json()
 
         if (!session) return new NextResponse("Unauthorized", { status: 401 })
-        const companyId = session.user.id
-
-        console.log({values})
 
         const collaborator = await db.collaborator.update({
             where: {

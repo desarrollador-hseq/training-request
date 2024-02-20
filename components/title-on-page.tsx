@@ -15,7 +15,7 @@ export const TitleOnPage = ({
   children?: ReactNode;
 }) => {
   return (
-    <Card className="w-full min-h-20 h-fit flex items-center justify-between my-2 bg-gradient-to-b from-secondary to-secondary/80">
+    <Card className="w-full min-h-20 h-fit flex items-center justify-between my-2 bg-gradient-to-b from-secondary/80 to-secondary">
        <CardContent className="w-full min-h-20 flex items-center justify-between p-3 flex-col md:flex-row">
       <div className="w-full flex flex-col ml-2">
         <h2 className="text-3xl font-semibold text-white">{text}</h2>

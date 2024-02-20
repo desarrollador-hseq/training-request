@@ -1,27 +1,26 @@
 "use client";
 
+import React, { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import PdfRenderer from "@/components/pdf-renderer";
+import { useDropzone } from "react-dropzone";
+import { useForm } from "react-hook-form";
+import ModalImage from "react-modal-image";
+import { toast } from "sonner";
+import { z } from "zod";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import {
   Cloud,
-  File,
   ImageIcon,
   Loader2,
   Pencil,
   PlusCircle,
   UploadCloud,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import ModalImage from "react-modal-image";
-import { toast } from "sonner";
-import { z } from "zod";
-import { useDropzone } from "react-dropzone";
 import { Progress } from "./ui/progress";
 import { Card, CardContent, CardHeader } from "./ui/card";
 

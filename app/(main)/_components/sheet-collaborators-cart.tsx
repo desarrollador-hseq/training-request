@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Send, X } from "lucide-react";
 import {
   Sheet,
@@ -12,9 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SimpleModal } from "@/components/simple-modal";
-import { useEffect, useState } from "react";
-import { useLoading } from "@/components/providers/loading-provider";
 import { useCollaboratorsCart } from "@/components/providers/collaborators-cart-provider";
+import { formatDateOf } from "@/lib/utils";
 
 export const SheetCollaboratorsCart = () => {
   const {
@@ -22,12 +22,9 @@ export const SheetCollaboratorsCart = () => {
     removeCartItem,
     removeCollaboratorItem,
     sendEmailToCompany,
-    
   } = useCollaboratorsCart();
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<number>(0);
-  const {setLoadingApp} = useLoading()
-
 
   const onRemoveCompany = (id: string) => {
     removeCartItem(id);
@@ -36,9 +33,8 @@ export const SheetCollaboratorsCart = () => {
     removeCollaboratorItem(id);
   };
 
-  const handleSendNotification =  () => {
-     sendEmailToCompany();
-
+  const handleSendNotification = () => {
+    sendEmailToCompany();
   };
 
   useEffect(() => {
@@ -77,7 +73,7 @@ export const SheetCollaboratorsCart = () => {
               >
                 <div className="flex justify-between">
                   <div className="w-full p-0">
-                    <h3 className="text-lg font-bold text-white p-0 m-0" >
+                    <h3 className="text-lg font-bold text-white p-0 m-0">
                       {cart.companyName}
                     </h3>
                     <span className="italic font-normal text-sm text-slate-300">
@@ -111,10 +107,20 @@ export const SheetCollaboratorsCart = () => {
                     key={col.collaboratorId + index}
                     className="flex justify-between items-center p-2 rounded-sm bg-primary/50 text-white mt-2"
                   >
-                    <p className="text-xs font-normal line-clamp-1">
-                      {index + 1}. {col.collaboratorName} -{" "}
-                      {col.courseLevelName}
-                    </p>
+                    <div className="flex flex-col">
+                      <p className="text-xs font-normal line-clamp-1">
+                        {index + 1}. {col.collaboratorName} -{" "}
+                        {col.courseLevelName}
+                      </p>
+                      <span className="text-xs">
+                        {col.courseDate &&
+                          col.courseDate.from &&
+                          formatDateOf(col.courseDate.from)}{" "}
+                        {col.courseDate &&
+                          col.courseDate.to &&
+                          "- " + formatDateOf(col.courseDate.to)}
+                      </span>
+                    </div>
                     <SimpleModal
                       title="Eliminar colaborador del listado de notificación de la empresa"
                       large={false}
@@ -147,7 +153,8 @@ export const SheetCollaboratorsCart = () => {
             </SheetClose> */}
             <div className=" w-full">
               <SimpleModal
-              btnDisabled={items <=0}
+                btnAsChild={true}
+                btnDisabled={items <= 0}
                 title="Notificación a empresas"
                 large={false}
                 onAcept={handleSendNotification}
@@ -162,7 +169,8 @@ export const SheetCollaboratorsCart = () => {
                 }
               >
                 <h2>
-                ¿Desea notificar a los responsables de las empresas sobre la programación de sus colaboradores?
+                  ¿Desea notificar a los responsables de las empresas sobre la
+                  programación de sus colaboradores?
                 </h2>
               </SimpleModal>
             </div>

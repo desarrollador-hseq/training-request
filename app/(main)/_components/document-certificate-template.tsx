@@ -373,6 +373,7 @@ const styles = StyleSheet.create({
     fontFamily: "Open Sans",
     backgroundColor: "#fff",
     padding: 20,
+    position: "relative",
   },
   container: {
     width: "100%",

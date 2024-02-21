@@ -1,14 +1,15 @@
+
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { authOptions } from "@/lib/authOptions"
 import { db } from "@/lib/db"
 
 
-export async function PATCH(req: Request, { params }: { params: { certificateId: string } }) {
+export async function POST(req: Request) {
     const session = await getServerSession(authOptions)
     try {
         if (!session || session.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
-        if (!params.certificateId) return new NextResponse("Bad request", { status: 400 })
+    
 
         const values = await req.json()
         const requiredProperties = [
@@ -20,12 +21,20 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
             "companyNit",
             "legalRepresentative",
             "courseName",
+            "courseLevelId",
+            "resolution",
+            "collaboratorId",
+            "coachId",
             "levelName",
             "levelHours",
             "certificateDate",
             "expeditionDate",
             "dueDate",
             // "monthsToExpire",
+            "coachName",
+            "coachPosition",
+            "coachLicence",
+            "coachImgSignatureUrl",
         ];
 
         const missingProperty = requiredProperties.find(prop => !(prop in values));
@@ -34,20 +43,16 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
             return new NextResponse(`Missing property: ${missingProperty}`, { status: 400 });
         }
 
-        const certificate = await db.certificate.update({
-            where: {
-                id: params.certificateId
-            },
+        const certificate = await db.certificate.create({
             data: {
                 ...values
             }
-
         })
 
         await db.certificateEvent.create({
             data: {
-                eventType: "UPDATED",
-                adminId:  session.user.id!,
+                eventType: "CREATED",
+                adminId: session.user.id!,
                 certificateId: certificate.id,
                 certificateData: JSON.stringify(certificate),
             }
@@ -56,8 +61,8 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
         return NextResponse.json(certificate)
 
     } catch (error) {
-        console.log("[CERTIFICATE-UPDATED]", error)
-        return new NextResponse("Internal Errorr" + error, { status: 500 })
+        console.log("[CERTIFICATE-CREATE]", error)
+        return new NextResponse("Internal Errorr", { status: 500 })
     }
 
 }

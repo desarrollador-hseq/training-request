@@ -1,15 +1,14 @@
 
 "use client"
 
-import { DeleteConfirmModal } from "@/components/delete-confirm-modal";
-import { Button } from "@/components/ui/button";
-import { db } from "@/lib/db";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Collaborator } from "@prisma/client";
 import axios from "axios";
 import { Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { toast } from "sonner";
+import { DeleteConfirmModal } from "@/components/delete-confirm-modal";
+import { Button } from "@/components/ui/button";
 
 interface DeleteCollaboratorProps {
   collaborator: Collaborator;

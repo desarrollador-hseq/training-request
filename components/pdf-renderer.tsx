@@ -1,15 +1,12 @@
 "use client";
 
-import "react-pdf/dist/Page/AnnotationLayer.css";
-import "react-pdf/dist/Page/TextLayer.css";
 import { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
 import { toast } from "sonner";
 import { useResizeDetector } from "react-resize-detector";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { useForm } from "react-hook-form";
+import PdfFullscreen from "./pdf-fullscreen";
 import {
   ChevronDown,
   ChevronUp,
@@ -19,10 +16,14 @@ import {
 } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@/lib/utils";
 import SimpleBar from "simplebar-react";
-import PdfFullscreen from "./pdf-fullscreen";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { cn } from "@/lib/utils";
+
 import "simplebar-react/dist/simplebar.min.css";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 interface PdfRendererProps {
@@ -66,7 +67,10 @@ const PdfRenderer = ({ url, className }: PdfRendererProps) => {
   };
 
   return (
-    <div className="w-full max-w-full bg-white rounded-md shadow flex flex-col items-center">
+    <div
+      ref={ref}
+      className="w-full max-w-full bg-white rounded-md shadow flex flex-col min-w-full"
+    >
       <div className="h-14  w-full border-b border-zinc-200 flex items-center justify-between px-2">
         <div className="flex items-center gap-1.5  justify-center">
           <Button
@@ -129,58 +133,64 @@ const PdfRenderer = ({ url, className }: PdfRendererProps) => {
         </div>
       </div>
 
-      <div className="flex-1 w-full max-h-fit">
-        <SimpleBar autoHide={false} className="max-h-[600px] max-w-[400px]">
-          <div ref={ref}>
-            <Document
-              loading={
-                <div>
-                  <Loader2 className="my-24 h-6 w-6 animate-spin text-primary" />
-                </div>
-              }
-              onError={() => {
-                toast.error("Error al cargar PDF");
-              }}
-              onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-              file={url}
-              error={
-                <div className="h-[500px] flex flex-col justify-center items-center text-lg">
-                  <XCircle className="w-7 h-7 text-red-500" />
-                  <span>Error al cargar PDF</span>
-                </div>
-              }
-              className="max-h-full"
-            >
-              {isLoading && renderedScale ? (
-                <Page
-                  width={width}
-                  height={height}
-                  pageNumber={currPage}
-                  scale={scale}
-                  rotate={rotation}
-                  key={"@" + renderedScale}
-                  className="w-full"
-                />
-              ) : null}
+      <SimpleBar
+        autoHide={false}
+        className={cn(" w-full h-full bg-red-500", width && `w-[${width}px]`)}
+      >
+        <div
+          className={cn(
+            "max-w-full w-full h-full bg-red-500",
+            width && `w-[${width}px]`
+          )}
+        >
+          <Document
+            loading={
+              <div>
+                <Loader2 className="my-24 h-6 w-6 animate-spin text-primary" />
+              </div>
+            }
+            onError={() => {
+              toast.error("Error al cargar PDF");
+            }}
+            onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+            file={url}
+            error={
+              <div className="h-[500px] flex flex-col justify-center items-center text-lg">
+                <XCircle className="w-7 h-7 text-red-500" />
+                <span>Error al cargar PDF</span>
+              </div>
+            }
+            className="max-h-full"
+          >
+            {isLoading && renderedScale ? (
               <Page
-                className={cn("w-full", isLoading ? "hidden" : "")}
                 width={width}
                 height={height}
                 pageNumber={currPage}
                 scale={scale}
                 rotate={rotation}
-                key={"@" + scale}
-                loading={
-                  <div className="flex justify-center ">
-                    <Loader2 className="my-24 h-6 w-6 animate-spin" />
-                  </div>
-                }
-                onRenderSuccess={() => setRenderedScale(scale)}
+                key={"@" + renderedScale}
+                className="w-full"
               />
-            </Document>
-          </div>
-        </SimpleBar>
-      </div>
+            ) : null}
+            <Page
+              className={cn("w-full", isLoading ? "hidden" : "")}
+              width={width}
+              height={height}
+              pageNumber={currPage}
+              scale={scale}
+              rotate={rotation}
+              key={"@" + scale}
+              loading={
+                <div className="flex justify-center ">
+                  <Loader2 className="my-24 h-6 w-6 animate-spin" />
+                </div>
+              }
+              onRenderSuccess={() => setRenderedScale(scale)}
+            />
+          </Document>
+        </div>
+      </SimpleBar>
     </div>
   );
 };

@@ -1,12 +1,12 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { cn, formatDateOf } from "@/lib/utils";
+import React, { useState } from "react";
 import { Certificate, CertificateEvent, Company } from "@prisma/client";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Edit2, FilePlus2 } from "lucide-react";
-import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { cn, formatDateOf } from "@/lib/utils";
 
 interface CertificateItemTimelineProps {
   event: CertificateEvent & { admin: Company | null | undefined };

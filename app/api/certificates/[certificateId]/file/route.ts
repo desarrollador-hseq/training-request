@@ -11,18 +11,7 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
         if (!params.certificateId) return new NextResponse("Bad request", { status: 400 })
 
         const values = await req.json()
-        const requiredProperties = [
-            "coachName",
-            "coachId",
-            "coachPosition",
-            "coachImgSignatureUrl",
-        ];
-
-        const missingProperty = requiredProperties.find(prop => !(prop in values));
-
-        if (missingProperty) {
-            return new NextResponse(`Missing property: ${missingProperty}`, { status: 400 });
-        }
+       
 
         const certificate = await db.certificate.update({
             where: {
@@ -31,22 +20,12 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
             data: {
                 ...values
             }
-
-        })
-
-        await db.certificateEvent.create({
-            data: {
-                eventType: "UPDATED",
-                adminId:  session.user.id!,
-                certificateId: certificate.id,
-                certificateData: JSON.stringify(certificate),
-            }
         })
 
         return NextResponse.json(certificate)
 
     } catch (error) {
-        console.log("[CERTIFICATE-UPDATE-COACH]", error)
+        console.log("[CERTIFICATE-FILE-ADD-EDIT]", error)
         return new NextResponse("Internal Errorr", { status: 500 })
     }
 

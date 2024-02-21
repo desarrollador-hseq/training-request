@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Collaborator,
@@ -33,7 +34,6 @@ import {
 import { useLoading } from "@/components/providers/loading-provider";
 import { cn } from "@/lib/utils";
 import { ModalUploadDocument } from "./modal-upload-document";
-import { useEffect, useState } from "react";
 import { TooltipInfo } from "@/components/tooltip-info";
 
 interface Collaboratorss extends TrainingRequestCollaborator {

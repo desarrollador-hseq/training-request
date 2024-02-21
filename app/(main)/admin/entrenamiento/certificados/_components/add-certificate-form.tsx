@@ -1,30 +1,44 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { PDFViewer } from "@react-pdf/renderer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Certificate, Coach, Course } from "@prisma/client";
+import { Certificate, Coach } from "@prisma/client";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { PDFViewer } from "@react-pdf/renderer";
 import { InputForm } from "@/components/input-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { CalendarInputForm } from "@/components/calendar-input-form";
-import { DocumentCertificateTemplate } from "../../../../../_components/document-certificate-template";
+import { DocumentCertificateTemplate } from "../../../../_components/document-certificate-template";
 import { formatDateCert, formatDateOf } from "@/lib/utils";
-import { SelectCoachCertificate } from "./select-coach-certificate";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { SubtitleSeparator } from "@/components/subtitle-separator";
+import { SimpleModal } from "@/components/simple-modal";
 
 interface AddCourseFormProps {
   certificate?: Certificate | null;
-  baseUrl: string ;
-  coaches: Coach[] | null
+  baseUrl: string;
+  coaches: Coach[] | null;
+  isCreate: boolean;
+  certAlreadyExists: boolean;
 }
 
 const formSchema = z.object({
+  collaboratorId: z.string(),
+  courseLevelId: z.string(),
+  coachId: z.string(),
   collaboratorFullname: z.string().min(1, {
     message: "Nombre del colaborador es requerido",
   }),
@@ -45,6 +59,7 @@ const formSchema = z.object({
   courseName: z.string().min(1, {
     message: "Nombre del curso es requerido",
   }),
+
   levelName: z.string().min(1, {
     message: "Nombre del nivel es requerido",
   }),
@@ -55,20 +70,35 @@ const formSchema = z.object({
   certificateDate: z.date(),
   expeditionDate: z.date(),
   dueDate: z.date(),
+
+  coachName: z.string(),
+  coachPosition: z.string(),
+  coachLicence: z.string().optional(),
+  coachImgSignatureUrl: z.string(),
 });
 
-export const AddCertificateForm = ({ certificate, baseUrl, coaches }: AddCourseFormProps) => {
+export const AddCertificateForm = ({
+  certificate,
+  baseUrl,
+  coaches,
+  isCreate,
+  certAlreadyExists,
+}: AddCourseFormProps) => {
   const router = useRouter();
-  const isEdit = useMemo(() => certificate, [certificate]);
 
-  if (isEdit && !certificate) {
+  if (!certificate) {
     router.replace("/admin/entrenamiento/certificados");
     toast.error("Certificado no encontrado, redirigiendo...");
   }
 
+  console.log({ certificate });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      collaboratorId: certificate?.collaboratorId,
+      courseLevelId: certificate?.courseLevelId || undefined,
+      coachId: certificate?.coachId || undefined,
       collaboratorFullname: certificate?.collaboratorFullname || "",
       collaboratorNumDoc: certificate?.collaboratorNumDoc || "",
       collaboratorTypeDoc: certificate?.collaboratorTypeDoc || "",
@@ -87,17 +117,54 @@ export const AddCertificateForm = ({ certificate, baseUrl, coaches }: AddCourseF
   });
 
   const { isSubmitting, isValid } = form.formState;
+  const { setValue, getValues } = form;
+
+  useEffect(() => {
+    certificate?.coachId &&
+      setValue("coachId", certificate.coachId, { shouldValidate: true });
+    certificate?.coachName &&
+      setValue("coachName", certificate.coachName, { shouldValidate: true });
+    certificate?.coachPosition &&
+      setValue("coachPosition", certificate.coachPosition, {
+        shouldValidate: true,
+      });
+    certificate?.coachLicence &&
+      setValue("coachLicence", certificate.coachLicence || undefined, {
+        shouldValidate: true,
+      });
+    certificate?.coachImgSignatureUrl &&
+      setValue("coachImgSignatureUrl", certificate.coachImgSignatureUrl!, {
+        shouldValidate: true,
+      });
+  }, []);
+
+  const onChangeCoach = (id: string) => {
+    const coachSelected = coaches?.find((coach) => coach.id === id);
+    if (!coachSelected) {
+      toast.error("error al seleccionar al entrenador");
+      return;
+    }
+    setValue("coachId", coachSelected.id, { shouldValidate: true });
+    setValue("coachName", coachSelected.fullname, { shouldValidate: true });
+    setValue("coachPosition", coachSelected.position, { shouldValidate: true });
+    setValue("coachLicence", coachSelected.licence || undefined, {
+      shouldValidate: true,
+    });
+    setValue("coachImgSignatureUrl", coachSelected.imgSignatureUrl!, {
+      shouldValidate: true,
+    });
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      if (isEdit) {
+      if (!isCreate) {
         await axios.patch(`/api/certificates/${certificate?.id}`, values);
-        toast.success("Curso actualizado");
+        toast.info("Certificado actualizado correctamente");
       } else {
-        const { data } = await axios.post(`/api/courses/`, values);
-        toast.success("Curso creado");
+        const { data } = await axios.post(`/api/certificates/`, values);
+        toast.success("Certificado creado correctamente");
       }
-      router.push(`/admin/entrenamiento/certificados`);
+      // router.push(`/admin/entrenamiento/certificados`);
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -105,7 +172,7 @@ export const AddCertificateForm = ({ certificate, baseUrl, coaches }: AddCourseF
     }
   };
   return (
-    <div className="max-w-[1500px] w-full h-full mx-auto bg-white rounded-md shadow-sm overflow-y-hidden p-3">
+    <div className="max-w-[1500px] w-full h-full">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -193,7 +260,34 @@ export const AddCertificateForm = ({ certificate, baseUrl, coaches }: AddCourseF
                   type="number"
                 />
               </div>
-              <SelectCoachCertificate coaches={coaches} certificateId={certificate?.id} coachId={certificate?.coachId} />
+              {/* <SelectCoachCertificate
+                coaches={coaches}
+                certificateId={certificate?.id}
+                coachId={certificate?.coachId}
+              /> */}
+              <div className="w-full">
+                <Label className="font-bold" htmlFor="coachId">
+                  Entrenador
+                </Label>
+                <Select
+                  defaultValue={
+                    certificate?.coachId ? certificate?.coachId : ""
+                  }
+                  onValueChange={(e) => onChangeCoach(e)}
+                  // disabled={!isPending}
+                >
+                  <SelectTrigger id="coachId" className="w-full">
+                    <SelectValue placeholder="🔴 Seleccionar Entrenador" />
+                  </SelectTrigger>
+                  <SelectContent className="w-full">
+                    {coaches?.map((coach) => (
+                      <SelectItem key={coach.id} value={coach.id}>
+                        {coach.fullname} - {coach.position}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div>
                 <CalendarInputForm
                   control={form.control}
@@ -217,20 +311,33 @@ export const AddCertificateForm = ({ certificate, baseUrl, coaches }: AddCourseF
               </div>
             </div>
           </div>
-
-          <Button
-            disabled={isSubmitting || !isValid}
-            className="w-full max-w-[500px] gap-3"
-          >
-            {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isEdit ? "Actualizar" : "Crear"}
-          </Button>
+          {certAlreadyExists ? (
+            <SimpleModal btnDisabled={isSubmitting || !isValid} large={false} onAcept={form.handleSubmit(onSubmit)} textBtn="Volver a generar" title="¿Esta seguro que desea crear el certificado?">
+              <h3>
+                Por favor confirme si desea crear el certificado, recuerde que
+                ya se encuentra creado un certificado para este colaborador
+              </h3>
+            </SimpleModal>
+          ) : (
+            <Button
+              disabled={isSubmitting || !isValid}
+              className="w-full max-w-[500px] gap-3"
+            >
+              {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+              {!isCreate ? "Actualizar" : "Crear"}
+            </Button>
+          )}
         </form>
       </Form>
 
-      <div>
+      <div className="relative">
+        <SubtitleSeparator text="Previsualización del certificado" />
+
         {certificate && (
-          <PDFViewer style={{ width: "100%", height: "1200px" }}>
+          <PDFViewer
+            showToolbar={false}
+            style={{ width: "100%", height: "1200px" }}
+          >
             <DocumentCertificateTemplate
               course={certificate.courseName}
               fullname={certificate.collaboratorFullname}
@@ -248,11 +355,10 @@ export const AddCertificateForm = ({ certificate, baseUrl, coaches }: AddCourseF
               expireDate={formatDateOf(certificate.dueDate!)}
               endDate={formatDateOf(certificate.certificateDate!)}
               expeditionDate={formatDateCert(certificate.expeditionDate!)}
-
-              coachName={certificate.coachName}
-              coachPosition={certificate.coachPosition}
-              coachLicence={certificate.coachLicence}
-              coachImgSignatureUrl={certificate.coachImgSignatureUrl}
+              coachName={getValues("coachName")}
+              coachPosition={getValues("coachPosition")}
+              coachLicence={getValues("coachLicence")}
+              coachImgSignatureUrl={getValues("coachImgSignatureUrl")}
             />
           </PDFViewer>
         )}

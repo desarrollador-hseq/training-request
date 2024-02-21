@@ -190,10 +190,10 @@ export const FileUploadForm = ({
               <ImageIcon className="w-10 h-10 text-slate-500" />
             </div>
           ) : (
-            <div className="mt-2 min-w-full flex justify-center">
+            <div className="mt-2 min-w-full flex justify-center w-full">
               {isPdf ? (
-                <div className="min-w-fit">
-                  <PdfRenderer url={file} />
+                <div className="min-w-fit w-full max-w-[800px] ">
+                  <PdfRenderer url={file}  />
                 </div>
               ) : (
                 <div className="object-cover">

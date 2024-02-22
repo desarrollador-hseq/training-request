@@ -1,5 +1,6 @@
 "use client";
 
+import { Roboto } from "next/font/google";
 import React, {
   Dispatch,
   ReactNode,
@@ -9,10 +10,14 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Loader2 } from "lucide-react";
-import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
-const inter = Inter({ subsets: ["latin"] });
+import { LoaderFullpage } from "../loader-fullpage";
+
+
+const roboto = Roboto({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 interface LoadingProps {
   setLoadingApp: Dispatch<SetStateAction<boolean | undefined>>;
@@ -36,7 +41,7 @@ export const LoadingProvider = ({ children }: Props) => {
       setLoadingApp(false);
     } catch (error) {
       setLoadingApp(false);
-    }finally {
+    } finally {
       setLoadingApp(false);
     }
   }, []);
@@ -45,16 +50,12 @@ export const LoadingProvider = ({ children }: Props) => {
     <LoadingContext.Provider value={{ setLoadingApp, loadingApp }}>
       <body
         className={cn(
-          inter.className,
+          roboto.className,
           loadingApp && "overflow-hidden",
           "bg-blue-100/40 relative"
         )}
       >
-        {loadingApp && (
-          <div style={{zIndex: 100, position: "fixed"}} className="backdrop-blur-sm bg-white/30 absolute top-0 left-0 w-full min-h-screen max-h-max overflow-hidden z-50 bg-white flex justify-center items-center">
-            <Loader2 className="w-12 h-12 animate-spin text-secondary" />
-          </div>
-        )}
+        {loadingApp && <LoaderFullpage />}
         {children}
       </body>
     </LoadingContext.Provider>

@@ -1,8 +1,9 @@
+
+
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { CertificatePreview } from "./_components/certificate-preview";
 import { TitleOnPage } from "@/components/title-on-page";
-import { SimpleModal } from "@/components/simple-modal";
 import { ModalCertificateWasCreated } from "./_components/modal-certificate-was-created";
 
 interface GenerateCertificatePageProps {
@@ -53,6 +54,7 @@ const GenerateCertificatePage = async ({
     where: {
       collaboratorId: params.collaboratorId,
       courseLevelId: trainingCollaborator?.courseLevel?.id,
+      active: true,
       collaborator: {
         companyId: trainingCollaborator?.collaborator.companyId,
       },
@@ -67,11 +69,9 @@ const GenerateCertificatePage = async ({
           bcrumb={crumbs}
         />
       )}
-      {certificateCreated && (
-       <ModalCertificateWasCreated />
-      )}
+      {certificateCreated && <ModalCertificateWasCreated />}
       <CertificatePreview
-       certificateWasCreatedId={certificateCreated?.id}
+        certificateWasCreatedId={certificateCreated?.id}
         collaborator={trainingCollaborator.collaborator}
         courseLevel={trainingCollaborator.courseLevel}
         endDate={trainingCollaborator.endDate}

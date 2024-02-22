@@ -9,6 +9,7 @@ import { Roboto } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import { authOptions } from "@/lib/authOptions";
+import { Footer } from "@/components/footer";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -50,6 +51,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
           </div>
         </div>
         <ScrollUp />
+        <Footer />
       </main>
     </CollaboratorsCartProvider>
   );

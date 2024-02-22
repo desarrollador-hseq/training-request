@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { SimpleModal } from "@/components/simple-modal";
+import { useLoading } from "@/components/providers/loading-provider";
 
 interface AddCourseFormProps {
   certificate?: Certificate | null;
@@ -85,13 +86,12 @@ export const AddCertificateForm = ({
   certAlreadyExists,
 }: AddCourseFormProps) => {
   const router = useRouter();
+  const { setLoadingApp } = useLoading();
 
   if (!certificate) {
     router.replace("/admin/entrenamiento/certificados");
     toast.error("Certificado no encontrado, redirigiendo...");
   }
-
-  console.log({ certificate });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -156,6 +156,7 @@ export const AddCertificateForm = ({
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoadingApp(true);
     try {
       if (!isCreate) {
         await axios.patch(`/api/certificates/${certificate?.id}`, values);
@@ -169,6 +170,8 @@ export const AddCertificateForm = ({
     } catch (error) {
       console.error(error);
       toast.error("Ocurrió un error inesperado");
+    } finally {
+      setLoadingApp(false);
     }
   };
   return (
@@ -312,7 +315,13 @@ export const AddCertificateForm = ({
             </div>
           </div>
           {certAlreadyExists ? (
-            <SimpleModal btnDisabled={isSubmitting || !isValid} large={false} onAcept={form.handleSubmit(onSubmit)} textBtn="Volver a generar" title="¿Esta seguro que desea crear el certificado?">
+            <SimpleModal
+              btnDisabled={isSubmitting || !isValid}
+              large={false}
+              onAcept={form.handleSubmit(onSubmit)}
+              textBtn="Volver a generar"
+              title="¿Esta seguro que desea crear el certificado?"
+            >
               <h3>
                 Por favor confirme si desea crear el certificado, recuerde que
                 ya se encuentra creado un certificado para este colaborador

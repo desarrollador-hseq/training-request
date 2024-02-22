@@ -22,8 +22,8 @@ export const LogoGHseq = ({
 
   const navigate = () => {
     if (!goRoot) return;
-
-    router.push(!isDashboard ? "/admin" : "/dashboard");
+    window.location.assign('https://grupohseq.com/')
+    
   };
   return (
     <div

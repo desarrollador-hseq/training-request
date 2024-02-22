@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -43,14 +43,15 @@ export const ModalLogout = () => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild className="p-0 m-0">
-        <Button
+        <div
           className={cn(
+            buttonVariants(),
             "rounded-none w-full p-0 m-0 h-8 bg-red-600 hover:bg-red-500"
           )}
         >
           Salir
           <LogOut className="w-4 h-4 ml-2" />
-        </Button>
+        </div>
       </AlertDialogTrigger>
 
       <AlertDialogContent className="max-w-[600px]">

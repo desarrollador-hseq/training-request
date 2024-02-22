@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Banner } from "@/components/banner";
 
 interface AddCollaboratorFormProps {
   collaborator?: Collaborator | null;
@@ -286,12 +287,13 @@ export const AddCollaboratorForm = ({
                   )}
                 />
               </div>
-
-              {/* <div>
-                <Button type="button" onClick={handleTab}>
-                  Gestionar documentos
-                </Button>
-              </div> */}
+              <div>
+                <Banner
+                  className="text-left text-xs md:text-sm font-thin p-1.5"
+                  label="Actualmente, no podemos enviar mensajes de texto a los usuarios de WOM Colombia. Por favor, ten en cuenta que los colaboradores con WOM solo recibirán notificaciones por correo electrónico."
+                />
+                
+              </div>
             </div>
           </div>
 

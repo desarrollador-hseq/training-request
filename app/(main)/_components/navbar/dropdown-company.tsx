@@ -1,16 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModalLogout } from "@/app/(auth)/_components/modal-logout";
 
 export function DropdownCompany({ companyName }: { companyName?: string }) {
@@ -18,7 +15,7 @@ export function DropdownCompany({ companyName }: { companyName?: string }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger  className="cursor-pointer">
+      <DropdownMenuTrigger className="cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="35"
@@ -34,15 +31,17 @@ export function DropdownCompany({ companyName }: { companyName?: string }) {
         </svg>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-fit max-w-[150px]">
-        <DropdownMenuLabel className="text-center font-bold text-base uppercase p-0  text-primary">{companyName}</DropdownMenuLabel>
-        
+        <DropdownMenuLabel className="text-center font-bold text-base uppercase p-0  text-primary">
+          {companyName}
+        </DropdownMenuLabel>
+
         <DropdownMenuItem
           className="cursor-pointer border-none hover:bg-secondary hover:text-white"
           onClick={() => router.push(`/dashboard/perfil/`)}
         >
           Perfil
         </DropdownMenuItem>
-        <DropdownMenuItem asChild >
+        <DropdownMenuItem asChild>
           <ModalLogout />
         </DropdownMenuItem>
       </DropdownMenuContent>

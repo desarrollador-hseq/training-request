@@ -1,12 +1,12 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Check, CheckCircle, Eye, EyeOff, Loader2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +26,7 @@ import { SelectForm } from "@/components/select-form";
 import { TooltipInfo } from "@/components/tooltip-info";
 import { useLoading } from "@/components/providers/loading-provider";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 const formSchema = z
   .object({
@@ -54,11 +55,15 @@ const formSchema = z
     legalRepresentative: z.string().min(2, {
       message: "digite al menos 5 caracteres",
     }),
-    password: z.string().min(5, {
-      message: "digite al menos 5 caracteres",
-    }),
-    repeatPassword: z.string().min(5, {
-      message: "digite al menos 5 caracteres",
+    password: z
+      .string()
+      .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
+      .regex(
+        /^(?=.*[A-Z])(?=.*\d).*$/,
+        "La contraseña debe contener al menos una mayúscula y un número"
+      ),
+    repeatPassword: z.string().min(6, {
+      message: "digite al menos 6 caracteres",
     }),
     acceptTerms: z.literal<boolean>(true),
   })
@@ -70,6 +75,15 @@ const formSchema = z
       });
     }
   });
+
+const getPasswordErrors = (password: string): string | null => {
+  try {
+    formSchema.parse({ password });
+    return null; // No hay errores
+  } catch (error: any) {
+    return error.errors[0];
+  }
+};
 
 const sectorsItem = [
   { value: "AGROPECUARIO", label: "Agropecuario" },
@@ -95,6 +109,8 @@ export const RegisterForm = ({
   const { setLoadingApp } = useLoading();
   const [isEditing, setIsEditing] = useState(false);
   const [viewPass, setViewPass] = useState(false);
+  const [isGoodPass, setIsGoodPass] = useState(false);
+  const [strength, setStrength] = useState("weak");
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -112,8 +128,8 @@ export const RegisterForm = ({
       repeatPassword: "",
     },
   });
-  const { isSubmitting, isValid } = form.formState;
-  const { watch, setError } = form;
+  const { isSubmitting, isValid, errors } = form.formState;
+  const { watch, setError, getValues } = form;
 
   const onSubmitRegister = async (values: z.infer<typeof formSchema>) => {
     setIsEditing(true);
@@ -163,6 +179,21 @@ export const RegisterForm = ({
       setLoadingApp(false);
     }
   };
+
+  useEffect(() => {
+    if (watch("password").length >= 6) {
+      if (/[A-Z]/.test(watch("password")) && /\d/.test(watch("password"))) {
+        setStrength("fuerte");
+        setIsGoodPass(true);
+      } else {
+        setStrength("media");
+        setIsGoodPass(false);
+      }
+    } else {
+      setStrength("fácil");
+      setIsGoodPass(false);
+    }
+  }, [watch("password")]);
 
   return (
     <Form {...form}>
@@ -252,6 +283,25 @@ export const RegisterForm = ({
             <h4 className="self-center mb-1 text-primary font-bold text-slate-500">
               Credenciales de inicio de sesión
             </h4>
+            {watch().password.length > 0 && (
+              <div
+                className={cn(
+                  "flex justify-between border border-blue-500 text-primary rounded-xl items-center px-4 mt-1",
+                  strength === "fuerte" &&
+                    "bg-emerald-600 text-white border-emerald-700"
+                )}
+              >
+                <div className="flex gap-2 items-center ">
+                  <p className="text-sm">Seguridad de la contraseña:</p>
+                  <span>{strength}</span>
+                </div>
+                {isGoodPass ? (
+                  <Check className="w-5 h-5 text-white" />
+                ) : (
+                  <X className="w-5 h-5 text-red-500" />
+                )}
+              </div>
+            )}
             {/* -----------password----------- */}
             <div>
               <FormField
@@ -299,9 +349,18 @@ export const RegisterForm = ({
                 type="password"
               />
             </div>
+
+            <div className="mt-3">
+                <h3 className="font-bold">Requisitos: </h3>
+              <ul className="text-sm">
+               <li className=""><strong>Longitud:</strong>  Al menos 6 caracteres.</li>
+               <li> <strong>Mayúsculas:</strong>  Debe tener al menos una letra mayúscula. </li>
+               <li> <strong>Números:</strong>  Debe tener al menos un número.</li>
+              </ul>
+            </div>
           </Card>
-             {/* -----------accept terms----------- */}
-          <Card className="w-full h-full flex justify-center items-center gap-2 max-w-max ">
+          {/* -----------accept terms----------- */}
+          <Card className="w-full h-fit flex justify-center items-center gap-2 max-w-max ">
             <div>
               <FormField
                 control={form.control}
@@ -316,7 +375,9 @@ export const RegisterForm = ({
                       />
                     </FormControl>
                     <div className="">
-                      <p className="flex flex-wrap">Aceptar terminos y condiciones sobre uso de datos</p>
+                      <p className="flex flex-wrap">
+                        Aceptar terminos y condiciones sobre uso de datos
+                      </p>
                       <FormDescription className="text-sm font-normal text-slate-400">
                         ver terminos y condiciones{" "}
                         <PdfFullscreen
@@ -335,8 +396,6 @@ export const RegisterForm = ({
 
         <div className="w-full flex flex-col items-center justify-center ">
           <div className="w-full flex flex-col gap-2 mt-2">
-         
-
             <TooltipInfo text="Rellena todo el formulario para continuar">
               <div className="w-full h-fit">
                 <Button disabled={!isValid || isSubmitting} className="w-full">

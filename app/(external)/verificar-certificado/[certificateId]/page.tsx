@@ -1,12 +1,10 @@
-import { db } from "@/lib/db";
-import React from "react";
-import { ViewCertificatePdf } from "./_components/view-certificate-pdf";
-import { Certificate, Course, CourseLevel } from "@prisma/client";
 import { addMonths, format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Card, CardHeader } from "@/components/ui/card";
-import Link from "next/link";
 import { FileX2 } from "lucide-react";
+import { ViewCertificatePdf } from "./_components/view-certificate-pdf";
+import { Card, CardHeader } from "@/components/ui/card";
+import { db } from "@/lib/db";
+import { SubtitleSeparator } from "@/components/subtitle-separator";
 
 const VerifyCertificate = async ({
   params,
@@ -25,12 +23,10 @@ const VerifyCertificate = async ({
     },
   });
 
-  console.log({ certificate });
   return (
     <div className="min-h-[calc(100vh-40px)] ">
-      <nav className="h-[40px] bg-primary flex justify-center items-center text-white">
-        <h3> Verificar Cerificado</h3>
-      </nav>
+      <SubtitleSeparator text="Verificar Cerificado" />
+
       {certificate ? (
         <div className="flex flex-col mx-auto max-w-[1200px]">
           <div className="flex justify-center gap-2 w-full bg-primary p-2 shadow-sm">

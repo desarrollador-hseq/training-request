@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { Info } from "lucide-react";
+import { authOptions } from "@/lib/authOptions";
 import { db } from "@/lib/db";
 import { TrainingCreationData } from "./_components/training-creation-data";
 import { TitleOnPage } from "@/components/title-on-page";
@@ -11,7 +12,6 @@ import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-tab
 import { SelectCollaborators } from "./_components/select-collaborators";
 import { SendTraining } from "./_components/send-training";
 import { TooltipInfo } from "@/components/tooltip-info";
-import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [
   { label: "solicitudes", path: "/dashboard/entrenamiento/solicitudes" },
@@ -28,6 +28,8 @@ const TrainingRequestPage = async ({
   if (!session || !session.user?.role) {
     return redirect("/dashboard");
   }
+
+  const isAdmin = session.user?.role === "ADMIN"
 
   const trainingRequest = await db.trainingRequest.findUnique({
     where: {
@@ -72,9 +74,11 @@ const TrainingRequestPage = async ({
       requiredDocuments: true,
     },
   });
+
+
   const collaborators = await db.collaborator.findMany({
     where: {
-      companyId: session.user.id,
+      companyId: isAdmin ? trainingRequest.companyId : session.user.id,
       active: true,
     },
     include: {
@@ -120,7 +124,6 @@ const TrainingRequestPage = async ({
   const isComplete = requiredFields.every(Boolean);
   const isPending = trainingRequest.state === "PENDING";
 
-  console.log({ isCompleteDocuments });
 
   return (
     <div className="">
@@ -135,13 +138,18 @@ const TrainingRequestPage = async ({
       <TitleOnPage text={`Editar solicitud de entrenamiento `} bcrumb={crumbs}>
         <div className="flex flex-col items-end">
           <SendTraining
+          isAdmin={isAdmin}
             trainingRequestId={params.requestId}
             disabled={isComplete}
             isPending={isPending}
           />
+          {
+          !isComplete && (
           <span className="text-slate-200 text-xs">
             completar todos los requisitos {completionText}{" "}
           </span>
+          )
+          }
         </div>
       </TitleOnPage>
 
@@ -167,6 +175,7 @@ const TrainingRequestPage = async ({
                   {/* Sheet para agregar colaboradores */}
                   <SelectCollaborators
                     isPending={isPending}
+                    isAdmin={isAdmin}
                     trainingRequestId={trainingRequest.id}
                     collaborators={collaborators}
                     collaboratorSelected={trainingRequest.collaborators.map(
@@ -183,6 +192,7 @@ const TrainingRequestPage = async ({
                   // courseId={trainingRequest.courseId}
                   coursesLevel={courseLevels}
                   isPending={isPending}
+                  isAdmin={isAdmin}
                   trainingRequest={trainingRequest}
                   courseLevels={courseLevels}
                 />

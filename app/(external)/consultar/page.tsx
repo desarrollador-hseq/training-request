@@ -109,7 +109,7 @@ const ConsultByDocument = () => {
                 <TableBody>
                   {!!currentCertificate &&
                     currentCertificate?.map((cert) => (
-                      <TableRow>
+                      <TableRow key={cert.id}>
                         <TableCell className="font-medium capitalize ">
                           {cert.collaboratorFullname?.toLowerCase()}
                         </TableCell>
@@ -127,7 +127,7 @@ const ConsultByDocument = () => {
                     ))}
                   {oldCertificate &&
                     oldCertificate?.map((cert: any) => (
-                      <TableRow>
+                      <TableRow key={cert.id}>
                         <TableCell className="font-medium capitalize ">
                           {cert.nom_asistente?.toLowerCase()}
                         </TableCell>

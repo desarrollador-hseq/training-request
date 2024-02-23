@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   Menubar,
@@ -9,7 +9,6 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import axios from "axios";
 import { CourseLevel } from "@prisma/client";
 
 interface CollaboratorCourseLevelProps {

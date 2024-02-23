@@ -46,7 +46,7 @@ const DashboardPage = async () => {
     },
     orderBy: {
       createdAt: "desc"
-    }
+    },
   });
   const certificates = await db.certificate.findMany({
     where: {
@@ -55,7 +55,8 @@ const DashboardPage = async () => {
     },
     orderBy: {
       createdAt: "desc"
-    }
+    },
+
   });
 
   return (
@@ -83,9 +84,9 @@ const DashboardPage = async () => {
         />
       </div>
 
-      <ListLatestRequestsAdded trainingRequests={trainingRequests} />
-      <ListLatestCollaboratorsAdded collaborators={collaborators} />
-      <ListLatestCertificatesAdded certificates={certificates} />
+      <ListLatestRequestsAdded trainingRequests={trainingRequests.slice(0, 5)} />
+      <ListLatestCollaboratorsAdded collaborators={collaborators.slice(0, 5)} />
+      <ListLatestCertificatesAdded certificates={certificates.slice(0, 5)} />
     </div>
   );
 };

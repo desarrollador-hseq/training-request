@@ -54,6 +54,7 @@ interface CollaboratorsSimpleTableProps {
   trainingRequestId: string;
   coursesLevel: CourseLevel[] | null;
   isPending: boolean;
+  isAdmin?: boolean;
   trainingRequest: any;
   courseLevels: any;
 }
@@ -65,6 +66,7 @@ export const CollaboratorsSimpleTable = ({
   trainingRequest,
   courseLevels,
   isPending,
+  isAdmin,
 }: CollaboratorsSimpleTableProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -126,7 +128,7 @@ export const CollaboratorsSimpleTable = ({
   };
 
   const onChange = async (courseLevelId: any, id: string) => {
-    if (isPending) {
+    if (isPending || isAdmin) {
       setLoadingApp(true);
       try {
         const { data } = await axios.patch(
@@ -155,7 +157,7 @@ export const CollaboratorsSimpleTable = ({
           <TableHead className="text-white">Teléfono</TableHead>
           <TableHead className="text-white">Nivel</TableHead>
           <TableHead className="text-white">Documentos</TableHead>
-          {isPending && (
+          {(isPending || isAdmin) && (
             <TableHead className="text-right text-white">Acción</TableHead>
           )}
         </TableRow>
@@ -178,7 +180,7 @@ export const CollaboratorsSimpleTable = ({
                 "font-semibold",
                 !isPending &&
                   collaborators[index].isDisallowed &&
-                  "bg-red-700 hover:bg-red-800 text-white z-40"
+                  "bg-red-700 hover:bg-red-800 text-white z-40 "
               )}
               key={collaborator.id + courseLevel?.id}
             >
@@ -187,13 +189,14 @@ export const CollaboratorsSimpleTable = ({
               <TableCell>{collaborator.email}</TableCell>
               <TableCell>{collaborator.phone}</TableCell>
 
-              <TableCell>
+              <TableCell className="disabled:text-slate-800 ">
                 <Select
                   defaultValue={courseLevel ? courseLevel.id : ""}
                   onValueChange={(e) => onChange(e, collaborator.id)}
-                  disabled={!isPending}
+                  disabled={!isPending && !isAdmin}
+                
                 >
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-[180px] disabled:text-gray-800">
                     <SelectValue placeholder="🔴 Sin definir" />
                   </SelectTrigger>
                   <SelectContent>
@@ -233,7 +236,7 @@ export const CollaboratorsSimpleTable = ({
                   )}
               </TableCell>
 
-              {isPending && (
+              {(isPending || isAdmin) && (
                 <TableCell className="flex justify-end">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -261,16 +264,16 @@ export const CollaboratorsSimpleTable = ({
             </TableRow>
           );
         })}
-        {!isPending && (
+        {(!isPending && !isAdmin) && (
           <TableRow>
-            <TableCell className="absolute top-0 left-0 bottom-0 right-0 w-full h-full bg-white opacity-40 z-20"></TableCell>
+            <TableCell className="absolute top-0 left-0 bottom-0 right-0 w-full h-full bg-white opacity-30 z-20"></TableCell>
           </TableRow>
         )}
       </TableBody>
       <TableFooter className="w-full">
         <TableRow className="w-full">
           <TableCell
-            colSpan={isPending ? 6 : 5}
+            colSpan={(isPending || isAdmin) ? 6 : 5}
             className="bg-blue-400/20"
           ></TableCell>
           <TableCell className="text-right bg-blue-400/20">

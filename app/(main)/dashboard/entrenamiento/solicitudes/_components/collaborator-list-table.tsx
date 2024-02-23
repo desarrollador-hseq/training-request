@@ -66,7 +66,7 @@ export const CollaboratorListTable = ({
             <TableCell>{collaborator.email}</TableCell>
             <TableCell>{collaborator.phone}</TableCell>
 
-            <TableCell>{courseLevel.name}</TableCell>
+            <TableCell>{courseLevel?.name}</TableCell>
             {/* agregar Documentos de colaborador a solicitud */}
           </TableRow>
         ))}

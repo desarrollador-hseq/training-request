@@ -17,12 +17,13 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 const stateEsp = {
-  PENDING: { text: "No enviada", icon: "🕒" },
-  ACTIVE: { text: "Activa", icon: "✅" },
-  EXECUTED: { text: "Ejecutada", icon: "✔️" },
-  CANCELLED: { text: "Cancelada", icon: "❌" },
+  PENDING: { text: "No enviada", col: "slate-500" },
+  ACTIVE: { text: "Activa", col: "emerald-600" },
+  EXECUTED: { text: "Ejecutada", col: "blue-700" },
+  CANCELLED: { text: "Cancelada", col: "slate-300" },
 };
 
 interface courseCompanyAndCollaborators extends TrainingRequest {
@@ -94,12 +95,12 @@ export const adminRequestTablecolumns: ColumnDef<courseCompanyAndCollaborators>[
         );
       },
       cell: ({ row }) => {
-        const state = row.original.state;
-        const stateTr = stateEsp[state] || state;
+       
+        const stateTr = stateEsp[row.original.state] ;
 
         return (
-          <div>
-            {stateTr.icon} {stateTr.text}
+          <div className={cn(`rounded-xl  bg-${stateTr.col}  text-white w-fit px-3 text-sm`)}>
+             {stateTr.text}
           </div>
         );
       },

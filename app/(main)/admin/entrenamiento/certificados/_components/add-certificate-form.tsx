@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { PDFViewer } from "@react-pdf/renderer";
@@ -33,7 +33,7 @@ interface AddCourseFormProps {
   baseUrl: string;
   coaches: Coach[] | null;
   isCreate: boolean;
-  certAlreadyExists: boolean;
+  certAlreadyExists?: boolean;
 }
 
 const formSchema = z.object({
@@ -87,11 +87,17 @@ export const AddCertificateForm = ({
 }: AddCourseFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
+  const [isClient, setIsClient] = useState(false)
 
   if (!certificate) {
     router.replace("/admin/entrenamiento/certificados");
     toast.error("Certificado no encontrado, redirigiendo...");
   }
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+  
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -342,7 +348,7 @@ export const AddCertificateForm = ({
       <div className="relative">
         <SubtitleSeparator text="Previsualización del certificado" />
 
-        {certificate && (
+        {isClient && certificate  && (
           <PDFViewer
             showToolbar={false}
             style={{ width: "100%", height: "1200px" }}

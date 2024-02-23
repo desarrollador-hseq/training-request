@@ -1,10 +1,4 @@
-
-import {
-  BookOpen,
-  Building2,
-  PersonStanding,
-  ScrollText,
-} from "lucide-react";
+import { BookOpen, Building2, PersonStanding, ScrollText } from "lucide-react";
 import { db } from "@/lib/db";
 import { TitleOnPage } from "@/components/title-on-page";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -14,6 +8,8 @@ import { adminRequestsActivesTablecolumns } from "./entrenamiento/solicitudes/_c
 import { AdminCollaboratorsProgrammingTable } from "./entrenamiento/colaboradores/_components/admin-collaborators-programming-table";
 import { KpiCard } from "@/components/kpi-card";
 import { Separator } from "@/components/ui/separator";
+import { adminRequestTablecolumns } from "./entrenamiento/solicitudes/_components/admin-requests-table-columns";
+import { RequestReport } from "../dashboard/_components/request-report";
 
 const crumbs = [{ label: "inicio", path: "inicio" }];
 
@@ -52,7 +48,7 @@ const AdminPage = async () => {
     },
   });
 
-  const requests = await db.trainingRequest.findMany({
+  const requestsActives = await db.trainingRequest.findMany({
     where: { state: "ACTIVE", active: true },
     include: {
       course: true,
@@ -64,6 +60,12 @@ const AdminPage = async () => {
         },
       },
     },
+    orderBy: {
+      activeFrom: "desc",
+    },
+  });
+  const requests = await db.trainingRequest.findMany({
+    where: { NOT: { state: "PENDING" }, active: true },
     orderBy: {
       activeFrom: "desc",
     },
@@ -117,37 +119,41 @@ const AdminPage = async () => {
       <TitleOnPage text="Panel" bcrumb={crumbs} />
       <div className="flex items-center w-full">
         <div className="w-full my-2">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 w-full">
-            <KpiCard
-              color="yellow"
-              icon={<Building2 className="text-yellow-500 w-8 h-8" />}
-              title="Empresas"
-              number={companies.length}
-            />
-            <KpiCard
-              color="cyan"
-              icon={<ScrollText className="text-cyan-500 w-8 h-8" />}
-              title="Solicitudes"
-              number={trainingRequests.length}
-            />
-            <KpiCard
-              color="blue"
-              icon={<ScrollText className="text-blue-500 w-8 h-8" />}
-              title="Certificados"
-              number={certificates.length}
-            />
-            <KpiCard
-              color="red"
-              icon={< BookOpen className="text-red-500 w-8 h-8" />}
-              title="Cursos"
-              number={courses.length}
-            />
-            <KpiCard
-              color="emerald"
-              icon={<PersonStanding className="text-emerald-500 w-8 h-8" />}
-              title="Administradores"
-              number={admins.length}
-            />
+          <div className="grid md:grid-cols-2 gap-2">
+            <div className="grid gap-3 sm:grid-cols-2  w-full">
+              <KpiCard
+                color="yellow"
+                icon={<Building2 className="text-yellow-500 w-8 h-8" />}
+                title="Empresas"
+                number={companies.length}
+              />
+              <KpiCard
+                color="cyan"
+                icon={<ScrollText className="text-cyan-500 w-8 h-8" />}
+                title="Solicitudes"
+                number={trainingRequests.length}
+              />
+              <KpiCard
+                color="blue"
+                icon={<ScrollText className="text-blue-500 w-8 h-8" />}
+                title="Certificados"
+                number={certificates.length}
+              />
+              <KpiCard
+                color="red"
+                icon={<BookOpen className="text-red-500 w-8 h-8" />}
+                title="Cursos"
+                number={courses.length}
+              />
+              <KpiCard
+                color="emerald"
+                icon={<PersonStanding className="text-emerald-500 w-8 h-8" />}
+                title="Administradores"
+                number={admins.length}
+              />
+            </div>
+
+            <RequestReport requests={requests} />
           </div>
         </div>
       </div>
@@ -163,8 +169,8 @@ const AdminPage = async () => {
           </CardHeader>
           <CardContent>
             <AdminRequestsTable
-              columns={adminRequestsActivesTablecolumns}
-              data={requests}
+              columns={adminRequestTablecolumns}
+              data={requestsActives}
             />
           </CardContent>
         </Card>

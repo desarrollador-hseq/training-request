@@ -13,7 +13,11 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDownSquare, ChevronUpSquare } from "lucide-react";
+import {
+  AlertCircle,
+  ChevronDownSquare,
+  ChevronUpSquare,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +36,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { CollaboratorListTable } from "./collaborator-list-table";
+import { TooltipInfo } from "@/components/tooltip-info";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -88,7 +93,6 @@ export function RequestsTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-   
       </div>
       <div className="rounded-md border">
         <Table>
@@ -122,18 +126,20 @@ export function RequestsTable<TData, TValue>({
                     <TableRow
                       data-state={row.getIsSelected() && "selected"}
                       className={cn(
+                        "relative",
                         idOpenCollapsible === row.id &&
-                          "bg-slate-200 border-b-0 hover:bg-slate-200"
+                          "bg-slate-200 border-b-0 hover:bg-slate-200 "
                       )}
                     >
                       {row.getVisibleCells().map((cell: any) => (
-                        <TableCell key={cell.id}>
+                        <TableCell key={cell.id} className="relative">
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
                           )}
                         </TableCell>
                       ))}
+
                       {row.original.collaborators.length > 0 && (
                         <CollapsibleTrigger
                           onClick={() => handleCollapsible(row.id)}
@@ -141,7 +147,10 @@ export function RequestsTable<TData, TValue>({
                           className="max-h-max flex items-center my-auto"
                         >
                           <TableCell className="flex justify-end">
-                            <Button variant="ghost" className="h-full my-auto text-slate-500">
+                            <Button
+                              variant="ghost"
+                              className="h-full my-auto text-slate-500"
+                            >
                               {idOpenCollapsible !== row.id ? (
                                 <ChevronDownSquare />
                               ) : (
@@ -150,6 +159,20 @@ export function RequestsTable<TData, TValue>({
                             </Button>
                           </TableCell>
                         </CollapsibleTrigger>
+                      )}
+
+                      {/* Verificar si algún colaborador está inhabilitado */}
+                      {row.original.collaborators.some(
+                        (collaborator: any) => collaborator.isDisallowed
+                      ) && (
+                        <TableCell className="absolute w-5 h-full top-0 m-0 right-1 rounded-ful flex items-center justify-start">
+                          <span className="w-4 absolute bg-red-500 h-4 rounded-full flex items-center">
+                            {" "}
+                            <TooltipInfo text="Se ha encontrado un colaborador inhabilitado en la solicitud">
+                              <AlertCircle className="w-4 h-4 text-white" />
+                            </TooltipInfo>
+                          </span>
+                        </TableCell>
                       )}
                     </TableRow>
                     <CollapsibleContentTable

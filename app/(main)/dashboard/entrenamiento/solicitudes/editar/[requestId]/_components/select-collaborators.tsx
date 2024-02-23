@@ -21,13 +21,14 @@ import {
 import { useLoading } from "@/components/providers/loading-provider";
 import { CollaboratorsSelectTable } from "../../../../colaboradores/_components/collaborators-select-table";
 import { columnsCollaboratorSelectTable } from "../../../../colaboradores/_components/collaborators-select-table-columns";
-
+import { cn } from "@/lib/utils";
 
 interface SelectCollaboratorsProps {
   collaborators: Collaborator[];
   collaboratorSelected: Collaborator[];
   trainingRequestId: string;
   isPending: boolean;
+  isAdmin?: boolean;
 }
 
 export const SelectCollaborators = ({
@@ -35,6 +36,7 @@ export const SelectCollaborators = ({
   collaboratorSelected,
   trainingRequestId,
   isPending,
+  isAdmin,
 }: SelectCollaboratorsProps) => {
   const router = useRouter();
   const [levelSelected, setLevelSelected] = useState<string | null>();
@@ -79,7 +81,7 @@ export const SelectCollaborators = ({
 
   return (
     <div className="">
-      {isPending && (
+      {(isPending || isAdmin) && (
         <Sheet open={openSheet} onOpenChange={setOpenSheet}>
           <SheetTrigger asChild className="relative">
             <div>
@@ -93,12 +95,14 @@ export const SelectCollaborators = ({
               </span>
             </div>
           </SheetTrigger>
-          <SheetContent side="bottom">
+          <SheetContent side="top">
             <SheetHeader>
-              <SheetTitle>Seleccionar los colaboradores</SheetTitle>
-              <SheetDescription>
-                Selecciona todos los colaboradores que necesites agregar a la
-                solicitud
+              <SheetTitle>Añadir colaboradores a la solicitud</SheetTitle>
+              <SheetDescription className="text-[16px] mt-1">
+                Selecciona todos los colaboradores que desees agregar a la
+                solicitud. Recuerda que los colaboradores resaltados ya están
+                seleccionados. Una vez que hayas completado la selección, haz
+                clic en el botón de guardar.
               </SheetDescription>
             </SheetHeader>
             <div className="grid gap-4 py-4">
@@ -109,9 +113,9 @@ export const SelectCollaborators = ({
                 setCollaboratorsSelected={setCollaboratorsSelected}
               />
             </div>
-            <SheetFooter>
+            <SheetFooter className={cn("flex justify-center items-center")}>
               <SheetClose onClick={() => handleLevelSelected(null)} asChild>
-                <Button onClick={handleUpdateCollaborators} type="submit">
+                <Button className="w-[300px]" onClick={handleUpdateCollaborators} type="submit">
                   Guardar
                 </Button>
               </SheetClose>

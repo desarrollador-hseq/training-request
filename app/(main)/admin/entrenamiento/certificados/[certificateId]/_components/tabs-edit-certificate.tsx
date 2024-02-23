@@ -50,6 +50,7 @@ export const TabsEditCertificate = ({
               certificate={certificate}
               baseUrl={`${baseUrl}`}
               isCreate={false}
+              // certAlreadyExists
             />
           </TabsContent>
           <TabsContent value="fichas">

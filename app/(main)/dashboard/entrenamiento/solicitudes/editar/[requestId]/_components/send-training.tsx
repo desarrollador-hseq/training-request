@@ -10,16 +10,18 @@ export const SendTraining = ({
   trainingRequestId,
   disabled,
   isPending,
+  isAdmin
 }: {
   trainingRequestId: string;
   disabled: boolean;
   isPending: boolean;
+  isAdmin?: boolean;
 }) => {
   const { setLoadingApp } = useLoading();
   const router = useRouter();
 
   const onclick = async () => {
-    if (isPending) {
+    if (isPending || isAdmin) {
       setLoadingApp(true);
       try {
         await axios.patch(`/api/training-requests/${trainingRequestId}/`, {
@@ -28,13 +30,17 @@ export const SendTraining = ({
         });
 
         // Notificacion de correo a admins
-        try {
-          await axios.post(`/api/mail/requests-created`, { trainingRequestId });
-        } catch (emailError) {
-          console.error(emailError);
+
+        //se verifica que no sea admin, si es admin no se envia la notificacion al correo
+        if(!isAdmin) {
+          try {
+            await axios.post(`/api/mail/requests-created`, { trainingRequestId });
+          } catch (emailError) {
+            console.error(emailError);
+          }
         }
 
-        toast.success("Solicitud enviada correctamente");
+        toast.success(isAdmin ? "Solicitud actualizada correctamente" : "Solicitud enviada correctamente");
         router.refresh();
       } catch (updateError) {
         console.error(updateError);
@@ -47,9 +53,9 @@ export const SendTraining = ({
 
   return (
     <div>
-      {isPending && (
+      {(isPending || isAdmin) && (
         <Button disabled={!disabled} onClick={onclick} variant="primary">
-          Enviar
+          {isAdmin ? "Actualizar" : "Enviar"}
         </Button>
       )}
     </div>

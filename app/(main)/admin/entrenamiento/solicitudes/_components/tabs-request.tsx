@@ -67,7 +67,7 @@ export const TabsRequest = ({ trainingRequest }: TabsRequestProps) => {
         <CardContent>
           <TabsContent value="activas">
             <AdminRequestsTable
-              columns={adminRequestsActivesTablecolumns}
+              columns={adminRequestTablecolumns}
               data={actives}
             />
           </TabsContent>

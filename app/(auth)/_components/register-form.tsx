@@ -193,7 +193,7 @@ export const RegisterForm = ({
       setStrength("fácil");
       setIsGoodPass(false);
     }
-  }, [watch("password")]);
+  }, [watch()]);
 
   return (
     <Form {...form}>
@@ -201,7 +201,7 @@ export const RegisterForm = ({
         onSubmit={form.handleSubmit(onSubmitRegister)}
         className="space-y-1"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+        <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-1 xl:grid-cols-2 gap-2 mt-2">
           <Card className="p-2 flex flex-col">
             <h4 className="self-center mb-1 text-primary font-bold text-slate-500">
               Datos de la empresa

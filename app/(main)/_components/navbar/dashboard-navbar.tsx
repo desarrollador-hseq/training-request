@@ -20,8 +20,8 @@ export const DashboardNavbar = ({
   return (
     <div
       className={cn(
-        `fixed top-0 z-40 p-1 border-b min-h-[60px] max-h-[60px] text-white w-full bg-primary shadow-sm flex items-center`,
-        isAdmin && "bg-emerald-600"
+        `fixed top-0 z-50 p-1 border-b border-secondary min-h-[60px] max-h-[60px] text-white w-full bg-primary shadow-sm flex items-center`,
+        isAdmin && "bg-secondary"
       )}
     >
       <div className="mx-auto w-full mt-1">

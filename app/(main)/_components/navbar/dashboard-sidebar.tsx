@@ -80,7 +80,7 @@ export const DashboardSidebar = ({
 }: DashboardSidebarProps) => {
   return (
     <>
-      <div className="fixed left-0 top-[64px]">
+      <div className="fixed left-0 top-[64px] ">
         <Sheet open={openSidebar} onOpenChange={setOpenSidebar}>
           <SheetContent side="left" className="p-0 w-56">
             <DashboardSidebarContent
@@ -89,7 +89,7 @@ export const DashboardSidebar = ({
           </SheetContent>
         </Sheet>
 
-        <div className="w-56 h-full min-h-screen hidden md:flex fixed left-0 top-[59px]">
+        <div className="w-56 h-full min-h-screen hidden md:flex fixed left-0 top-[60px] z-40">
           <DashboardSidebarContent
             routes={isAdmin ? adminRoutes : dashRoutes}
           />

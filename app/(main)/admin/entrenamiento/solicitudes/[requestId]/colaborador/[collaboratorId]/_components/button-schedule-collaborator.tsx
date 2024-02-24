@@ -89,7 +89,7 @@ export const ButtonScheduleCollaborator = ({
               date?.from!,
               "P",
               { locale: es }
-            )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/47gIiOr `,
+            )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/3T9vy8h`,
           });
           toast.success("SMS enviado");
         } catch (error) {
@@ -107,7 +107,7 @@ export const ButtonScheduleCollaborator = ({
           toast.success("Correo enviado");
         } catch (error) {
           toast.error("Error al enviar correo de confirmación al colaborador");
-          console.log({ errorApiSms: error });
+          console.log({ errorApieMAIL: error });
         }
       }
     } else if (notifyReschedule) {
@@ -119,7 +119,7 @@ export const ButtonScheduleCollaborator = ({
               date?.from!,
               "P",
               { locale: es }
-            )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/47gIiOr `,
+            )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/3T9vy8h`,
           });
           toast.success("SMS reprogramacion enviado");
         } catch (error) {
@@ -138,7 +138,7 @@ export const ButtonScheduleCollaborator = ({
         toast.success("Correo de reprogramación enviado");
       } catch (error) {
         toast.error("Error al enviar correo de confirmación al colaborador");
-        console.log({ errorApiSms: error });
+        console.log({ errorApieMAIL: error });
       }
       }
     }

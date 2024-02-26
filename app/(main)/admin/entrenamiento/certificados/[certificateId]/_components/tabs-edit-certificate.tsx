@@ -41,6 +41,7 @@ export const TabsEditCertificate = ({
                 {certificate.fileUrl && "✅"}
               </span>
             </TabsTrigger>
+          
           </TabsList>
         </CardHeader>
         <CardContent>

@@ -5,6 +5,7 @@ import { CertificateItemTimeline } from "./_components/certificate-item-timeline
 import { TitleOnPage } from "@/components/title-on-page";
 import { SimpleModal } from "@/components/simple-modal";
 import { TabsEditCertificate } from "./_components/tabs-edit-certificate";
+import { DeactivateCertificate } from "./_components/deactivate-certificate";
 
 const bcrumb = [
   { label: "Certificados", path: "/dashboard/entrenamiento/certificados" },
@@ -28,7 +29,7 @@ const EditCertificate = async ({
   });
 
   if (!certificate) {
-    redirect("/admin/entrenamiento/cursos/");
+    redirect("/admin/entrenamiento/certificados/");
   }
 
   const certificateEvents = await db.certificateEvent.findMany({
@@ -51,7 +52,7 @@ const EditCertificate = async ({
 
   return (
     <div>
-      <TitleOnPage text={`Editar Certificado`} bcrumb={bcrumb}>
+      <TitleOnPage text={`Editar Certificado`} bcrumb={bcrumb} className="bg-gradient-to-b from-red-700 to-red-900">
         <SimpleModal
           textBtn={<GanttChartSquare />}
           btnClass={`bg-accent text-white`}
@@ -71,6 +72,8 @@ const EditCertificate = async ({
         certificate={certificate}
         baseUrl={`${baseUrl}`}
       />
+
+      <DeactivateCertificate certificate={certificate} />
     </div>
   );
 };

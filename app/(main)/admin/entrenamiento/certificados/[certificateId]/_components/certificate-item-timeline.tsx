@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Certificate, CertificateEvent, Company } from "@prisma/client";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Edit2, FilePlus2 } from "lucide-react";
+import { Edit2, FilePlus2, Trash } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatDateOf } from "@/lib/utils";
 
@@ -22,7 +22,13 @@ export const CertificateItemTimeline = ({
   return (
     <li className="mb-10 ms-6">
       <span className="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white ">
-        {event.eventType === "CREATED" ? <FilePlus2 /> : <Edit2 />}
+        {event.eventType === "CREATED" ? (
+          <FilePlus2 />
+        ) : event.eventType === "UPDATED" ? (
+          <Edit2 />
+        ) : (
+          <Trash />
+        )}
       </span>
 
       <div className="flex flex-col justify-between p-2 bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -42,10 +48,16 @@ export const CertificateItemTimeline = ({
                   " text-white text-xs font-semibold me-2 px-2.5 py-0.5 rounded ",
                   event.eventType === "CREATED"
                     ? "bg-emerald-600"
-                    : "bg-slate-500"
+                    : event.eventType === "UPDATED"
+                    ? "bg-slate-500"
+                    : "bg-red-600"
                 )}
               >
-                {event.eventType === "CREATED" ? "Creado" : "Actualizado"}
+                {event.eventType === "CREATED"
+                  ? "Creado"
+                  : event.eventType === "UPDATED"
+                  ? "Actualizado"
+                  : "Eliminado"}
               </span>
             </div>
           </div>
@@ -80,7 +92,8 @@ export const CertificateItemTimeline = ({
                     {certificateData?.collaboratorFullname}
                   </span>
                   <span className="leading-4">
-                    {certificateData?.collaboratorTypeDoc}{" "}{certificateData.collaboratorNumDoc}
+                    {certificateData?.collaboratorTypeDoc}{" "}
+                    {certificateData.collaboratorNumDoc}
                   </span>
                   <span className="leading-4">
                     {certificateData?.collaboratorArlName}

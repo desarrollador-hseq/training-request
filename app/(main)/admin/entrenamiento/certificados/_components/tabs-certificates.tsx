@@ -1,9 +1,7 @@
 "use client";
 
-import { isAfter, addMonths } from "date-fns";
-import {
-  Certificate,
-} from "@prisma/client";
+import { isAfter } from "date-fns";
+import { Certificate } from "@prisma/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useTabManager from "@/hooks/useTabManager";
@@ -26,25 +24,23 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
 
   const certificatesNotExpired = certificates.filter((cer) => {
     if (cer.certificateDate && cer.dueDate) {
-      const expirationDate = addMonths(
-        cer.certificateDate,
-        cer?.courseLevel?.monthsToExpire!
-      );
-      return isAfter(expirationDate, currentDate);
+      if (cer.active !== true) return false;
+      return isAfter(cer.dueDate, currentDate);
     }
     return false;
   });
 
   const certificatesExpired = certificates.filter((cer) => {
     if (cer.dueDate && cer.certificateDate) {
-      const expirationDate = addMonths(
-        cer.certificateDate,
-        cer.courseLevel.monthsToExpire!
-      );
-      return isAfter(currentDate, expirationDate);
+      if (cer.active !== true) return false;
+      return isAfter(currentDate, cer.dueDate);
     }
     return false;
   });
+
+  const certificatesDeleted = certificates.filter(
+    (cert) => cert.active === false
+  );
 
   return (
     <Tabs
@@ -62,6 +58,9 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
             <TabsTrigger className="w-full" value="vencidos">
               Vencidos
             </TabsTrigger>
+            <TabsTrigger className="w-full" value="inactivos">
+              Inactivos
+            </TabsTrigger>
           </TabsList>
         </CardHeader>
         <CardContent>
@@ -69,7 +68,10 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
             <TableDefault
               columns={columnsAdminCertificatesTable}
               data={certificatesNotExpired}
-              editHref={{btnText: `Ver`, href: `/admin/entrenamiento/certificados` }}
+              editHref={{
+                btnText: `Ver`,
+                href: `/admin/entrenamiento/certificados`,
+              }}
             />
           </TabsContent>
 
@@ -77,7 +79,16 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
             <TableDefault
               columns={columnsAdminCertificatesTable}
               data={certificatesExpired}
-              editHref={{btnText: `Ver`, href: `/admin/entrenamiento/certificados` }}
+              editHref={{
+                btnText: `Ver`,
+                href: `/admin/entrenamiento/certificados`,
+              }}
+            />
+          </TabsContent>
+          <TabsContent value="inactivos">
+            <TableDefault
+              columns={columnsAdminCertificatesTable}
+              data={certificatesDeleted}
             />
           </TabsContent>
         </CardContent>

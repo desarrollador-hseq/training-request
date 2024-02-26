@@ -65,6 +65,7 @@ const GenerateCertificatePage = async ({
     <div>
       {trainingCollaborator && (
         <TitleOnPage
+        className="bg-gradient-to-b from-emerald-700 to-emerald-900"
           text={`Generar certificado: (${trainingCollaborator?.collaborator.fullname} - ${trainingCollaborator?.courseLevel?.course.name} - ${trainingCollaborator.courseLevel?.name})`}
           bcrumb={crumbs}
         />

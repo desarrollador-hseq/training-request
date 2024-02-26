@@ -7,9 +7,7 @@ const crumbs = [{ label: "certificados", path: "certificados" }];
 
 const CertificatePage = async () => {
   const certificates = await db.certificate.findMany({
-    where: {
-      active: true,
-    },
+    
     include: {
       courseLevel: {
         select: {

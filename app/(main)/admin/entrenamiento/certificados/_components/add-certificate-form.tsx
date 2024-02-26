@@ -123,7 +123,7 @@ export const AddCertificateForm = ({
   });
 
   const { isSubmitting, isValid } = form.formState;
-  const { setValue, getValues } = form;
+  const { setValue, getValues , watch } = form;
 
   useEffect(() => {
     certificate?.coachId &&
@@ -354,22 +354,22 @@ export const AddCertificateForm = ({
             style={{ width: "100%", height: "1200px" }}
           >
             <DocumentCertificateTemplate
-              course={certificate.courseName}
-              fullname={certificate.collaboratorFullname}
-              numDoc={certificate.collaboratorNumDoc}
-              typeDoc={certificate.collaboratorTypeDoc}
-              level={certificate.levelName}
-              levelHours={`${certificate.levelHours}`}
-              resolution={certificate.resolution}
-              companyName={certificate.companyName}
-              companyNit={certificate.companyNit}
-              legalRepresentative={certificate.legalRepresentative}
-              arlName={certificate.collaboratorArlName}
+              course={watch("courseName")}
+              fullname={watch("collaboratorFullname")}
+              numDoc={watch("collaboratorNumDoc")}
+              typeDoc={watch("collaboratorTypeDoc")}
+              level={watch("levelName")}
+              levelHours={`${watch("levelHours")}`}
+              resolution={watch("resolution")}
+              companyName={watch("companyName")}
+              companyNit={watch("companyNit")}
+              legalRepresentative={watch("legalRepresentative")}
+              arlName={watch("collaboratorArlName")}
               fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
               certificateId={certificate.id}
-              expireDate={formatDateOf(certificate.dueDate!)}
-              endDate={formatDateOf(certificate.certificateDate!)}
-              expeditionDate={formatDateCert(certificate.expeditionDate!)}
+              expireDate={formatDateOf(watch("dueDate"))}
+              endDate={formatDateOf(watch("certificateDate"))}
+              expeditionDate={formatDateCert(watch("expeditionDate"))}
               coachName={getValues("coachName")}
               coachPosition={getValues("coachPosition")}
               coachLicence={getValues("coachLicence")}

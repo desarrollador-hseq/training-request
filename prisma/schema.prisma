@@ -225,6 +225,7 @@ model Certificate {
 enum EventType {
   UPDATED
   CREATED
+  DELETED
 }
 
 model CertificateEvent {

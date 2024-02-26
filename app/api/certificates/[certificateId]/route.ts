@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { authOptions } from "@/lib/authOptions"
 import { db } from "@/lib/db"
+import bcrypt from "bcryptjs"
 
 
 export async function PATCH(req: Request, { params }: { params: { certificateId: string } }) {
@@ -61,3 +62,61 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
     }
 
 }
+
+export async function DELETE(req: Request, { params }: { params: { certificateId: string } }) {
+    try {
+        const session = await getServerSession(authOptions)
+        
+        if (!session || session.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
+        const { certificateId } = params;
+
+
+        const values = await req.json()
+
+        console.log({values})
+
+        if(!values.pass) {
+            return new NextResponse("Error credenciales", { status: 401 })
+        }
+
+        const user = await db.company.findUnique({
+            where: {
+                id: session.user.id,
+                active: true,
+                role: "ADMIN"
+            }
+        })
+
+        if (!user || !user.password) return new NextResponse("Unauthorized", { status: 401 })
+
+        const valid = bcrypt.compareSync(values.pass, user.password)
+
+        if(!valid) return new NextResponse("Contraseña incorrecta", { status: 400 })
+
+
+        const certificate = await db.certificate.update({
+            where: {
+                id: certificateId,
+            },
+            data: {
+                active: false
+            }
+        })
+
+        await db.certificateEvent.create({
+            data: {
+                eventType: "DELETED",
+                adminId:  session.user.id!,
+                certificateId: certificate.id,
+                certificateData: JSON.stringify(certificate),
+            }
+        })
+
+        return NextResponse.json(certificate)
+
+    } catch (error) {
+        console.log("[CERTIFICATE_DELETE_ID]", error)
+        return new NextResponse("Internal Errorr" + error, { status: 500 })
+    }
+}
+

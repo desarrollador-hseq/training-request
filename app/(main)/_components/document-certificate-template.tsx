@@ -311,6 +311,7 @@ export const DocumentCertificateTemplate = ({
                   />
                   <Text
                     style={{
+                      minWidth: 150,
                       borderTop: "1px solid #a30e0c",
                       fontSize: 10,
                       fontWeight: "bold",

@@ -35,6 +35,7 @@ import { useLoading } from "@/components/providers/loading-provider";
 import { cn } from "@/lib/utils";
 import { ModalUploadDocument } from "./modal-upload-document";
 import { TooltipInfo } from "@/components/tooltip-info";
+import { ModalSuggestedDate } from "./modal-suggested-date";
 
 interface Collaboratorss extends TrainingRequestCollaborator {
   collaborator:
@@ -157,6 +158,7 @@ export const CollaboratorsSimpleTable = ({
           <TableHead className="text-white">Teléfono</TableHead>
           <TableHead className="text-white">Nivel</TableHead>
           <TableHead className="text-white">Documentos</TableHead>
+          <TableHead className="text-white">Fecha sugerida</TableHead>
           {(isPending || isAdmin) && (
             <TableHead className="text-right text-white">Acción</TableHead>
           )}
@@ -194,7 +196,6 @@ export const CollaboratorsSimpleTable = ({
                   defaultValue={courseLevel ? courseLevel.id : ""}
                   onValueChange={(e) => onChange(e, collaborator.id)}
                   disabled={!isPending && !isAdmin}
-                
                 >
                   <SelectTrigger className="w-[180px] disabled:text-gray-800">
                     <SelectValue placeholder="🔴 Sin definir" />
@@ -224,7 +225,7 @@ export const CollaboratorsSimpleTable = ({
                         isDisallowed={collaborators[index].isDisallowed}
                       />
                       <span className="h-full flex items-center">
-                        {missingDocumentsMap.get(collaborator.id) && ( // Usamos el mapa para obtener el estado isMissing del colaborador
+                        {missingDocumentsMap.get(collaborator.id) && ( //  obtener el estado isMissing del colaborador
                           <TooltipInfo text="Falta adjuntar uno o más documentos a este colaborador">
                             <div className="w-7 h-7 bg-yellow-400 border-2 border-accent rounded-full flex justify-center items-center">
                               <AlertTriangle className="w-5 h-5 text-primary" />
@@ -234,6 +235,19 @@ export const CollaboratorsSimpleTable = ({
                       </span>
                     </div>
                   )}
+              </TableCell>
+              <TableCell>
+                <ModalSuggestedDate
+                  trainingRequestCollaborator={collaborators[index]}
+                  suggestedDate={
+                    !!collaborators[index].suggestedDate
+                      ? collaborators[index].suggestedDate!
+                      : undefined
+                  }
+                  trainingRequestId={trainingRequestId}
+                  courseLevel={courseLevel}
+                  isDisallowed={collaborators[index].isDisallowed}
+                />
               </TableCell>
 
               {(isPending || isAdmin) && (
@@ -264,7 +278,7 @@ export const CollaboratorsSimpleTable = ({
             </TableRow>
           );
         })}
-        {(!isPending && !isAdmin) && (
+        {!isPending && !isAdmin && (
           <TableRow>
             <TableCell className="absolute top-0 left-0 bottom-0 right-0 w-full h-full bg-white opacity-30 z-20"></TableCell>
           </TableRow>
@@ -273,7 +287,7 @@ export const CollaboratorsSimpleTable = ({
       <TableFooter className="w-full">
         <TableRow className="w-full">
           <TableCell
-            colSpan={(isPending || isAdmin) ? 6 : 5}
+            colSpan={isPending || isAdmin ? 7 : 6}
             className="bg-blue-400/20"
           ></TableCell>
           <TableCell className="text-right bg-blue-400/20">

@@ -160,6 +160,8 @@ model TrainingRequestCollaborator {
   startDate    DateTime?
   endDate      DateTime?
 
+  suggestedDate DateTime?
+
   wasCertified Boolean @default(false)
 
   createdAt DateTime @default(now())

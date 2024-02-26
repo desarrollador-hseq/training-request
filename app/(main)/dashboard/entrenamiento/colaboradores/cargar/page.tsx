@@ -34,8 +34,6 @@ const UploadCollaboratorsExcel = () => {
         values
       );
 
-      console.log({valuesdata: data})
-
       if (data.failedInserts) {
         setListError(data.failedInserts);
         setWasError(true);
@@ -67,6 +65,8 @@ const UploadCollaboratorsExcel = () => {
     document.body.removeChild(link);
   };
 
+
+
   return (
     <div className="">
       <TitleOnPage
@@ -94,12 +94,12 @@ const UploadCollaboratorsExcel = () => {
               </div>
             ) : (
               <div className="w-full">
-                <div className="w-full flex justify-end items-center my-3">
+                <div className="w-full flex justify-center items-center my-3">
                   <Button
                     variant="secondary"
                     disabled={usersLoaded.length == 0}
                     onClick={onClick}
-                    className="gap-2"
+                    className="gap-2 p-8 text-xl"
                   >
                     <UploadCloud /> Cargar
                   </Button>

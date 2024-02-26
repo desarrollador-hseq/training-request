@@ -4,12 +4,13 @@ import { TitleOnPage } from "@/components/title-on-page";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { AdminRequestsTable } from "./entrenamiento/solicitudes/_components/admin-requests-table";
 import { columnsAdminCollaboratorTableSimple } from "./entrenamiento/colaboradores/_components/admin-collaborators-table-columns-simple";
-import { adminRequestsActivesTablecolumns } from "./entrenamiento/solicitudes/_components/admin-requests-actives-table-columns";
 import { AdminCollaboratorsProgrammingTable } from "./entrenamiento/colaboradores/_components/admin-collaborators-programming-table";
 import { KpiCard } from "@/components/kpi-card";
 import { Separator } from "@/components/ui/separator";
 import { adminRequestTablecolumns } from "./entrenamiento/solicitudes/_components/admin-requests-table-columns";
 import { RequestReport } from "../dashboard/_components/request-report";
+
+
 
 const crumbs = [{ label: "inicio", path: "inicio" }];
 
@@ -113,6 +114,9 @@ const AdminPage = async () => {
         },
       },
     });
+
+
+
 
   return (
     <div>

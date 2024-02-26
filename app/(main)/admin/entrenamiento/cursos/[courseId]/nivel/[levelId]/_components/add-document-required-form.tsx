@@ -7,18 +7,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Pencil, X } from "lucide-react";
+import { Pencil, Trash, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { InputForm } from "@/components/input-form";
+import { SimpleModal } from "@/components/simple-modal";
+import { useLoading } from "@/components/providers/loading-provider";
 
 interface AddDocumentRequiredFormProps {
   requiredDocument?:
@@ -36,6 +31,7 @@ export const AddDocumentRequiredForm = ({
   requiredDocument,
   courseLevelId,
 }: AddDocumentRequiredFormProps) => {
+  const { setLoadingApp } = useLoading();
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -55,6 +51,7 @@ export const AddDocumentRequiredForm = ({
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoadingApp(true);
     try {
       if (!isEdit) {
         await axios.post(
@@ -68,11 +65,31 @@ export const AddDocumentRequiredForm = ({
         );
       }
 
-      toast.success("Porcentaje actualizado");
+      toast.success("Documento requerido actualizado");
       toggleEdit();
       router.refresh();
     } catch {
       toast.error("Ocurrió un error inesperado");
+    } finally {
+      setLoadingApp(false);
+      form.reset()
+    }
+  };
+
+  const onDeleteDocument = async () => {
+    setLoadingApp(true);
+    try {
+      await axios.delete(
+        `/api/course-levels/${courseLevelId}/required-document/${requiredDocument?.id}`
+      );
+      toast.info("Documento requerido eliminado");
+      toggleEdit();
+      router.refresh();
+    } catch {
+      toast.error("Ocurrió un error inesperado");
+    } finally {
+      setLoadingApp(false);
+
     }
   };
 
@@ -83,15 +100,15 @@ export const AddDocumentRequiredForm = ({
           <Button
             onClick={toggleEdit}
             variant="default"
-            className="bg-slate-500 hover:bg-slate-700"
+            className="bg-slate-500 hover:bg-slate-700 p-2 h-fit gap-1"
           >
             {isEditing ? (
               <>
-                <X className="h-5 w-5 " />
+                <X className="h-5 w-5 " /> 
               </>
             ) : (
               <>
-                <Pencil className="h-4 w-4" />
+                <Pencil className="h-4 w-4" /> editar
               </>
             )}
           </Button>
@@ -101,14 +118,27 @@ export const AddDocumentRequiredForm = ({
             Agregar Documento requerido
           </span>
         )}
+        {!isEditing && isEdit && (
+          <SimpleModal
+            onAcept={onDeleteDocument}
+            large={false}
+            btnClass="p-2 h-fit bg-red-700 hover:bg-red-600"
+            textBtn={<Trash className="w-4 h-4" />}
+            title="Eliminar documento requerido"
+          >
+            ¿Desea eliminar el documento: ({requiredDocument?.name})?
+          </SimpleModal>
+        )}
       </div>
 
       {!isEditing && (
-        <p className={cn("text-md font-semibold mt-2 italic")}>
-          {requiredDocument ? requiredDocument.name : ""}
-        </p>
+        <div>
+          <p className={cn("text-md font-semibold mt-2 italic")}>
+            {requiredDocument ? requiredDocument.name : ""}
+          </p>
+        </div>
       )}
-      {isEditing && (
+      {(isEditing || !!!requiredDocument) && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

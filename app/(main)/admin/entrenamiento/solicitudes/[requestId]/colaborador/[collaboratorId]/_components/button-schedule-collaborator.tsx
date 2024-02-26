@@ -66,7 +66,6 @@ export const ButtonScheduleCollaborator = ({
         `/api/training-requests/${trainingRequestId}/members/${collaboratorId}/schedule`,
         { startDate: date?.from, endDate: date?.to }
       );
-      console.log({ buttoncourse: collaboratorName });
 
       toast.success(
         !!!scheduledDate.from ? "Fecha guardada" : "Fecha reprogramada"
@@ -89,7 +88,7 @@ export const ButtonScheduleCollaborator = ({
               date?.from!,
               "P",
               { locale: es }
-            )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/3T9vy8h`,
+            )} H: 7:30am ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/3T9vy8h`,
           });
           toast.success("SMS enviado");
         } catch (error) {
@@ -115,11 +114,11 @@ export const ButtonScheduleCollaborator = ({
         try {
           await axios.post("/api/messages/", {
             msisdn: collaboratorPhone,
-            message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
+            message: `[GRUPOHSEQ] Se le informa que ud ha sido reprogramado en el curso: ${courseName} - ${levelName}, dia ${format(
               date?.from!,
               "P",
               { locale: es }
-            )} ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/3T9vy8h`,
+            )} H: 7:30am ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/3T9vy8h`,
           });
           toast.success("SMS reprogramacion enviado");
         } catch (error) {
@@ -127,7 +126,6 @@ export const ButtonScheduleCollaborator = ({
           console.log({ errorApiSms: error });
         }
       }
-      console.log("enviando email")
       if(collaboratorMail) {
         // send email reprogrammed
       try {

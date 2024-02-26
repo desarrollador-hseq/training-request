@@ -50,3 +50,29 @@ export async function PATCH(
     return new NextResponse("Internal Errorr", { status: 500 });
   }
 }
+export async function DELETE(
+  req: Request,
+  { params }: { params: { courseLevelId: string; docId: string } }
+) {
+  const session = await getServerSession(authOptions);
+  try {
+    if (!session || session.user.role !== "ADMIN")
+      return new NextResponse("Unauthorized", { status: 401 });
+
+
+    const courses = await db.requiredDocument.update({
+      where: {
+        id: params.docId,
+        courseLevelId: params.courseLevelId,
+      },
+      data: {
+        active: false
+      },
+    });
+
+    return NextResponse.json(courses);
+  } catch (error) {
+    console.log("[PATCH-DOCUMENTS-COURSELEVEL]", error);
+    return new NextResponse("Internal Errorr", { status: 500 });
+  }
+}

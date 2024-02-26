@@ -31,6 +31,8 @@ import { IdentificationFileForm } from "@/app/(main)/dashboard/entrenamiento/col
 import { DateRange } from "react-day-picker";
 import { ButtonScheduleCollaborator } from "./button-schedule-collaborator";
 import { ArlForm } from "./arl-form";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 interface CourseLevelWithRequiredDocumentsAndCollaborators
   extends TrainingRequestCollaborator {
@@ -131,7 +133,6 @@ export const AdminScheduleCollaboratorForm = ({
       console.error(error);
       toast.error("Ocurrió un error inesperado");
     } finally {
-
       setLoadingApp(false);
     }
   };
@@ -174,7 +175,15 @@ export const AdminScheduleCollaboratorForm = ({
         )}
       </div>
 
-      <div>
+      <div className="flex flex-col">
+        <span className="flex text-sm text-slate-500 gap-1">
+          <strong className="inline">Fecha sugerida: </strong>
+          {!!trainingRequestCollaborator?.suggestedDate
+            ? `${format(trainingRequestCollaborator?.suggestedDate, "P", {
+                locale: es,
+              })}`
+            : "no"}
+        </span>
         <PickScheduleDates
           isDisallowed={isDisallowed}
           setDate={setDate}
@@ -192,6 +201,7 @@ export const AdminScheduleCollaboratorForm = ({
             to: trainingRequestCollaborator?.endDate,
           }}
         />
+        <div />
       </div>
       {!!date?.from && (
         <ButtonScheduleCollaborator
@@ -213,7 +223,6 @@ export const AdminScheduleCollaboratorForm = ({
           }}
           date={date}
         />
-        
       )}
 
       <Card className="bg-slate-100 ">

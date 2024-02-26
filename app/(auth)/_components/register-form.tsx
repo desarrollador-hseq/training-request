@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "sonner";
-import { Check, CheckCircle, Eye, EyeOff, Loader2, X } from "lucide-react";
+import { Check, Eye, EyeOff, Loader2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -211,7 +211,7 @@ export const RegisterForm = ({
               <InputForm
                 control={form.control}
                 isSubmitting={isSubmitting}
-                label="Razón social"
+                label="Razón social (incluyendo: SA, SAS, LTDA , etc.)"
                 name="businessName"
               />
             </div>
@@ -351,11 +351,20 @@ export const RegisterForm = ({
             </div>
 
             <div className="mt-3">
-                <h3 className="font-bold">Requisitos: </h3>
+              <h3 className="font-bold">Requisitos: </h3>
               <ul className="text-sm">
-               <li className=""><strong>Longitud:</strong>  Al menos 6 caracteres.</li>
-               <li> <strong>Mayúsculas:</strong>  Debe tener al menos una letra mayúscula. </li>
-               <li> <strong>Números:</strong>  Debe tener al menos un número.</li>
+                <li className="">
+                  <strong>Longitud:</strong> Al menos 6 caracteres.
+                </li>
+                <li>
+                  {" "}
+                  <strong>Mayúsculas:</strong> Debe tener al menos una letra
+                  mayúscula.{" "}
+                </li>
+                <li>
+                  {" "}
+                  <strong>Números:</strong> Debe tener al menos un número.
+                </li>
               </ul>
             </div>
           </Card>

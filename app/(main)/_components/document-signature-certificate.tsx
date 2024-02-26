@@ -30,7 +30,7 @@ export const DocumentSignatureCertificate = ({
           display: "flex",
           flexDirection: "column",
           position: "relative",
-          paddingTop: 35,
+          paddingTop: 32,
         }}
       >
         {imageUrl && (

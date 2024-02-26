@@ -71,6 +71,12 @@ export const CollaboratorsExcelTable = ({
     };
   }, [file]);
 
+  const handleFilterList = (indexToRemove: number) => {
+    setUsersLoaded((prevUsersLoaded) =>
+    prevUsersLoaded.filter((_, index) => index !== indexToRemove)
+  );
+  };
+
   return (
     <div className="overflow-y-auto bg-white ">
       <div
@@ -190,7 +196,11 @@ export const CollaboratorsExcelTable = ({
                     {Object.values(row!).map((value, index) => (
                       <TableCell key={index}>{value}</TableCell>
                     ))}
-                      <TableCell key={index}><Button><X /></Button></TableCell>
+                    <TableCell key={index}>
+                      <Button className="p-1 h-fit" onClick={(e) => handleFilterList(index)}>
+                        <X className="w-5 h-5 " />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}

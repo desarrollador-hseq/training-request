@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
 import { Certificate } from "@prisma/client";
 import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
@@ -13,30 +13,39 @@ export const ShowCertificate = ({
   certificate: Certificate;
   baseUrl: string;
 }) => {
-  console.log({certificatearl: certificate.collaboratorArlName, legal: certificate.legalRepresentative})
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <div>
-      <PDFViewer style={{ width: "100%", height: "1200px" }}>
-        <DocumentCertificateTemplate
-          fullname={certificate.collaboratorFullname}
-          numDoc={certificate.collaboratorNumDoc}
-          typeDoc={certificate.collaboratorTypeDoc}
-          level={certificate.levelName}
-          course={certificate.courseName}
-          levelHours={""+ certificate.levelHours}
-          resolution={certificate.resolution}
-          endDate={formatDateOf(certificate.certificateDate!)}
-          arlName={certificate.collaboratorArlName}
-          certificateId={certificate.id}
-          fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-          expeditionDate={formatDateCert(certificate.expeditionDate!)}
-          expireDate={certificate.dueDate && formatDateOf(certificate.dueDate)}
-          coachName={certificate.coachName}
-          coachPosition={certificate.coachPosition}
-          coachImgSignatureUrl={certificate.coachImgSignatureUrl}
-          coachLicence={certificate.coachLicence}
-        />
-      </PDFViewer>
+      {isClient && (
+        <PDFViewer style={{ width: "100%", height: "1200px" }}>
+          <DocumentCertificateTemplate
+            fullname={certificate.collaboratorFullname}
+            numDoc={certificate.collaboratorNumDoc}
+            typeDoc={certificate.collaboratorTypeDoc}
+            level={certificate.levelName}
+            course={certificate.courseName}
+            levelHours={"" + certificate.levelHours}
+            resolution={certificate.resolution}
+            endDate={formatDateOf(certificate.certificateDate!)}
+            arlName={certificate.collaboratorArlName}
+            certificateId={certificate.id}
+            fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
+            expeditionDate={formatDateCert(certificate.expeditionDate!)}
+            expireDate={
+              certificate.dueDate && formatDateOf(certificate.dueDate)
+            }
+            coachName={certificate.coachName}
+            coachPosition={certificate.coachPosition}
+            coachImgSignatureUrl={certificate.coachImgSignatureUrl}
+            coachLicence={certificate.coachLicence}
+          />
+        </PDFViewer>
+      )}
     </div>
   );
 };

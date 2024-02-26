@@ -1,11 +1,11 @@
 
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { DateRange } from "react-day-picker";
 import { authOptions } from "@/lib/authOptions";
 import { mailOptions, transporter } from "@/lib/nodemailer";
 import { templateMail } from "@/lib/template-mail";
 import { formatDateOf } from "@/lib/utils";
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
-import { DateRange } from "react-day-picker";
 
 const generateEmailContent = (collaborator: CollaboratorData, rescheduled: boolean) => {
   const { name, levelName, companyName, courseDate, courseName } = collaborator;
@@ -34,24 +34,25 @@ const generateEmailContent = (collaborator: CollaboratorData, rescheduled: boole
                           <div style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
                             <p style="line-height: 140%;">Estimado(a) ${name},</p>
                             <p style="line-height: 140%;">&nbsp;</p>
-                            <p style="line-height: 140%;">${rescheduled ? ""
-      : "Nos complace informarte que has sido inscrito por parte de: ${companyName}, en el siguiente curso:"}</p>
+                            <p style="line-height: 140%;">${rescheduled ? "Te informamos sobre un cambio en las fechas del curso que estás programado para tomar. A continuación, encontrarás los detalles actualizados:"
+      : `Nos complace informarte que has sido inscrito por parte de: ${companyName}, en el siguiente curso:`}</p>
                             <ul style="list-style-type: disc;">
                               <li style="line-height: 19.6px;"><strong>Nombre del Curso:</strong> ${courseName}</li>
                               <li style="line-height: 19.6px;"><strong>Nivel</strong>: ${levelName}</li>
-                              <li style="line-height: 19.6px;"><strong>Fechas del Curso:</strong> ${formatDateOf(courseDate.from!)} al ${formatDateOf(courseDate.to!)}</li>
+                              <li style="line-height: 19.6px;"><strong>Fecha de inicio:</strong> ${courseDate.from ? formatDateOf(courseDate.from!) : ""}</li>
+                              <li style="line-height: 19.6px;"><strong>Hora:</strong> 7 : 30 AM</li>
                               <li style="line-height: 19.6px;"><strong>Lugar:</strong> Calle 30 # 10 - 230 Local 1</li>
                             </ul>
                             <p style="line-height: 140%;">&nbsp;</p>
                             <p style="line-height: 140%;">
-                            ${rescheduled &&
+                            ${rescheduled ?
     "Lamentamos cualquier inconveniente que este cambio pueda causarte y agradecemos tu comprensión y flexibilidad. Nuestro objetivo es brindarte la mejor experiencia de aprendizaje posible, y esperamos verte en el curso en la nueva fecha programada."
-    }
+    : ""}
                             </p>
                             <p style="line-height: 140%;">&nbsp;</p>
-                            <p style="line-height: 140%;"><strong>Requisitos para Asistir: </strong>Asegúrate de cumplir con los siguientes requisitos para asistir al curso:</p>
+                            <p style="line-height: 140%;">Asegúrate de cumplir con los siguientes requisitos para asistir al curso:</p>
                             <p style="line-height: 140%;">&nbsp;</p>
-                            <p style="line-height: 140%;"><a target="_blank" href="${baseUrl}/requisitos-para-asistir" rel="noopener">Ver requisitos</a></p>
+                            <p style="line-height: 140%;"><a target="_blank" href="${baseUrl}/requisitos-para-asistir" rel="noopener">Ver requisitos para asistir</a></p>
                           </div>
 
                         </td>
@@ -115,7 +116,7 @@ export async function POST(req: Request) {
        to: collaborator.email!,
       // to: "kingj3su@gmail.com",
       ...generateEmailContent(collaborator, rescheduled ? rescheduled : false),
-      subject: `Confirmación de Inscripción en Curso - [${collaborator.companyName}]`,
+      subject: `Confirmación de Inscripción a Curso de: [${collaborator.courseName}]`,
     });
     return NextResponse.json({ message: "ok", status: 200 });
   } catch (error) {

@@ -4,6 +4,27 @@ import { authOptions } from "@/lib/authOptions";
 import { db } from "@/lib/db";
 
 
+export async function GET(req: Request) {
+    const session = await getServerSession(authOptions)
+    if (!session) return new NextResponse("Unauthorized", { status: 401 })
+    try {
+
+        const requests = await db.trainingRequest.findMany({
+            where: {
+                active: true,
+                state: "ACTIVE"
+            }
+        })
+
+        return NextResponse.json(requests)
+
+    } catch (error) {
+        console.log("[TRAINING-REQUEST-GET]", error)
+        return new NextResponse("Internal Errorr " + error, { status: 500 })
+    }
+}
+
+
 export async function POST(req: Request, { params }: { params: { courseId: string } }) {
     const session = await getServerSession(authOptions)
     if (!session) return new NextResponse("Unauthorized", { status: 401 })

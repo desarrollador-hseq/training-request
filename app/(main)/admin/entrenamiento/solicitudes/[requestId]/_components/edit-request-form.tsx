@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/select";
 
 import { ListCollaboratorsRequest } from "./list-collaborators-request";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 interface EditRequestFormProps {
   trainingRequest:
@@ -163,6 +166,12 @@ export const EditRequestForm = ({
           </div>
         </CardHeader>
         <CardContent>
+          <Link
+            className={cn(buttonVariants(), "justify-self-end")}
+            href={`/dashboard/entrenamiento/solicitudes/editar/${trainingRequest?.id}`}
+          >
+            Agregar colaboradores
+          </Link>
           <ListCollaboratorsRequest
             collaborators={trainingRequest?.collaborators}
           />

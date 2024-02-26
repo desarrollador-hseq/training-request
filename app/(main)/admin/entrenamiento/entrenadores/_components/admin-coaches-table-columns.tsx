@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import ModalImage from "react-modal-image";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 export const columnsAdminCoachesTable: ColumnDef<Coach>[] = [
   {
@@ -69,7 +70,7 @@ export const columnsAdminCoachesTable: ColumnDef<Coach>[] = [
   {
     accessorKey: "imgSignatureUrl",
     header: ({ column }) => {
-      return <div>Evaluación</div>;
+      return <div>Firma</div>;
     },
     enableColumnFilter: false,
     cell: ({ row }) => {
@@ -77,25 +78,33 @@ export const columnsAdminCoachesTable: ColumnDef<Coach>[] = [
       const existUrl = !!url;
 
       return (
-        <Badge
+        <div
           className={cn(
-            "bg-inherit hover:bg-inherit",
-            existUrl && "bg-emerald-500 hover:bg-emerald-700"
+            "bg-slate-50 border border-slate-400",
+          
           )}
         >
           {existUrl ? (
-            <div style={{ width: "15px", height: "15px" }}>
-              <ModalImage
+            <div style={{ }}>
+              {/* <ModalImage
                 small={"/eye-icon-blue.png"}
                 hideDownload
                 color="white"
                 large={url}
+              /> */}
+              <Image 
+               src={`${url}`}
+               alt=""
+               priority
+               width={100}
+               height={100}
+               style={{width: "auto", height: "auto", maxWidth: 100, maxHeight: 100}}
               />
             </div>
           ) : (
            <X className="w-4 h-4 text-slate-300" />
           )}
-        </Badge>
+        </div>
       );
     },
   },

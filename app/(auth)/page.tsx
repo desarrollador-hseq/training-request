@@ -19,7 +19,7 @@ export default function LoginPage() {
           onValueChange={setTabSelected}
           className="max-w-full w-full mx-10 flex justify-center flex-col items-center mt-3"
         >
-          <TabsList className="grid w-full grid-cols-2 ">
+          <TabsList className="grid w-[400px] grid-cols-2 ">
             <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
             <TabsTrigger value="register">Registrar Empresa</TabsTrigger>
           </TabsList>

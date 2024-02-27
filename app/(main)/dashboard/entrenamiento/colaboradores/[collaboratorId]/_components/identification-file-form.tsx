@@ -70,7 +70,6 @@ export const IdentificationFileForm = ({
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const [isLoading, setIsLoading] = useState(true);
 
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -100,6 +99,7 @@ export const IdentificationFileForm = ({
   });
   const { isSubmitting, isValid } = form.formState;
   const { setValue } = form;
+
 
   useEffect(() => {
     setLoadingApp(true);
@@ -153,6 +153,8 @@ export const IdentificationFileForm = ({
           }
         );
       } else {
+        setFileUrl(undefined);
+
         await axios.post(
           `/api/collaborators/${collaboratorId}/course-level/${courseLevelId}/document-required/${documentRequiredId}`,
           {
@@ -203,13 +205,13 @@ export const IdentificationFileForm = ({
           className={cn(isEditing && "bg-slate-500 hover:bg-slate-700")}
         >
           {isEditing && <>Cancelar</>}
-          {!isEditing && !file && (
+          {!isEditing && !!!fileUrl && (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
               Agregar documento
             </>
           )}
-          {!isEditing && file && (
+          {!isEditing && fileUrl && (
             <>
               <Pencil className="h-4 w-4 mr-2" />
               Actualizar archivo
@@ -218,7 +220,7 @@ export const IdentificationFileForm = ({
         </Button>
       </div>
       {!isEditing &&
-        (!file ? (
+        (!fileUrl ? (
           <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md w-full">
             <ImageIcon className="w-10 h-10 text-slate-500" />
           </div>

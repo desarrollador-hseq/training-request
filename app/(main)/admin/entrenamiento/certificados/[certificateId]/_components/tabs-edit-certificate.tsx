@@ -59,7 +59,7 @@ export const TabsEditCertificate = ({
               apiUrl={`/api/upload/file`}
               field="fileUrl"
               label="Ficha de entrenamiento"
-              ubiPath="entrenamiento/fichas"
+              ubiPath="certificados/fichas"
               update={`/api/certificates/${certificate.id}/file`}
               file={certificate.fileUrl}
             />

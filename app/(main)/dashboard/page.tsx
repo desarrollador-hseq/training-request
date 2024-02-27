@@ -82,6 +82,8 @@ const DashboardPage = async () => {
           number={certificates.length}
           title="Certificados"
         />
+
+        
       </div>
 
       <ListLatestRequestsAdded trainingRequests={trainingRequests.slice(0, 5)} />

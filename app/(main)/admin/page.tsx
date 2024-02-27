@@ -10,8 +10,6 @@ import { Separator } from "@/components/ui/separator";
 import { adminRequestTablecolumns } from "./entrenamiento/solicitudes/_components/admin-requests-table-columns";
 import { RequestReport } from "../dashboard/_components/request-report";
 
-
-
 const crumbs = [{ label: "inicio", path: "inicio" }];
 
 const AdminPage = async () => {
@@ -95,6 +93,7 @@ const AdminPage = async () => {
             company: {
               select: {
                 nit: true,
+                active: true
               },
             },
             certificates: {
@@ -114,9 +113,6 @@ const AdminPage = async () => {
         },
       },
     });
-
-
-
 
   return (
     <div>
@@ -174,7 +170,7 @@ const AdminPage = async () => {
           <CardContent>
             <AdminRequestsTable
               columns={adminRequestTablecolumns}
-              data={requestsActives}
+              data={requestsActives.filter(req => req.company.active === true)}
             />
           </CardContent>
         </Card>
@@ -188,7 +184,7 @@ const AdminPage = async () => {
           <CardContent>
             <AdminCollaboratorsProgrammingTable
               columns={columnsAdminCollaboratorTableSimple}
-              data={trainingRequestCollaborator}
+              data={trainingRequestCollaborator.filter(traCol => traCol?.collaborator?.company?.active === true)}
             />
           </CardContent>
         </Card>

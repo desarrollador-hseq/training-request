@@ -73,7 +73,7 @@ const EditCertificate = async ({
         baseUrl={`${baseUrl}`}
       />
 
-      <DeactivateCertificate certificate={certificate} />
+      <DeactivateCertificate certificate={certificate}  />
     </div>
   );
 };

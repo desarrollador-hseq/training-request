@@ -217,7 +217,7 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
           </div>
 
           <Button
-            disabled={isSubmitting || !isValid}
+            disabled={isSubmitting || !isValid || !company.active}
             className="w-full max-w-[500px] gap-3"
           >
             {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}

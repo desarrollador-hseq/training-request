@@ -164,6 +164,12 @@ export const RegisterForm = ({
               type: "manual",
               message: "Nit de empresa ya se encuentra registrado",
             });
+          }else if(typeof errorMessage === "string" &&
+          errorMessage.includes("Correo electrónico de contacto ya se encuentra registrado")){
+            setError("email", {
+              type: "manual",
+              message: "Correo electrónico de contacto ya se encuentra registrado",
+            });
           } else {
             toast.error(errorMessage);
           }

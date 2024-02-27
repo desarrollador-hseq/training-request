@@ -7,7 +7,7 @@ const crumbs = [{ label: "solicitudes", path: "solicitudes" }];
 
 const AdminRequestPage = async () => {
   const trainingRequest = await db.trainingRequest.findMany({
-    where: { active: true },
+    where: { active: true, company: {active: true} },
     include: {
       course: true,
       company: true,

@@ -179,10 +179,10 @@ export const CollaboratorsSimpleTable = ({
             <TableRow
               // className={cn("font-semibold", !isPending && "opacity-60")}
               className={cn(
-                "font-semibold",
+                "font-semibold border-b border-secondary",
                 !isPending &&
                   collaborators[index].isDisallowed &&
-                  "bg-red-700 hover:bg-red-800 text-white z-40 "
+                  "bg-red-700 hover:bg-red-800 text-white z-40"
               )}
               key={collaborator.id + courseLevel?.id}
             >
@@ -215,7 +215,7 @@ export const CollaboratorsSimpleTable = ({
                   courseLevel?.requiredDocuments.length > 0 && (
                     <div
                       className={cn(
-                        "flex gap-1 items-center absolute top-0 bottom-0 left-0 right-0 ",
+                        "flex gap-0 items-center justify-center absolute top-2 bottom-2 left-5 right-0 border border-slate-100 bg-secondary/60 rounded-md",
                         collaborators[index].isDisallowed && "z-30"
                       )}
                     >
@@ -224,11 +224,11 @@ export const CollaboratorsSimpleTable = ({
                         courseLevel={courseLevel}
                         isDisallowed={collaborators[index].isDisallowed}
                       />
-                      <span className="h-full flex items-center">
+                      <span className="h-full flex items-center justify-start">
                         {missingDocumentsMap.get(collaborator.id) && ( //  obtener el estado isMissing del colaborador
                           <TooltipInfo text="Falta adjuntar uno o más documentos a este colaborador">
-                            <div className="w-7 h-7 bg-yellow-400 border-2 border-accent rounded-full flex justify-center items-center">
-                              <AlertTriangle className="w-5 h-5 text-primary" />
+                            <div className="w-7 h-7 bg-yellow-400 cursor-help border border-accent rounded-full flex justify-center items-center">
+                              <AlertTriangle className="w-5 h-5 text-orange-700" />
                             </div>
                           </TooltipInfo>
                         )}

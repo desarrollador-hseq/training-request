@@ -63,13 +63,14 @@ export const DeactivateCertificate = ({
   );
 
   return (
-    <div>
+    <div className="w-full flex justify-end mt-5">
       {certificate.active && (
         <SimpleModal
           large={false}
           textBtn={<Trash />}
           title="¿Eliminar certificado?"
           onAcept={handleDelete}
+          btnClass="w-[150px] bg-red-500 bg-red-600"
         >
           {content}
           <Card className="max-w-[400px] mt-4 justify-self-center self-center mx-auto bg-red-700 text-white">

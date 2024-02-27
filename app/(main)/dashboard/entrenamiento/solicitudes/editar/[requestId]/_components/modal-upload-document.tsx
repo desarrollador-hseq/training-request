@@ -63,7 +63,7 @@ export const ModalUploadDocument = ({
   return (
     <div
       className={cn(
-        "w-full max-w-[70%] flex items-center gap-2",
+        "w-full max-w-[50%] flex items-center gap-0",
         isDisallowed && "z-40"
       )}
     >
@@ -76,9 +76,9 @@ export const ModalUploadDocument = ({
         >
           <Button
             onClick={() => handleOpenModal(collaborator?.id!, courseLevel.id)}
-            className={cn(
+            className={cn("p-2 h-fit",
               isDisallowed
-                ? "bg-orange-400 shadow-md border-2 border-white "
+                ? "bg-orange-400 shadow-md border-2 border-white"
                 : "bg-accent "
             )}
           >

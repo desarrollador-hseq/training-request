@@ -113,7 +113,6 @@ export const LoginForm = () => {
                   <Input
                     id="password"
                     type={viewPass ? "text" : "password"}
-                    className="relative"
                     disabled={isSubmitting}
                     autoComplete="off"
                     {...field}
@@ -122,7 +121,7 @@ export const LoginForm = () => {
                 {field.value && (
                   <div
                     onClick={() => setViewPass(!viewPass)}
-                    className="absolute top-1 right-2 "
+                    className="absolute top-9 right-2 "
                   >
                     {!viewPass ? (
                       <Eye className="w-5 h-5" />

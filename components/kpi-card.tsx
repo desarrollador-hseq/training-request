@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { Card, CardHeader } from "./ui/card";
 
 interface KpiCardProps {
@@ -11,6 +11,7 @@ interface KpiCardProps {
 }
 
 export const KpiCard = ({ number, title, color, icon: Icon }: KpiCardProps) => {
+  
   return (
     <Card className="p-1 flex flex-col justify-center  border-secondary rounded-xl">
       <CardHeader className="p-2">

@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -47,7 +47,6 @@ const formSchema = z
 export const SetNewPasswordForm = ({
   token,
   invalidToken,
-  passwordResetToken,
   messageError,
 }: {
   token: string;
@@ -78,7 +77,6 @@ export const SetNewPasswordForm = ({
   });
   const { isSubmitting, isValid } = form.formState;
   const { watch } = form;
-  // https://ethanmick.com/how-to-create-a-password-reset-flow/
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsEditing(true);
@@ -106,7 +104,7 @@ export const SetNewPasswordForm = ({
   return (
     <Card className="flex flex-col items-center w-full max-w-[400px]">
       <CardHeader>
-       <h2 className="font-bold text-xl"> Ingresar nueva contraseña</h2>
+        <h2 className="font-bold text-xl"> Ingresar nueva contraseña</h2>
         {!!msg && <Banner variant="danger" label={msg} />}
         {wasSend && !!!msg && (
           <Banner
@@ -134,7 +132,6 @@ export const SetNewPasswordForm = ({
               className="space-y-8 mt-4 w-full "
             >
               <div>
-               
                 {!tokenInvalid && (
                   <div className="space-y-3">
                     <div>

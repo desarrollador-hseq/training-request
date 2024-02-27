@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { PDFViewer } from "@react-pdf/renderer";
 import axios from "axios";
+import { useDropzone } from "react-dropzone";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Coach } from "@prisma/client";
 import { z } from "zod";
@@ -11,13 +13,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Cloud, Loader2 } from "lucide-react";
 
-import { useDropzone } from "react-dropzone";
 import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { InputForm } from "@/components/input-form";
 import { Button } from "@/components/ui/button";
 import { SignaturePreview } from "./signature-preview";
-import { PDFViewer } from "@react-pdf/renderer";
 
 interface AddCourseFormProps {
   coach?: Coach | null;

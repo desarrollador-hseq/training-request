@@ -24,6 +24,17 @@ export async function POST(
         status: 400,
       });
     }
+    const companyIsRegisteredEmail = await db.company.findFirst({
+      where: { email: values.email },
+    });
+
+    if (companyIsRegisteredEmail) {
+      return new NextResponse("Correo electrónico de contacto ya se encuentra registrado", {
+        status: 400,
+      });
+    }
+
+
 
     const company = await db.company.create({
       data: { ...otherValues, password: hashedPassword },

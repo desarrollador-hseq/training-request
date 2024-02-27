@@ -40,36 +40,39 @@ export const RequestReport = ({ requests }: CollaboratorsReportsProps) => {
 
   const chartData = Object.entries(collaboratorsByState).map(
     ([state, count]) => ({
-      value: ((count / totalCollaborators) * 100).toPrecision(3),
+      value: ((count / totalCollaborators) * 100).toPrecision(2),
       name: stateTranslations[state],
+      num: count,
     })
   );
 
   const option = {
     title: {
-      text: "Solicitudes por estado",
-      subtext: "",
-      left: "center",
+      text: "",
+      show: "false",
     },
     tooltip: {
       trigger: "item",
+      show: true,
+      formatter: function (params: any) {
+        return `${params.name}: ${params.data.num}`;
+      },
     },
     legend: {
-      show: "false",
-
+      show: false,
     },
     series: [
       {
         name: "estado:",
         type: "pie",
-        radius: "65%",
+        radius: "55%",
         label: {
-            show: true,
-            fontWeight: "bold",
-            formatter(param: any) {
-              return param.name + " (" + param.value + "%)";
-            },
+          show: true,
+          fontWeight: "bold",
+          formatter(param: any) {
+            return param.name + " (" + param.value + "%)";
           },
+        },
         data: totalCollaborators !== 0 ? chartData : [],
         emphasis: {
           itemStyle: {
@@ -82,5 +85,5 @@ export const RequestReport = ({ requests }: CollaboratorsReportsProps) => {
     ],
   };
 
-  return <Chart option={option} title="" />;
+  return <Chart option={option} title="Solicitudes por estado" />;
 };

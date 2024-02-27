@@ -40,6 +40,8 @@ const ConsultByDocument = () => {
         const { data } = await axios.get(`/api/certificates/doc/${numDoc}`);
         setCurrentCertificate(data);
 
+        console.log({data})
+
         try {
           const { data: oldData } = await axios.post(
             `https://app.grupohseq.com/funciones/class_cons_certificado.php`,
@@ -119,7 +121,7 @@ const ConsultByDocument = () => {
                             {cert.collaboratorFullname?.toLowerCase()}
                           </TableCell>
                           <TableCell className="capitalize">
-                            {cert.courseName}
+                            {cert.courseName} - {cert.levelName}
                           </TableCell>
                           <TableCell className="capitalize">
                             {cert.companyName}

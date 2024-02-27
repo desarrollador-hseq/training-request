@@ -15,10 +15,11 @@ export async function GET(req: Request, { params }: { params: { numDoc: string }
             },
         })
 
+
         return NextResponse.json(certificate)
 
     } catch (error) {
-        console.log("[CERTIFICATE-UPDATED]", error)
+        console.log("[CERTIFICATE-GET-NUMDOC]", error)
         return new NextResponse("Internal Errorr" + error, { status: 500 })
     }
 

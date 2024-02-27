@@ -2,10 +2,12 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
+import ReCAPTCHA from "react-google-recaptcha";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "sonner";
+
 import { Check, Eye, EyeOff, Loader2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -107,6 +109,7 @@ export const RegisterForm = ({
 }) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
+  const [captcha, setCaptcha] = useState<string | null>();
   const [isEditing, setIsEditing] = useState(false);
   const [viewPass, setViewPass] = useState(false);
   const [isGoodPass, setIsGoodPass] = useState(false);
@@ -164,11 +167,16 @@ export const RegisterForm = ({
               type: "manual",
               message: "Nit de empresa ya se encuentra registrado",
             });
-          }else if(typeof errorMessage === "string" &&
-          errorMessage.includes("Correo electrónico de contacto ya se encuentra registrado")){
+          } else if (
+            typeof errorMessage === "string" &&
+            errorMessage.includes(
+              "Correo electrónico de contacto ya se encuentra registrado"
+            )
+          ) {
             setError("email", {
               type: "manual",
-              message: "Correo electrónico de contacto ya se encuentra registrado",
+              message:
+                "Correo electrónico de contacto ya se encuentra registrado",
             });
           } else {
             toast.error(errorMessage);
@@ -375,45 +383,55 @@ export const RegisterForm = ({
             </div>
           </Card>
           {/* -----------accept terms----------- */}
-          <Card className="w-full h-fit flex justify-center items-center gap-2 max-w-max ">
-            <div>
-              <FormField
-                control={form.control}
-                name="acceptTerms"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between gap-3 p-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="accent-red-700 "
-                      />
-                    </FormControl>
-                    <div className="">
-                      <p className="flex flex-wrap">
-                        Aceptar terminos y condiciones sobre uso de datos
-                      </p>
-                      <FormDescription className="text-sm font-normal text-slate-400">
-                        ver terminos y condiciones{" "}
-                        <PdfFullscreen
-                          fileUrl="/politica-proteccion-datos.pdf"
-                          icon="aquí"
-                          btnClass="p-0 font-normal text-sm hover:bg-ihnerit text-blue-400"
+          <div className="flex flex-col justify-between gap-5 min-w-max">
+            <Card className="w-full h-fit flex justify-center items-center gap-2 max-w-max min-w-full">
+              <div>
+                <FormField
+                  control={form.control}
+                  name="acceptTerms"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between gap-3 p-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className="accent-red-700 "
                         />
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </Card>
+                      </FormControl>
+                      <div className="">
+                        <p className="flex flex-wrap">
+                          Aceptar condiciones sobre uso de datos
+                        </p>
+                        <FormDescription className="text-sm font-normal text-slate-400">
+                          ver condiciones{" "}
+                          <PdfFullscreen
+                            fileUrl="/politica-proteccion-datos.pdf"
+                            icon="aquí"
+                            btnClass="p-0 font-normal text-sm hover:bg-ihnerit text-blue-400"
+                          />
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </Card>
+            <ReCAPTCHA
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+              onChange={setCaptcha}
+              className="mx-auto w-auto"
+            />
+          </div>
         </div>
 
         <div className="w-full flex flex-col items-center justify-center ">
           <div className="w-full flex flex-col gap-2 mt-2">
             <TooltipInfo text="Rellena todo el formulario para continuar">
               <div className="w-full h-fit">
-                <Button disabled={!isValid || isSubmitting} className="w-full">
+                <Button
+                  disabled={!isValid || isSubmitting || !captcha}
+                  className="w-full"
+                >
                   {isEditing && <Loader2 className="w-4 h-4 animate-spin" />}
                   Registrarse
                 </Button>

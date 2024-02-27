@@ -86,11 +86,7 @@ export const LoginForm = () => {
                   Correo Electrónico
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    id="email"
-                    disabled={isSubmitting}
-                    {...field}
-                  />
+                  <Input id="email" disabled={isSubmitting} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -134,20 +130,25 @@ export const LoginForm = () => {
               </FormItem>
             )}
           />
-         <div className="w-full flex justify-end mt-2">
-         <Link
-            href="/recuperar-contrasena"
-            className="font-medium text-xs  hover:underline text-secondary"
-          >
-            Olvidé la contraseña
-          </Link>
-         </div>
+          <div className="w-full flex justify-end mt-2">
+            <Link
+              href="/recuperar-contrasena"
+              className="font-medium text-xs  hover:underline text-secondary"
+            >
+              Olvidé la contraseña
+            </Link>
+          </div>
         </div>
 
         {/* <Link href="/dashboard" className="w-full">
         Entrar
       </Link> */}
-        <Button disabled={!isValid || isSubmitting} className="w-full">
+
+ 
+        <Button
+          disabled={!isValid || isSubmitting}
+          className="w-full"
+        >
           {isEditing && <Loader2 className="w-4 h-4 animate-spin" />}
           Entrar
         </Button>

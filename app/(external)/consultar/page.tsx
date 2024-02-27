@@ -43,7 +43,13 @@ const ConsultByDocument = () => {
         try {
           const { data: oldData } = await axios.post(
             `https://app.grupohseq.com/funciones/class_cons_certificado.php`,
-            { cc: numDoc }
+            { cc: numDoc, op: 2 },
+            {
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded; charset=UTF-8",
+              },
+            }
           );
           setOldCertificate(oldData);
           console.log({ oldData });
@@ -90,61 +96,60 @@ const ConsultByDocument = () => {
           {(currentCertificate && currentCertificate?.length !== 0) ||
           (thereOldCertificate && oldCertificate?.length !== 0) ? (
             <>
-        
-            <span></span>
-            <Card>
-              <Table>
-                <TableHeader className="bg-slate-100">
-                  <TableRow>
-                    <TableHead className="font-semibold">Asistente</TableHead>
-                    <TableHead className="font-semibold">Curso</TableHead>
-                    <TableHead className="font-semibold">
-                      Empresa/Contratante
-                    </TableHead>
-                    <TableHead className="font-semibold">
-                      Fecha Realizado
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {!!currentCertificate &&
-                    currentCertificate?.map((cert) => (
-                      <TableRow key={cert.id}>
-                        <TableCell className="font-medium capitalize ">
-                          {cert.collaboratorFullname?.toLowerCase()}
-                        </TableCell>
-                        <TableCell className="capitalize">
-                          {cert.courseName}
-                        </TableCell>
-                        <TableCell className="capitalize">
-                          {cert.companyName}
-                        </TableCell>
-                        <TableCell className="">
-                          {cert.certificateDate &&
-                            formatDateOf(cert.certificateDate)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  {oldCertificate &&
-                    oldCertificate?.map((cert: any) => (
-                      <TableRow key={cert.id}>
-                        <TableCell className="font-medium capitalize ">
-                          {cert.nom_asistente?.toLowerCase()}
-                        </TableCell>
-                        <TableCell className="capitalize">
-                          {cert.nom_curso}
-                        </TableCell>
-                        <TableCell className="capitalize">
-                          {cert.cliente}
-                        </TableCell>
-                        <TableCell className="">
-                          {cert.fecha && formatDateOf(cert.fecha)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </Card>
+              <span></span>
+              <Card>
+                <Table>
+                  <TableHeader className="bg-slate-100">
+                    <TableRow>
+                      <TableHead className="font-semibold">Asistente</TableHead>
+                      <TableHead className="font-semibold">Curso</TableHead>
+                      <TableHead className="font-semibold">
+                        Empresa/Contratante
+                      </TableHead>
+                      <TableHead className="font-semibold">
+                        Fecha Realizado
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {!!currentCertificate &&
+                      currentCertificate?.map((cert) => (
+                        <TableRow key={cert.id}>
+                          <TableCell className="font-medium capitalize ">
+                            {cert.collaboratorFullname?.toLowerCase()}
+                          </TableCell>
+                          <TableCell className="capitalize">
+                            {cert.courseName}
+                          </TableCell>
+                          <TableCell className="capitalize">
+                            {cert.companyName}
+                          </TableCell>
+                          <TableCell className="">
+                            {cert.certificateDate &&
+                              formatDateOf(cert.certificateDate)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    {oldCertificate &&
+                      oldCertificate?.map((cert: any) => (
+                        <TableRow key={cert.id}>
+                          <TableCell className="font-medium capitalize ">
+                            {cert.nom_asistente?.toLowerCase()}
+                          </TableCell>
+                          <TableCell className="capitalize">
+                            {cert.nom_curso}
+                          </TableCell>
+                          <TableCell className="capitalize">
+                            {cert.cliente}
+                          </TableCell>
+                          <TableCell className="">
+                            {cert.fecha && cert.fecha !== "0000-00-00" && formatDateOf(new Date(cert.fecha))}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </Card>
             </>
           ) : (
             <div></div>

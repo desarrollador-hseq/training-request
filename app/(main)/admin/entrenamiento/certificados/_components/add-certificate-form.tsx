@@ -70,7 +70,7 @@ const formSchema = z.object({
   }),
   certificateDate: z.date(),
   expeditionDate: z.date(),
-  dueDate: z.date(),
+  dueDate: z.date().optional(),
 
   coachName: z.string(),
   coachPosition: z.string(),
@@ -367,9 +367,9 @@ export const AddCertificateForm = ({
               arlName={watch("collaboratorArlName")}
               fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
               certificateId={certificate.id}
-              expireDate={formatDateOf(watch("dueDate"))}
-              endDate={formatDateOf(watch("certificateDate"))}
-              expeditionDate={formatDateCert(watch("expeditionDate"))}
+              expireDate={watch("dueDate") && formatDateOf(watch("dueDate")!)}
+              endDate={watch("certificateDate") && formatDateOf(watch("certificateDate"))}
+              expeditionDate={watch("expeditionDate") && formatDateCert(watch("expeditionDate"))}
               coachName={getValues("coachName")}
               coachPosition={getValues("coachPosition")}
               coachLicence={getValues("coachLicence")}

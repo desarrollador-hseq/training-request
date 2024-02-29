@@ -45,12 +45,14 @@ interface EditRequestFormProps {
       })
     | null
     | undefined;
-  courses: Course[] | null | undefined;
+  canManageRequests: boolean;
+  canManagePermissions: boolean;
 }
 
 export const EditRequestForm = ({
   trainingRequest,
-  courses,
+  canManageRequests,
+  canManagePermissions,
 }: EditRequestFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -62,21 +64,6 @@ export const EditRequestForm = ({
     { text: "Cancelada", value: "CANCELLED" },
   ];
 
-  const onChangeCourse = async (courseId: string) => {
-    try {
-      setLoadingApp(true);
-      const { data } = await axios.patch(
-        `/api/training-requests/${trainingRequest?.id}`,
-        { courseId: courseId }
-      );
-      toast.success("Colaborador actualizado");
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      toast.error("Ocurrió un error inesperado");
-    }
-    setLoadingApp(false);
-  };
   const onChangeState = async (state: string) => {
     try {
       setLoadingApp(true);
@@ -111,24 +98,7 @@ export const EditRequestForm = ({
                   <CardItemInfo
                     label="curso"
                     // text={`${stateEsp[trainingRequest?.state].text}` || trainingRequest?.state}
-                    text={
-                      <Select
-                        defaultValue={trainingRequest?.courseId}
-                        onValueChange={(e) => onChangeCourse(e)}
-                        // disabled={!isPending}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="🔴 Sin definir" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {courses?.map((course) => (
-                            <SelectItem key={course.id} value={course.id}>
-                              {course.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    }
+                    text={trainingRequest?.course?.name}
                   />
                   <CardItemInfo
                     label="# Colaboradores"
@@ -142,7 +112,7 @@ export const EditRequestForm = ({
                       <Select
                         defaultValue={trainingRequest?.state}
                         onValueChange={(e) => onChangeState(e)}
-                        // disabled={!isPending}
+                        disabled={!canManagePermissions && !canManageRequests}
                       >
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="🔴 Sin definir" />
@@ -167,7 +137,12 @@ export const EditRequestForm = ({
         </CardHeader>
         <CardContent>
           <Link
-            className={cn(buttonVariants(), "justify-self-end")}
+            className={cn(
+              buttonVariants(),
+              "justify-self-end mb-3 hidden max-w-[200px]",
+              canManagePermissions && "flex",
+              canManageRequests && "flex"
+            )}
             href={`/dashboard/entrenamiento/solicitudes/editar/${trainingRequest?.id}`}
           >
             Agregar colaboradores

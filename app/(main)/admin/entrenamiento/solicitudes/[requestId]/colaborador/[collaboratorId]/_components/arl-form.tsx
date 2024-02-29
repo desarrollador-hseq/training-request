@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils";
 interface ArlFormProps {
   arlName?: string | null;
   collaboratorId?: string;
+  canManagePermissions?: boolean;
+  canManageRequests?: boolean;
 }
 
 const formSchema = z.object({
@@ -23,7 +25,12 @@ const formSchema = z.object({
   }),
 });
 
-export const ArlForm = ({ arlName, collaboratorId }: ArlFormProps) => {
+export const ArlForm = ({
+  arlName,
+  collaboratorId,
+  canManageRequests,
+  canManagePermissions,
+}: ArlFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -59,6 +66,7 @@ export const ArlForm = ({ arlName, collaboratorId }: ArlFormProps) => {
       <div className="font-medium flex items-center justify-center ">
         <span className="font-bold"> Nombre de ARL</span>
         <Button
+          disabled={!(canManagePermissions || canManageRequests)}
           className={cn(
             "text-white hover:text-white p-1 h-6 rounded-none absolute top-0 right-0 rounded-bl-md shadow-md",
             isEditing

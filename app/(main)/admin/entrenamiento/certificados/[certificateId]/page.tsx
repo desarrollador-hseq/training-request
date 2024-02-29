@@ -6,6 +6,8 @@ import { TitleOnPage } from "@/components/title-on-page";
 import { SimpleModal } from "@/components/simple-modal";
 import { TabsEditCertificate } from "./_components/tabs-edit-certificate";
 import { DeactivateCertificate } from "./_components/deactivate-certificate";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 const bcrumb = [
   { label: "Certificados", path: "/dashboard/entrenamiento/certificados" },
@@ -17,6 +19,8 @@ const EditCertificate = async ({
 }: {
   params: { certificateId: string };
 }) => {
+  const session = await getServerSession(authOptions);
+
   const { certificateId } = params;
 
   const baseUrl = process.env.NEXTAUTH_URL;
@@ -71,6 +75,7 @@ const EditCertificate = async ({
         coaches={coaches}
         certificate={certificate}
         baseUrl={`${baseUrl}`}
+        canManagePermissions={session?.user.canManagePermissions || false}
       />
 
       <DeactivateCertificate certificate={certificate}  />

@@ -33,6 +33,7 @@ import { ButtonScheduleCollaborator } from "./button-schedule-collaborator";
 import { ArlForm } from "./arl-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { ValidateDocuments } from "./validate-documents";
 
 interface CourseLevelWithRequiredDocumentsAndCollaborators
   extends TrainingRequestCollaborator {
@@ -80,11 +81,15 @@ interface AdminScheduleCollaboratorFormProps {
     | null
     | undefined;
   courseLevels: CourseLevel[] | null | undefined;
+  canManageRequests: boolean;
+  canManagePermissions: boolean;
 }
 
 export const AdminScheduleCollaboratorForm = ({
   trainingRequestCollaborator,
   courseLevels,
+  canManageRequests,
+  canManagePermissions,
 }: AdminScheduleCollaboratorFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -171,19 +176,32 @@ export const AdminScheduleCollaboratorForm = ({
             collaboratorId={trainingRequestCollaborator?.collaborator?.id}
             isDisallowed={trainingRequestCollaborator?.isDisallowed}
             setIsDisallowed={setIsDisallowed}
+            canManageRequests={canManageRequests}
+            canManagePermissions={canManagePermissions}
           />
         )}
       </div>
 
-      <div className="flex flex-col">
-        <span className="flex text-sm text-slate-500 gap-1">
+      <div className="flex flex-col  gap-1">
+        <span className="flex text-base text-slate-500 gap-1">
           <strong className="inline">Fecha sugerida: </strong>
-          {!!trainingRequestCollaborator?.suggestedDate
-            ? `${format(trainingRequestCollaborator?.suggestedDate, "P", {
-                locale: es,
-              })}`
-            : "no"}
+          <span className="">
+            {!!trainingRequestCollaborator?.suggestedDate
+              ? `${format(trainingRequestCollaborator?.suggestedDate, "P", {
+                  locale: es,
+                })}`
+              : "no"}
+          </span>
         </span>
+        {trainingRequestCollaborator?.validDocumentBy && (
+          <h2 className="flex text-xs text-slate-500 gap-1 ">
+            <strong className="inline">Documentos válidados por: </strong>
+            <span className="">
+              {trainingRequestCollaborator?.validDocumentBy}
+            </span>
+          </h2>
+        )}
+
         <PickScheduleDates
           isDisallowed={isDisallowed}
           setDate={setDate}
@@ -200,6 +218,9 @@ export const AdminScheduleCollaboratorForm = ({
             from: trainingRequestCollaborator?.startDate,
             to: trainingRequestCollaborator?.endDate,
           }}
+          canManageRequests={canManageRequests}
+          canManagePermissions={canManagePermissions}
+          validDocuments={trainingRequestCollaborator?.validDocument || false}
         />
         <div />
       </div>
@@ -299,7 +320,12 @@ export const AdminScheduleCollaboratorForm = ({
                         }
                         // disabled={!isPending}
                       >
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger
+                          className="w-[180px]"
+                          disabled={
+                            !(canManagePermissions || canManageRequests)
+                          }
+                        >
                           <SelectValue placeholder="🔴 Sin definir" />
                         </SelectTrigger>
                         <SelectContent>
@@ -356,6 +382,8 @@ export const AdminScheduleCollaboratorForm = ({
                       collaboratorId={
                         trainingRequestCollaborator?.collaborator?.id
                       }
+                      canManageRequests={canManageRequests}
+                      canManagePermissions={canManagePermissions}
                     />
                   </div>
                 </div>
@@ -364,7 +392,16 @@ export const AdminScheduleCollaboratorForm = ({
               <SubtitleSeparator
                 className="bg-primary"
                 text="Documentos adjuntados"
-              ></SubtitleSeparator>
+              >
+                {trainingRequestCollaborator?.validDocument && (
+                  <h2 className="text-slate-400 italic text-sm">
+                    Documentos válidados por:{" "}
+                    <span className="font-semibold">
+                      {trainingRequestCollaborator?.validDocumentBy}
+                    </span>
+                  </h2>
+                )}
+              </SubtitleSeparator>
               <div className="px-2 grid md:grid-cols-2 gap-2">
                 {documentsRequired?.map((doc, index) => (
                   <div key={doc.id + index} className="">
@@ -383,6 +420,16 @@ export const AdminScheduleCollaboratorForm = ({
                   </div>
                 ))}
               </div>
+              {!trainingRequestCollaborator?.validDocument && (
+                <ValidateDocuments
+                  collaboratorId={trainingRequestCollaborator?.collaboratorId}
+                  trainingRequestId={
+                    trainingRequestCollaborator?.trainingRequestId
+                  }
+                  canManagePermissions={canManagePermissions}
+                  canManageRequest={canManageRequests}
+                />
+              )}
             </div>
           </div>
         </CardHeader>

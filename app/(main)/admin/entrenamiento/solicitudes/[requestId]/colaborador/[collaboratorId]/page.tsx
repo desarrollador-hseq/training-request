@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeftToLine } from "lucide-react";
+import { getServerSession } from "next-auth";
 import { AdminScheduleCollaboratorForm } from "./_components/admin-schedule-collaborator-form";
 import { db } from "@/lib/db";
 import { buttonVariants } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TitleOnPage } from "@/components/title-on-page";
 import { Banner } from "@/components/banner";
+import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [
   { label: "solicitudes", path: "solicitudes" },
@@ -19,6 +21,8 @@ const AdminScheduleCollaborator = async ({
 }: {
   params: { requestId: string; collaboratorId: string };
 }) => {
+  const session = await getServerSession(authOptions) 
+
   const trainingRequestCollaborator =
     await db.trainingRequestCollaborator.findUnique({
       where: {
@@ -74,6 +78,7 @@ const AdminScheduleCollaborator = async ({
   const courseLevels = await db.courseLevel.findMany({
     where: {
       courseId: trainingRequestCollaborator?.courseLevel?.course.id!,
+      active: true,
     },
   });
 
@@ -97,6 +102,8 @@ const AdminScheduleCollaborator = async ({
             <AdminScheduleCollaboratorForm
               courseLevels={courseLevels}
               trainingRequestCollaborator={trainingRequestCollaborator}
+              canManageRequests={session?.user.canManageRequests || false}
+              canManagePermissions={session?.user.canManagePermissions || false}
             />
           </CardContent>
         </Card>

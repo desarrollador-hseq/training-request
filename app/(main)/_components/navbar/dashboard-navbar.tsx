@@ -45,8 +45,8 @@ export const DashboardNavbar = ({
 
           <div className="flex gap-5 items-center">
             {isAdmin && <span>Administrador</span>}
-            <DropdownCompany companyName={businessName} />
             {isAdmin && <SheetCollaboratorsCart />}
+            <DropdownCompany companyName={businessName} />
           </div>
         </div>
       </div>

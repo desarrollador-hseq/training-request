@@ -17,14 +17,7 @@ export const DocumentSignatureCertificate = ({
   licence,
 }: CertificateTemplateProps) => {
   return (
-    <View
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: "80%",
-      }}
-    >
+    
       <View
         style={{
           display: "flex",
@@ -58,7 +51,7 @@ export const DocumentSignatureCertificate = ({
         {licence && (
           <Text style={{ fontSize: 10 }}>{licence && capitalize(licence)}</Text>
         )}
-      </View>
+      
     </View>
   );
 };

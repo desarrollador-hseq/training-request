@@ -170,7 +170,7 @@ export const DocumentCertificateTemplate = ({
                     marginBottom: 5,
                   }}
                 >
-                  Certifica que
+                  CERTIFICA QUE
                 </Text>
                 <View style={{ marginBottom: 15 }}>
                   <View
@@ -231,6 +231,7 @@ export const DocumentCertificateTemplate = ({
                 <Text
                   style={{
                     fontSize: 20,
+                    marginTop: 10,
                     fontWeight: "bold",
                     textTransform: "uppercase",
                   }}
@@ -247,15 +248,15 @@ export const DocumentCertificateTemplate = ({
                   {course}
                 </Text>
                 {resolution && (
-                  <Text style={{ ...styles.text, fontSize: 10 }}>
+                  <Text style={{ fontSize: 13, fontWeight: "bold" }}>
                     {resolution}
                   </Text>
                 )}
-                <View style={{ marginBottom: 15 }}>
+                <View style={{ marginBottom: 15, marginTop: 10 }}>
                   <Text style={styles.text}>
                     Con una intensidad de{" "}
-                    <Text style={{ fontWeight: "bold" }}>{levelHours}</Text>{" "}
-                    Horas.
+                    <Text style={{ fontWeight: "bold" }}>{levelHours} Horas.</Text>{" "}
+                   
                   </Text>
                 </View>
                 <Text style={styles.text}>
@@ -279,9 +280,12 @@ export const DocumentCertificateTemplate = ({
               <View
                 style={{
                   display: "flex",
-                  flexDirection: "row",
+                  flexDirection: "column",
                   justifyContent: "space-between",
-                  width: "80%",
+                  alignItems: "flex-end",
+                  width: "95%",
+                  gap: 30,
+                  marginTop: 50,
                 }}
               >
                 {coachName && coachImgSignatureUrl && coachPosition && (
@@ -387,17 +391,18 @@ const styles = StyleSheet.create({
   sideContent: {
     display: "flex",
     flexDirection: "column",
-    width: "25%",
-    height: "75%",
+    width: "20%",
+    height: "80%",
     justifyContent: "space-between",
     alignItems: "center",
     padding: 8,
-    marginTop: 10,
+    marginTop: 48,
     paddingTop: 10,
+  
   },
   textMain: {
-    width: "340px",
-    height: "70px",
+    width: "440px",
+    height: "80px",
     backgroundColor: "#a30e0c",
     display: "flex",
     justifyContent: "center",
@@ -407,18 +412,20 @@ const styles = StyleSheet.create({
     transform: "rotate(-90deg)",
     padding: "18px",
     paddingTop: "10px",
+    fontSize: 23,
+    gap: 10,
   },
   textContent: {
-    width: "80%",
+    width: "70%",
     height: "93%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
-    alignContent: "space-around",
+    justifyContent: "flex-start",
+    alignContent: "flex-start",
     marginVertical: "10px",
   },
   logoTraining: {
-    width: "160px",
+    width: "150px",
     height: "auto",
     marginBottom: 5,
   },

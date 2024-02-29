@@ -23,6 +23,8 @@ interface MarkCollaboratorDisallowedProps {
   trainingRequestId?: string;
   levelName?: string | null;
   toEmail?: string | null;
+  canManagePermissions?: boolean;
+  canManageRequests?: boolean;
 }
 
 export const MarkCollaboratorDisallowed = ({
@@ -37,6 +39,9 @@ export const MarkCollaboratorDisallowed = ({
   levelName,
   trainingRequestId,
   emailResponsibleCompany,
+  canManageRequests,
+  canManagePermissions,
+
 }: MarkCollaboratorDisallowedProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -100,6 +105,7 @@ export const MarkCollaboratorDisallowed = ({
     <SimpleModal
       onClose={() => resetFieldsModal()}
       onAcept={() => handleDisallowed()}
+      btnDisabled={!(canManagePermissions || canManageRequests)}
       btnClass={`p-2 bg-red-500 ${
         isDisallowed
           ? "bg-green-600 hover:bg-green-800"

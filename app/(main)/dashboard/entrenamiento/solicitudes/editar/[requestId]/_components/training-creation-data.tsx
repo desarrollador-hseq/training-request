@@ -15,9 +15,9 @@ import { es } from "date-fns/locale";
 
 const stateEsp = {
   PENDING: { text: "Creada/No enviada", icon: "🕒" },
-  ACTIVE: { text: "Activo", icon: "✅" },
-  EXECUTED: { text: "Ejecutado", icon: "✔️" },
-  CANCELLED: { text: "Cancelado", icon: "❌" },
+  ACTIVE: { text: "Activa", icon: "✅" },
+  EXECUTED: { text: "Ejecutada", icon: "✔️" },
+  CANCELLED: { text: "Cancelada", icon: "❌" },
   // Agrega más estados según sea necesario
 };
 

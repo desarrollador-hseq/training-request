@@ -13,7 +13,7 @@ interface InputFormProps<T extends FieldValues>
   extends UseControllerProps<T>,
     Omit<
       InputHTMLAttributes<HTMLInputElement>,
-      "defaultValue" | "name" | "type"
+      "defaultValue" | "name" | "type" | "disabled"
     > {
   control: Control<T>;
   label: string;
@@ -34,6 +34,7 @@ export const InputForm: React.FC<InputFormProps<any>> = ({
 }) => {
   return (
     <FormField
+      disabled={disabled}
       control={control}
       name={name}
       render={({ field }) => (
@@ -44,7 +45,6 @@ export const InputForm: React.FC<InputFormProps<any>> = ({
           <FormControl>
             <Input
               id={name}
-              disabled={isSubmitting || disabled}
               placeholder=""
               type={type || "text"}
               readOnly={readOnly}

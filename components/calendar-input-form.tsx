@@ -40,14 +40,14 @@ export const CalendarInputForm: React.FC<InputFormProps<any>> = ({
 }) => {
   return (
     <FormField
-      disabled={isSubmitting}
+      disabled={isSubmitting || disabled}
       control={control}
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col">
           <FormLabel>{label}</FormLabel>
           <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild disabled={disabled}>
               <FormControl>
                 <Button
                   variant={"outline"}

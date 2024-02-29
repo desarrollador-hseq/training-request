@@ -1,5 +1,5 @@
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { Info } from "lucide-react";
 import { authOptions } from "@/lib/authOptions";
 import { db } from "@/lib/db";
@@ -29,7 +29,7 @@ const TrainingRequestPage = async ({
     return redirect("/dashboard");
   }
 
-  const isAdmin = session.user?.role === "ADMIN"
+  const isAdmin = session.user?.role === "ADMIN";
 
   const trainingRequest = await db.trainingRequest.findUnique({
     where: {
@@ -51,8 +51,8 @@ const TrainingRequestPage = async ({
             include: {
               requiredDocuments: {
                 where: {
-                  active: true
-                }
+                  active: true,
+                },
               },
             },
           },
@@ -75,7 +75,6 @@ const TrainingRequestPage = async ({
     },
   });
 
-
   const collaborators = await db.collaborator.findMany({
     where: {
       companyId: isAdmin ? trainingRequest.companyId : session.user.id,
@@ -92,21 +91,34 @@ const TrainingRequestPage = async ({
   let isCompleteDocuments = false;
 
   // Verificar si todos los colaboradores tienen los documentos adjuntados para el nivel de curso correspondiente
-  if (trainingRequest && courseLevels && courseLevels.length > 0 && trainingRequest.collaborators) {
-    isCompleteDocuments = trainingRequest.collaborators.length === 0 ? false : trainingRequest.collaborators.every(({ collaborator, courseLevel }) => {
-      if (!collaborator || !courseLevel) {
-        return false; // Si no hay colaborador o nivel de curso, no está completo
-      }
-      // Obtener los documentos requeridos para este nivel de curso
-      const requiredDocuments = courseLevel.requiredDocuments;
-  
-      // Verificar si el colaborador tiene adjuntados todos los documentos requeridos para este nivel de curso
-      return requiredDocuments.every((document) => {
-        return collaborator.documents && collaborator.documents.some((attachedDocument) => {
-          return attachedDocument.requiredDocumentId === document.id;
-        });
-      });
-    });
+  if (
+    trainingRequest &&
+    courseLevels &&
+    courseLevels.length > 0 &&
+    trainingRequest.collaborators
+  ) {
+    isCompleteDocuments =
+      trainingRequest.collaborators.length === 0
+        ? false
+        : trainingRequest.collaborators.every(
+            ({ collaborator, courseLevel }) => {
+              if (!collaborator || !courseLevel) {
+                return false; // Si no hay colaborador o nivel de curso, no está completo
+              }
+              // Obtener los documentos requeridos para este nivel de curso
+              const requiredDocuments = courseLevel.requiredDocuments;
+
+              // Verificar si el colaborador tiene adjuntados todos los documentos requeridos para este nivel de curso
+              return requiredDocuments.every((document) => {
+                return (
+                  collaborator.documents &&
+                  collaborator.documents.some((attachedDocument) => {
+                    return attachedDocument.requiredDocumentId === document.id;
+                  })
+                );
+              });
+            }
+          );
   }
 
   const requiredFields = [
@@ -124,7 +136,6 @@ const TrainingRequestPage = async ({
   const isComplete = requiredFields.every(Boolean);
   const isPending = trainingRequest.state === "PENDING";
 
-
   return (
     <div className="">
       {trainingRequest.state === "PENDING" && (
@@ -138,18 +149,16 @@ const TrainingRequestPage = async ({
       <TitleOnPage text={`Editar solicitud de entrenamiento `} bcrumb={crumbs}>
         <div className="flex flex-col items-end">
           <SendTraining
-          isAdmin={isAdmin}
+            isAdmin={isAdmin}
             trainingRequestId={params.requestId}
             disabled={isComplete}
             isPending={isPending}
           />
-          {
-          !isComplete && (
-          <span className="text-slate-200 text-xs">
-            completar todos los requisitos {completionText}{" "}
-          </span>
-          )
-          }
+          {!isComplete && (
+            <span className="text-slate-200 text-xs">
+              completar todos los requisitos {completionText}{" "}
+            </span>
+          )}
         </div>
       </TitleOnPage>
 
@@ -175,7 +184,8 @@ const TrainingRequestPage = async ({
                   {/* Sheet para agregar colaboradores */}
                   <SelectCollaborators
                     isPending={isPending}
-                    isAdmin={isAdmin}
+                    canManageRequests={session?.user?.canManageRequests || false}
+                    canManagePermissions={session?.user?.canManagePermissions || false}
                     trainingRequestId={trainingRequest.id}
                     collaborators={collaborators}
                     collaboratorSelected={trainingRequest.collaborators.map(
@@ -187,6 +197,8 @@ const TrainingRequestPage = async ({
               {/* Listar colaboradores de una solicitud y con collapsible de documentos */}
               <div className="p-2">
                 <CollaboratorsSimpleTable
+                   canManageRequests={session?.user.canManageRequests || false}
+                   canManagePermissions={session?.user.canManagePermissions || false}
                   collaborators={trainingRequest.collaborators}
                   trainingRequestId={trainingRequest.id}
                   // courseId={trainingRequest.courseId}

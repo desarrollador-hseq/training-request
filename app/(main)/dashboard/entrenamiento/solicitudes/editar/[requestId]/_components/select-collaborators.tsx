@@ -28,7 +28,8 @@ interface SelectCollaboratorsProps {
   collaboratorSelected: Collaborator[];
   trainingRequestId: string;
   isPending: boolean;
-  isAdmin?: boolean;
+  canManageRequests: boolean;
+  canManagePermissions: boolean;
 }
 
 export const SelectCollaborators = ({
@@ -36,7 +37,8 @@ export const SelectCollaborators = ({
   collaboratorSelected,
   trainingRequestId,
   isPending,
-  isAdmin,
+  canManageRequests,
+  canManagePermissions,
 }: SelectCollaboratorsProps) => {
   const router = useRouter();
   const [levelSelected, setLevelSelected] = useState<string | null>();
@@ -81,9 +83,9 @@ export const SelectCollaborators = ({
 
   return (
     <div className="">
-      {(isPending || isAdmin) && (
+      {(isPending || canManagePermissions || canManageRequests) && (
         <Sheet open={openSheet} onOpenChange={setOpenSheet}>
-          <SheetTrigger asChild className="relative">
+          <SheetTrigger asChild className="relative" >
             <div>
               <span className="relative flex w-fit h-fit">
                 {collaboratorSelected.length === 0 && (
@@ -115,7 +117,11 @@ export const SelectCollaborators = ({
             </div>
             <SheetFooter className={cn("flex justify-center items-center")}>
               <SheetClose onClick={() => handleLevelSelected(null)} asChild>
-                <Button className="w-[300px]" onClick={handleUpdateCollaborators} type="submit">
+                <Button
+                  className="w-[300px]"
+                  onClick={handleUpdateCollaborators}
+                  type="submit"
+                >
                   Guardar
                 </Button>
               </SheetClose>

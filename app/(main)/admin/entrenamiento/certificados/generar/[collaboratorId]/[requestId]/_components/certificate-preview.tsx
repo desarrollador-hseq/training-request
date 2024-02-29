@@ -1,9 +1,8 @@
 "use client";
 
-import { PDFViewer } from "@react-pdf/renderer";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { addMonths } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import {
   Certificate,
   Coach,
@@ -12,28 +11,10 @@ import {
   Course,
   CourseLevel,
 } from "@prisma/client";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn, formatDateOf } from "@/lib/utils";
-import { Label } from "@/components/ui/label";
-import { ButtonCreateCertificate } from "./button-create-certificate";
-import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { AddCertificateForm } from "../../../../_components/add-certificate-form";
 import { Banner } from "@/components/banner";
-import Link from "next/link";
 
 interface CertificatePreviewProps {
   collaborator:
@@ -49,6 +30,8 @@ interface CertificatePreviewProps {
   baseUrl: string;
   coaches: Coach[] | null;
   certificateWasCreatedId?: string;
+  canManageRequests: boolean;
+  canManagePermissions: boolean;
 }
 export const CertificatePreview = ({
   collaborator,
@@ -58,6 +41,8 @@ export const CertificatePreview = ({
   trainingRequestId,
   certificateWasCreatedId,
   coaches,
+  canManageRequests,
+  canManagePermissions,
 }: CertificatePreviewProps) => {
   const [expeditionDate, setExpeditionDate] = useState<Date | null | undefined>(
     new Date()
@@ -138,13 +123,22 @@ export const CertificatePreview = ({
       <Card>
         <CardHeader className="p-0">
           {certificateWasCreatedId !== undefined && (
-            <Banner label="Ya existe un certificado para este colaborador en el mismo curso y nivel, y bajo la misma empresa." >
-              <Link className={buttonVariants({className: `bg-emerald-600 hover:bg-emerald-700`})} href={`/admin/entrenamiento/certificados/${certificateWasCreatedId}`}>Ver certificado</Link>
+            <Banner label="Ya existe un certificado para este colaborador en el mismo curso y nivel, y bajo la misma empresa.">
+              <Link
+                className={buttonVariants({
+                  className: `bg-emerald-600 hover:bg-emerald-700`,
+                })}
+                href={`/admin/entrenamiento/certificados/${certificateWasCreatedId}`}
+              >
+                Ver certificado
+              </Link>
             </Banner>
           )}
         </CardHeader>
         <CardContent>
           <AddCertificateForm
+            canManagePermissions={canManagePermissions}
+            canManageRequests={canManageRequests}
             certificate={certificate}
             baseUrl={`${baseUrl}`}
             coaches={coaches}

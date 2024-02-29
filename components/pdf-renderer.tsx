@@ -135,11 +135,11 @@ const PdfRenderer = ({ url, className }: PdfRendererProps) => {
 
       <SimpleBar
         autoHide={false}
-        className={cn(" w-full h-full bg-red-500", width && `w-[${width}px]`)}
+        className={cn(" w-full h-full", width && `w-[${width}px]`)}
       >
         <div
           className={cn(
-            "max-w-full w-full h-full bg-red-500",
+            "max-w-full w-full h-full",
             width && `w-[${width}px]`
           )}
         >

@@ -20,7 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-
+import { Banner } from "@/components/banner";
 
 interface PickDatesProps {
   isDisallowed: boolean;
@@ -35,6 +35,9 @@ interface PickDatesProps {
   date: DateRange | undefined;
   company?: Company | null;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
+  canManageRequests: boolean;
+  canManagePermissions: boolean;
+  validDocuments: boolean;
 }
 
 export const PickScheduleDates = ({
@@ -43,6 +46,9 @@ export const PickScheduleDates = ({
   date,
   scheduledDate,
   isDisallowed,
+  canManageRequests,
+  canManagePermissions,
+  validDocuments,
 }: PickDatesProps) => {
   // const { date, setDate } = useDashboard();
 
@@ -70,7 +76,6 @@ export const PickScheduleDates = ({
     setDateSelected({ to: undefined, from: undefined });
     setDate(undefined);
   };
-
 
   useEffect(() => {
     setIsFiltering(!!dateSelected);
@@ -139,7 +144,11 @@ export const PickScheduleDates = ({
             </PopoverTrigger>
             <PopoverContent className="w-auto mr-4" align="start">
               <Calendar
-                disabled={isDisallowed || !!!scheduledDate}
+                disabled={
+                  isDisallowed ||
+                  !!!scheduledDate ||
+                  !(canManagePermissions || canManageRequests)
+                }
                 initialFocus
                 mode="range"
                 defaultMonth={dateSelected ? dateSelected.to : new Date()}
@@ -151,26 +160,24 @@ export const PickScheduleDates = ({
               />
             </PopoverContent>
           </Popover>
-          {!date && (
-            <Button
-              onClick={(e) => setIsFiltering(!isFiltering)}
-              variant="secondary"
-              className="absolute top-3 right-0.5 w-5 h-5 m-0 p-0"
-            >
-              <X className="w-4 h-4 text-white" />
-            </Button>
-          )}
+         
         </div>
       ) : (
         <div className="flex items-center gap-2">
-          <Button
-            disabled={isDisallowed}
-            variant="secondary"
-            className="text-white bg-accent"
-            onClick={() => onOpenFiltering()}
-          >
-            <CalendarSearch className="w-5 h-5" />
-          </Button>
+          {validDocuments ? (
+            <Button
+              disabled={
+                isDisallowed || !(canManagePermissions || canManageRequests)
+              }
+              variant="secondary"
+              className="text-white bg-accent w-full"
+              onClick={() => onOpenFiltering()}
+            >
+              <CalendarSearch className="w-5 h-5" />
+            </Button>
+          ) : (
+            <Banner label="Documentos sin validar"></Banner>
+          )}
         </div>
       )}
     </div>

@@ -56,6 +56,8 @@ interface CollaboratorsSimpleTableProps {
   coursesLevel: CourseLevel[] | null;
   isPending: boolean;
   isAdmin?: boolean;
+  canManageRequests: boolean;
+  canManagePermissions: boolean;
   trainingRequest: any;
   courseLevels: any;
 }
@@ -67,7 +69,8 @@ export const CollaboratorsSimpleTable = ({
   trainingRequest,
   courseLevels,
   isPending,
-  isAdmin,
+  canManageRequests,
+  canManagePermissions,
 }: CollaboratorsSimpleTableProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -129,7 +132,7 @@ export const CollaboratorsSimpleTable = ({
   };
 
   const onChange = async (courseLevelId: any, id: string) => {
-    if (isPending || isAdmin) {
+    if (isPending || canManagePermissions || canManageRequests) {
       setLoadingApp(true);
       try {
         const { data } = await axios.patch(
@@ -159,7 +162,7 @@ export const CollaboratorsSimpleTable = ({
           <TableHead className="text-white">Nivel</TableHead>
           <TableHead className="text-white">Documentos</TableHead>
           <TableHead className="text-white">Fecha sugerida</TableHead>
-          {(isPending || isAdmin) && (
+          {(isPending || canManagePermissions || canManageRequests) && (
             <TableHead className="text-right text-white">Acción</TableHead>
           )}
         </TableRow>
@@ -195,7 +198,7 @@ export const CollaboratorsSimpleTable = ({
                 <Select
                   defaultValue={courseLevel ? courseLevel.id : ""}
                   onValueChange={(e) => onChange(e, collaborator.id)}
-                  disabled={!isPending && !isAdmin}
+                  disabled={!isPending && !(canManagePermissions || canManageRequests)}
                 >
                   <SelectTrigger className="w-[180px] disabled:text-gray-800">
                     <SelectValue placeholder="🔴 Sin definir" />
@@ -250,7 +253,7 @@ export const CollaboratorsSimpleTable = ({
                 />
               </TableCell>
 
-              {(isPending || isAdmin) && (
+              {(isPending || canManagePermissions || canManageRequests) && (
                 <TableCell className="flex justify-end">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -278,7 +281,7 @@ export const CollaboratorsSimpleTable = ({
             </TableRow>
           );
         })}
-        {!isPending && !isAdmin && (
+        {!isPending && !(canManagePermissions || canManageRequests) && (
           <TableRow>
             <TableCell className="absolute top-0 left-0 bottom-0 right-0 w-full h-full bg-white opacity-30 z-20"></TableCell>
           </TableRow>
@@ -287,7 +290,9 @@ export const CollaboratorsSimpleTable = ({
       <TableFooter className="w-full">
         <TableRow className="w-full">
           <TableCell
-            colSpan={isPending || isAdmin ? 7 : 6}
+            colSpan={
+              isPending || canManagePermissions || canManageRequests ? 7 : 6
+            }
             className="bg-blue-400/20"
           ></TableCell>
           <TableCell className="text-right bg-blue-400/20">

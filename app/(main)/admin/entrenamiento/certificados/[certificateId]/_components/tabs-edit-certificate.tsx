@@ -11,12 +11,14 @@ interface TabsEditCertificateProps {
   coaches: Coach[];
   certificate: Certificate;
   baseUrl: string;
+  canManagePermissions: boolean;
 }
 
 export const TabsEditCertificate = ({
   coaches,
   certificate,
   baseUrl,
+  canManagePermissions
 }: TabsEditCertificateProps) => {
   const { activeTab, handleTabChange } = useTabManager({
     initialTab: "datos",
@@ -51,6 +53,8 @@ export const TabsEditCertificate = ({
               certificate={certificate}
               baseUrl={`${baseUrl}`}
               isCreate={false}
+              canManagePermissions={canManagePermissions}
+              canManageRequests={false}
               // certAlreadyExists
             />
           </TabsContent>

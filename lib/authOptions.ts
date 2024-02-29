@@ -12,6 +12,9 @@ declare module 'next-auth' {
         email: string;
         isValid: boolean;
         role: Role;
+        canManageRequests: boolean
+        canManageCompanies: boolean
+        canManagePermissions: boolean
         createdAt: Date;
         updatedAt: Date;
     }
@@ -23,6 +26,9 @@ declare module 'next-auth' {
             email: string;
             role?: string;
             isValid?: boolean;
+            canManageRequests?: boolean
+            canManageCompanies?: boolean
+            canManagePermissions?: boolean
         } & DefaultSession['user'];
     }
 }

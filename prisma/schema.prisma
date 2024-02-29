@@ -39,6 +39,10 @@ model Company {
 
   active Boolean @default(true)
 
+  canManageRequests    Boolean @default(false)
+  canManageCompanies   Boolean @default(false)
+  canManagePermissions Boolean @default(false)
+
   passwordResetTokens PasswordResetToken[]
 
   createdAt DateTime @default(now())
@@ -164,6 +168,9 @@ model TrainingRequestCollaborator {
 
   wasCertified Boolean @default(false)
 
+  validDocumentBy String?
+  validDocument  Boolean   @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -201,9 +208,9 @@ model Certificate {
   levelHours     Int?
   monthsToExpire Int?
 
-  coachName String?
-  coachPosition String?
-  coachLicence String?
+  coachName            String?
+  coachPosition        String?
+  coachLicence         String?
   coachImgSignatureUrl String?
 
   certificateDate DateTime?

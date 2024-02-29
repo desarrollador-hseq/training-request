@@ -6,6 +6,8 @@ import { db } from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { TitleOnPage } from "@/components/title-on-page";
 import { EditRequestForm } from "./_components/edit-request-form";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [
   { label: "empresas", path: "/admin/entrenamiento/empresas" },
@@ -17,6 +19,7 @@ const EditRequestPage = async ({
 }: {
   params: { requestId: string };
 }) => {
+  const session = await getServerSession(authOptions) 
   const trainingRequest = await db.trainingRequest.findUnique({
     where: {
       id: params.requestId,
@@ -38,11 +41,6 @@ const EditRequestPage = async ({
     },
   });
 
-  const courses = await db.course.findMany({
-    where: {
-      active: true,
-    },
-  });
 
   return (
     <div>
@@ -75,7 +73,8 @@ const EditRequestPage = async ({
               <CardContent>
                 <EditRequestForm
                   trainingRequest={trainingRequest}
-                  courses={courses}
+                  canManageRequests={session?.user?.canManageRequests || false}
+                  canManagePermissions={session?.user?.canManagePermissions || false}
                 />
               </CardContent>
             </Card>

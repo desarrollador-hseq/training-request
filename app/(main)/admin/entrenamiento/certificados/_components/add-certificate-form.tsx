@@ -34,6 +34,8 @@ interface AddCourseFormProps {
   coaches: Coach[] | null;
   isCreate: boolean;
   certAlreadyExists?: boolean;
+  canManageRequests: boolean;
+  canManagePermissions: boolean;
 }
 
 const formSchema = z.object({
@@ -84,10 +86,12 @@ export const AddCertificateForm = ({
   coaches,
   isCreate,
   certAlreadyExists,
+  canManagePermissions,
 }: AddCourseFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, setIsClient] = useState(false);
+  const [inputsDisabled, setInputsDisabled] = useState(!canManagePermissions);
 
   if (!certificate) {
     router.replace("/admin/entrenamiento/certificados");
@@ -95,9 +99,8 @@ export const AddCertificateForm = ({
   }
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
-  
+    setIsClient(true);
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -123,7 +126,7 @@ export const AddCertificateForm = ({
   });
 
   const { isSubmitting, isValid } = form.formState;
-  const { setValue, getValues , watch } = form;
+  const { setValue, getValues, watch } = form;
 
   useEffect(() => {
     certificate?.coachId &&
@@ -162,6 +165,10 @@ export const AddCertificateForm = ({
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (inputsDisabled) {
+      toast.error("No tiene permisos para proceder");
+      return;
+    }
     setLoadingApp(true);
     try {
       if (!isCreate) {
@@ -191,6 +198,7 @@ export const AddCertificateForm = ({
             <div className="space-y-4">
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Nombre del colaborador"
                   name="collaboratorFullname"
@@ -198,6 +206,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Tipo de documento del colaborador"
                   name="collaboratorTypeDoc"
@@ -205,6 +214,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Número de documento del colaborador"
                   name="collaboratorNumDoc"
@@ -212,6 +222,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Arl del colaborador"
                   name="collaboratorArlName"
@@ -219,6 +230,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Razón social de la empresa"
                   name="companyName"
@@ -226,6 +238,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Representante legal de la empresa"
                   name="legalRepresentative"
@@ -233,6 +246,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="NIT de la empresa"
                   name="companyNit"
@@ -242,6 +256,7 @@ export const AddCertificateForm = ({
             <div className="space-y-4">
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Nombre del curso"
                   name="courseName"
@@ -249,6 +264,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Nivel del curso"
                   name="levelName"
@@ -256,6 +272,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Resolución"
                   name="resolution"
@@ -263,6 +280,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <InputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Número de horas"
                   name="levelHours"
@@ -285,7 +303,11 @@ export const AddCertificateForm = ({
                   onValueChange={(e) => onChangeCoach(e)}
                   // disabled={!isPending}
                 >
-                  <SelectTrigger id="coachId" className="w-full">
+                  <SelectTrigger
+                    id="coachId"
+                    className="w-full"
+                    disabled={inputsDisabled}
+                  >
                     <SelectValue placeholder="🔴 Seleccionar Entrenador" />
                   </SelectTrigger>
                   <SelectContent className="w-full">
@@ -299,6 +321,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <CalendarInputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Fecha de expedición del certificado"
                   name="expeditionDate"
@@ -306,6 +329,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <CalendarInputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Fecha de la capacitación"
                   name="certificateDate"
@@ -313,6 +337,7 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <CalendarInputForm
+                  disabled={inputsDisabled}
                   control={form.control}
                   label="Reentrenamiento para"
                   name="dueDate"
@@ -322,7 +347,7 @@ export const AddCertificateForm = ({
           </div>
           {certAlreadyExists ? (
             <SimpleModal
-              btnDisabled={isSubmitting || !isValid}
+              btnDisabled={isSubmitting || !isValid || inputsDisabled}
               large={false}
               onAcept={form.handleSubmit(onSubmit)}
               textBtn="Volver a generar"
@@ -346,36 +371,43 @@ export const AddCertificateForm = ({
       </Form>
 
       <div className="relative">
-        <SubtitleSeparator text="Previsualización del certificado" />
-
-        {isClient && certificate  && (
-          <PDFViewer
-            showToolbar={false}
-            style={{ width: "100%", height: "1200px" }}
-          >
-            <DocumentCertificateTemplate
-              course={watch("courseName")}
-              fullname={watch("collaboratorFullname")}
-              numDoc={watch("collaboratorNumDoc")}
-              typeDoc={watch("collaboratorTypeDoc")}
-              level={watch("levelName")}
-              levelHours={`${watch("levelHours")}`}
-              resolution={watch("resolution")}
-              companyName={watch("companyName")}
-              companyNit={watch("companyNit")}
-              legalRepresentative={watch("legalRepresentative")}
-              arlName={watch("collaboratorArlName")}
-              fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-              certificateId={certificate.id}
-              expireDate={watch("dueDate") && formatDateOf(watch("dueDate")!)}
-              endDate={watch("certificateDate") && formatDateOf(watch("certificateDate"))}
-              expeditionDate={watch("expeditionDate") && formatDateCert(watch("expeditionDate"))}
-              coachName={getValues("coachName")}
-              coachPosition={getValues("coachPosition")}
-              coachLicence={getValues("coachLicence")}
-              coachImgSignatureUrl={getValues("coachImgSignatureUrl")}
-            />
-          </PDFViewer>
+        {isClient && certificate && canManagePermissions && (
+          <>
+            <SubtitleSeparator text="Previsualización del certificado" />
+            <PDFViewer
+              showToolbar={false}
+              style={{ width: "100%", height: "1200px" }}
+            >
+              <DocumentCertificateTemplate
+                course={watch("courseName")}
+                fullname={watch("collaboratorFullname")}
+                numDoc={watch("collaboratorNumDoc")}
+                typeDoc={watch("collaboratorTypeDoc")}
+                level={watch("levelName")}
+                levelHours={`${watch("levelHours")}`}
+                resolution={watch("resolution")}
+                companyName={watch("companyName")}
+                companyNit={watch("companyNit")}
+                legalRepresentative={watch("legalRepresentative")}
+                arlName={watch("collaboratorArlName")}
+                fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
+                certificateId={certificate.id}
+                expireDate={watch("dueDate") && formatDateOf(watch("dueDate")!)}
+                endDate={
+                  watch("certificateDate") &&
+                  formatDateOf(watch("certificateDate"))
+                }
+                expeditionDate={
+                  watch("expeditionDate") &&
+                  formatDateCert(watch("expeditionDate"))
+                }
+                coachName={getValues("coachName")}
+                coachPosition={getValues("coachPosition")}
+                coachLicence={getValues("coachLicence")}
+                coachImgSignatureUrl={getValues("coachImgSignatureUrl")}
+              />
+            </PDFViewer>
+          </>
         )}
       </div>
     </div>

@@ -21,6 +21,7 @@ interface AddDocumentRequiredFormProps {
     | null
     | undefined;
   courseLevelId?: string | null;
+  canManagePermissions: boolean;
 }
 
 const formSchema = z.object({
@@ -30,6 +31,7 @@ const formSchema = z.object({
 export const AddDocumentRequiredForm = ({
   requiredDocument,
   courseLevelId,
+  canManagePermissions
 }: AddDocumentRequiredFormProps) => {
   const { setLoadingApp } = useLoading();
   const [isEditing, setIsEditing] = useState(false);
@@ -51,6 +53,10 @@ export const AddDocumentRequiredForm = ({
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if(!canManagePermissions) {
+      toast.error("Sin permisos para proceder")
+      return
+    }
     setLoadingApp(true);
     try {
       if (!isEdit) {
@@ -77,7 +83,12 @@ export const AddDocumentRequiredForm = ({
   };
 
   const onDeleteDocument = async () => {
+    if(!canManagePermissions) {
+      toast.error("Sin permisos para proceder")
+      return
+    }
     setLoadingApp(true);
+
     try {
       await axios.delete(
         `/api/course-levels/${courseLevelId}/required-document/${requiredDocument?.id}`
@@ -99,6 +110,7 @@ export const AddDocumentRequiredForm = ({
         {isEdit && (
           <Button
             onClick={toggleEdit}
+            disabled={!canManagePermissions}
             variant="default"
             className="bg-slate-500 hover:bg-slate-700 p-2 h-fit gap-1"
           >
@@ -125,6 +137,7 @@ export const AddDocumentRequiredForm = ({
             btnClass="p-2 h-fit bg-red-700 hover:bg-red-600"
             textBtn={<Trash className="w-4 h-4" />}
             title="Eliminar documento requerido"
+            btnDisabled={!canManagePermissions}
           >
             ¿Desea eliminar el documento: ({requiredDocument?.name})?
           </SimpleModal>
@@ -144,11 +157,11 @@ export const AddDocumentRequiredForm = ({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 mt-4"
           >
-            <InputForm control={form.control} label="" name="name" />
+            <InputForm control={form.control} label="" name="name" disabled={!canManagePermissions} />
 
             <div className="flex items-center gap-x-2">
               <Button
-                disabled={!isValid || isSubmitting}
+                disabled={!isValid || isSubmitting || !canManagePermissions}
                 className="bg-secondary"
                 type="submit"
               >

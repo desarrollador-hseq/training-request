@@ -1,7 +1,7 @@
+import Link from "next/link";
 import { TitleOnPage } from "@/components/title-on-page";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddCollaboratorForm } from "../_components/add-collaborator-form";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 

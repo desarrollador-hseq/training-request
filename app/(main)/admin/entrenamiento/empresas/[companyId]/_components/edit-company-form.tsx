@@ -5,7 +5,7 @@ import { Company } from "@prisma/client";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -41,6 +41,9 @@ const formSchema = z.object({
   nameContact: z.string().min(1, {
     message: "Nombre del contacto es requerido",
   }),
+  legalRepresentative: z.string().min(1, {
+    message: "Nombre del representante legal es requerido",
+  }),
   email: z
     .string()
     .email({
@@ -66,9 +69,20 @@ const sectorsItem = [
   { value: "OTRO", label: "Otro" },
 ];
 
-export const EditCompanyForm = ({ company }: { company: Company }) => {
+export const EditCompanyForm = ({
+  company,
+  canManageCompany,
+  canManagePermissions,
+}: {
+  company: Company;
+  canManageCompany: boolean;
+  canManagePermissions: boolean;
+}) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
+  const [canEdit, setCanEdit] = useState(
+    canManageCompany || canManagePermissions
+  );
   const isEdit = useMemo(() => company, [company]);
 
   if (isEdit && !company) {
@@ -83,6 +97,7 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
       nit: company.nit || "",
       sector: company.sector || "",
       nameContact: company.nameContact || "",
+      legalRepresentative: company.legalRepresentative || "",
       email: company.email || "",
       phoneContact: company.phoneContact || "",
     },
@@ -91,8 +106,13 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
   const { setError } = form;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    
+    if(!canEdit) {
+      toast.error("Sin permisos para proceder")
+      return
+    }
+    
     setLoadingApp(true);
-
     try {
       await axios.patch(`/api/companies/${company?.id}`, values);
       toast.success("Empresa actualizada");
@@ -149,10 +169,16 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
                   control={form.control}
                   label="Razón social"
                   name="businessName"
+                  disabled={!canEdit}
                 />
               </div>
               <div>
-                <InputForm control={form.control} label="NIT" name="nit" />
+                <InputForm
+                  control={form.control}
+                  label="NIT"
+                  name="nit"
+                  disabled={!canEdit}
+                />
               </div>
               <div>
                 <FormField
@@ -168,7 +194,10 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="bg-slate-100 border-slate-300">
+                          <SelectTrigger
+                            className="bg-slate-100 border-slate-300"
+                            disabled={!canEdit}
+                          >
                             <SelectValue
                               className="text-red-500"
                               placeholder="Selecciona el tipo de documento"
@@ -188,6 +217,14 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
                   )}
                 />
               </div>
+              <div>
+                <InputForm
+                  control={form.control}
+                  label="Representante legal"
+                  name="legalRepresentative"
+                  disabled={!canEdit}
+                />
+              </div>
             </div>
 
             {/* 2 Column */}
@@ -197,6 +234,7 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
                   control={form.control}
                   label="Nombre del contacto"
                   name="nameContact"
+                  disabled={!canEdit}
                 />
               </div>
               <div>
@@ -204,6 +242,7 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
                   control={form.control}
                   label="Correo del contacto"
                   name="email"
+                  disabled={!canEdit}
                 />
               </div>
               <div>
@@ -211,13 +250,14 @@ export const EditCompanyForm = ({ company }: { company: Company }) => {
                   control={form.control}
                   label="Teléfono del contacto"
                   name="phoneContact"
+                  disabled={!canEdit}
                 />
               </div>
             </div>
           </div>
 
           <Button
-            disabled={isSubmitting || !isValid || !company.active}
+            disabled={isSubmitting || !isValid || !company.active || !canEdit}
             className="w-full max-w-[500px] gap-3"
           >
             {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}

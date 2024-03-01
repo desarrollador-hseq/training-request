@@ -73,7 +73,7 @@ export const CertificatePreview = ({
     certificateDate: endDate || null,
     expeditionDate: expeditionDate ? expeditionDate : new Date(),
     monthsToExpire: courseLevel?.monthsToExpire || null,
-    dueDate: addMonths(endDate!, courseLevel?.monthsToExpire!),
+    dueDate: courseLevel?.monthsToExpire !== 0 ? addMonths(endDate!, courseLevel?.monthsToExpire!) : null,
     collaboratorId: collaborator?.id || "",
     courseLevelId: courseLevel?.id || "",
     active: true,
@@ -138,7 +138,6 @@ export const CertificatePreview = ({
         <CardContent>
           <AddCertificateForm
             canManagePermissions={canManagePermissions}
-            canManageRequests={canManageRequests}
             certificate={certificate}
             baseUrl={`${baseUrl}`}
             coaches={coaches}

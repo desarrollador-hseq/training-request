@@ -40,6 +40,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
         <DashboardNavbar
           isAdmin={session.user.role === "ADMIN"}
           businessName={session.user.businessName}
+          canManagePermissions={session.user.canManagePermissions || false}
         />
         <div className="mt-1 md:pl-[223px] min-h-screen xl:flex justify-center items-start xl:w-full relative">
           <div className="mx-1 min-h-full mt-[56px] max-w-[1200px] w-full">

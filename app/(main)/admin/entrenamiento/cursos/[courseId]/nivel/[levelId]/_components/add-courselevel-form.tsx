@@ -12,11 +12,13 @@ import { Loader2 } from "lucide-react";
 import { InputForm } from "@/components/input-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useLoading } from "@/components/providers/loading-provider";
 
 interface AddCourseLevelFormProps {
   courseLevel?: CourseLevel | null;
   courseId?: string | null;
   courseName?: string | null;
+  canManagePermissions: boolean;
 }
 
 const formSchema = z.object({
@@ -31,8 +33,10 @@ export const AddCourseLevelForm = ({
   courseLevel,
   courseId,
   courseName,
+  canManagePermissions,
 }: AddCourseLevelFormProps) => {
   const router = useRouter();
+  const { setLoadingApp } = useLoading();
   const isLevel = useMemo(() => courseLevel !== null, [courseLevel]);
   const isEdit = useMemo(() => isLevel && courseLevel, [courseLevel, isLevel]);
 
@@ -48,6 +52,11 @@ export const AddCourseLevelForm = ({
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!canManagePermissions) {
+      toast.error("Sin permisos para proceder");
+      return;
+    }
+    setLoadingApp(true);
     try {
       if (isEdit) {
         await axios.patch(
@@ -67,6 +76,8 @@ export const AddCourseLevelForm = ({
     } catch (error) {
       console.error(error);
       toast.error("Ocurrió un error inesperado");
+    } finally {
+      setLoadingApp(false);
     }
   };
   return (
@@ -83,7 +94,12 @@ export const AddCourseLevelForm = ({
                 <p>{courseName}</p>
               </div>
               <div>
-                <InputForm control={form.control} label="Nombre" name="name" />
+                <InputForm
+                  control={form.control}
+                  label="Nombre"
+                  name="name"
+                  disabled={!canManagePermissions}
+                />
               </div>
               <div>
                 <InputForm
@@ -91,6 +107,7 @@ export const AddCourseLevelForm = ({
                   label="Número de horas"
                   name="hours"
                   type="number"
+                  disabled={!canManagePermissions}
                 />
               </div>
               <div>
@@ -99,13 +116,14 @@ export const AddCourseLevelForm = ({
                   label="Meses para reentrenamiento"
                   name="monthsToExpire"
                   type="number"
+                  disabled={!canManagePermissions}
                 />
               </div>
             </div>
           </div>
 
           <Button
-            disabled={isSubmitting || !isValid}
+            disabled={isSubmitting || !isValid || !canManagePermissions}
             className="w-full max-w-[500px] gap-3"
           >
             {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}

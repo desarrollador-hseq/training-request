@@ -16,7 +16,7 @@ import { SimpleModal } from "@/components/simple-modal";
 import { useCollaboratorsCart } from "@/components/providers/collaborators-cart-provider";
 import { formatDateOf } from "@/lib/utils";
 
-export const SheetCollaboratorsCart = () => {
+export const SheetCollaboratorsCart = ({canManagePermissions}: {canManagePermissions: boolean}) => {
   const {
     cartItems,
     removeCartItem,
@@ -156,7 +156,7 @@ export const SheetCollaboratorsCart = () => {
             <div className=" w-full">
               <SimpleModal
                 btnAsChild={true}
-                btnDisabled={items <= 0}
+                btnDisabled={items <= 0 || !canManagePermissions}
                 title="Notificación a empresas"
                 large={false}
                 onAcept={handleSendNotification}

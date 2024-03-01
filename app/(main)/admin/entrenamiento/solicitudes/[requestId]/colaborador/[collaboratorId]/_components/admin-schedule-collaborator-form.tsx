@@ -193,14 +193,6 @@ export const AdminScheduleCollaboratorForm = ({
               : "no"}
           </span>
         </span>
-        {trainingRequestCollaborator?.validDocumentBy && (
-          <h2 className="flex text-xs text-slate-500 gap-1 ">
-            <strong className="inline">Documentos válidados por: </strong>
-            <span className="">
-              {trainingRequestCollaborator?.validDocumentBy}
-            </span>
-          </h2>
-        )}
 
         <PickScheduleDates
           isDisallowed={isDisallowed}
@@ -243,7 +235,24 @@ export const AdminScheduleCollaboratorForm = ({
             from: trainingRequestCollaborator?.startDate,
           }}
           date={date}
+          canManagePermissions={canManagePermissions}
         />
+      )}
+
+      {trainingRequestCollaborator?.validDocumentBy && (
+        <h2 className="flex text-xs text-slate-500 gap-1 ">
+          <strong className="inline">Documentos válidados por: </strong>
+          <span className="">
+            {trainingRequestCollaborator?.validDocumentBy}
+          </span>
+        </h2>
+      )}
+
+      {trainingRequestCollaborator?.programmedBy && (
+        <h2 className="flex text-xs text-slate-500 gap-1 ">
+          <strong className="inline">Programado por: </strong>
+          <span className="">{trainingRequestCollaborator?.programmedBy}</span>
+        </h2>
       )}
 
       <Card className="bg-slate-100 ">

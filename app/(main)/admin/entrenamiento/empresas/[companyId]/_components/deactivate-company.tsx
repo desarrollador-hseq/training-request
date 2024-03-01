@@ -3,23 +3,34 @@
 import { Company } from "@prisma/client";
 import axios from "axios";
 import { Trash2 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 import { DeleteConfirmModal } from "@/components/delete-confirm-modal";
 import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/providers/loading-provider";
 import { useRouter } from "next/navigation";
 
-export const DeactivateCompany = ({ company }: { company: Company }) => {
+export const DeactivateCompany = ({
+  company,
+  canManagePermissions,
+}: {
+  company: Company;
+  canManagePermissions: boolean;
+}) => {
   const { loadingApp, setLoadingApp } = useLoading();
-  const router = useRouter()
+  const router = useRouter();
+
 
   const handleDelete = async () => {
+    if (!canManagePermissions) {
+      toast.error("Sin permisos para proceder");
+      return;
+    }
     setLoadingApp(true);
     try {
       await axios.delete(`/api/companies/${company.id}`);
       toast.info("Se ha eliminado la empresa correctamente");
-      router.push(`/admin/entrenamiento/empresas`)
+      router.push(`/admin/entrenamiento/empresas`);
     } catch (error) {
       toast.error(
         "Ocurrió un error inesperado, por favor intentelo nuevamente"
@@ -42,14 +53,18 @@ export const DeactivateCompany = ({ company }: { company: Company }) => {
       {company.active ? (
         <DeleteConfirmModal onConfirm={handleDelete} title={title}>
           <Button
-            disabled={loadingApp}
+            disabled={loadingApp || !canManagePermissions}
             variant="destructive"
             className="bg-red-700"
           >
             <Trash2 className="w-5 h-5" />
           </Button>
         </DeleteConfirmModal>
-      ): <div className="text-white p-1 rounded-md font-semibold uppercase bg-red-600">Inactiva</div>}
+      ) : (
+        <div className="text-white p-1 rounded-md font-semibold uppercase bg-red-600">
+          Inactiva
+        </div>
+      )}
     </div>
   );
 };

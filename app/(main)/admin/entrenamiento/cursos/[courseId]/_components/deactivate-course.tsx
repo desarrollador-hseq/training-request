@@ -8,10 +8,20 @@ import { DeleteConfirmModal } from "@/components/delete-confirm-modal";
 import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/providers/loading-provider";
 
-export const DeactivateCourse = ({ course }: { course?: Course | null }) => {
+export const DeactivateCourse = ({
+  course,
+  canManagePermissions,
+}: {
+  course?: Course | null;
+  canManagePermissions: boolean;
+}) => {
   const { loadingApp, setLoadingApp } = useLoading();
 
   const handleDelete = async () => {
+    if (!canManagePermissions) {
+      toast.error("sin permisos para proceder");
+      return;
+    }
     setLoadingApp(true);
     try {
       await axios.delete(`/api/courses/${course?.id}`);
@@ -37,7 +47,7 @@ export const DeactivateCourse = ({ course }: { course?: Course | null }) => {
       {course && course.active && (
         <DeleteConfirmModal onConfirm={handleDelete} title={title}>
           <Button
-            disabled={loadingApp}
+            disabled={loadingApp || !canManagePermissions}
             variant="destructive"
             className="bg-red-700"
           >

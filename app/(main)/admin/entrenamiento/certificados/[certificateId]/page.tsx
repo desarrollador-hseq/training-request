@@ -78,7 +78,6 @@ const EditCertificate = async ({
         canManagePermissions={session?.user.canManagePermissions || false}
       />
 
-      <DeactivateCertificate certificate={certificate}  />
     </div>
   );
 };

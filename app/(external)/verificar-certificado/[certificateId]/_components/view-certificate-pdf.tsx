@@ -78,6 +78,7 @@ export const ViewCertificatePdf = ({
             arlName={certificate.collaboratorArlName}
             legalRepresentative={certificate.legalRepresentative}
             fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
+            verifying
           />
         </PDFViewer>
       )}

@@ -13,8 +13,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export const DeactivateCertificate = ({
   certificate,
+  canManagePermissions,
 }: {
   certificate: Certificate;
+  canManagePermissions: boolean
 }) => {
   const { loadingApp, setLoadingApp } = useLoading();
   const router = useRouter();
@@ -71,6 +73,7 @@ export const DeactivateCertificate = ({
           title="¿Eliminar certificado?"
           onAcept={handleDelete}
           btnClass="w-[150px] bg-red-500 bg-red-600"
+          btnDisabled={!canManagePermissions}
         >
           {content}
           <Card className="max-w-[400px] mt-4 justify-self-center self-center mx-auto bg-red-700 text-white">

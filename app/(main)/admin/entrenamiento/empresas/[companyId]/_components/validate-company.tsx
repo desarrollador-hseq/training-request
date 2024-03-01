@@ -8,7 +8,15 @@ import { Banner } from "@/components/banner";
 import { useLoading } from "@/components/providers/loading-provider";
 import { SimpleModal } from "@/components/simple-modal";
 
-export const ValidateCompany = ({ company }: { company: Company }) => {
+export const ValidateCompany = ({
+  company,
+  canManageCompany,
+  canManagePermissions,
+}: {
+  company: Company;
+  canManageCompany: boolean;
+  canManagePermissions: boolean;
+}) => {
   const { setLoadingApp } = useLoading();
   const router = useRouter();
   const handleValid = async () => {
@@ -19,7 +27,6 @@ export const ValidateCompany = ({ company }: { company: Company }) => {
       await axios.post(`/api/mail/company-validate`, {
         company,
       });
-
 
       toast.info("Se ha verificado la empresa correctamente");
       router.refresh();
@@ -39,6 +46,7 @@ export const ValidateCompany = ({ company }: { company: Company }) => {
           <Banner variant="warning" label="Empresa no validada" />
 
           <SimpleModal
+            btnDisabled={!(canManageCompany || canManagePermissions)}
             textBtn="Validar"
             title="Activar Empresa"
             btnClass="absolute top-2 right-1 bg-emerald-600 hover:bg-emerald-700"

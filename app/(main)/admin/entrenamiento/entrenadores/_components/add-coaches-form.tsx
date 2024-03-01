@@ -18,9 +18,12 @@ import { cn } from "@/lib/utils";
 import { InputForm } from "@/components/input-form";
 import { Button } from "@/components/ui/button";
 import { SignaturePreview } from "./signature-preview";
+import { useLoading } from "@/components/providers/loading-provider";
+import { Input } from "@/components/ui/input";
 
 interface AddCourseFormProps {
   coach?: Coach | null;
+  canManagePermissions: boolean;
 }
 const MAX_FILE_SIZE = 1024 * 1024 * 1;
 const ACCEPTED_IMAGE_MIME_TYPES = [
@@ -53,8 +56,12 @@ const formSchema = z.object({
     .optional(),
 });
 
-export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
+export const AddCoachesForm = ({
+  coach,
+  canManagePermissions,
+}: AddCourseFormProps) => {
   const router = useRouter();
+  const { setLoadingApp } = useLoading();
   const [imageUploadedUrl, setImageUploadedUrl] = useState();
   const isEdit = useMemo(() => coach, [coach]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -62,10 +69,6 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
     router.replace("/admin/entrenamiento/entrenadores");
     toast.error("Entrenador no encontrado, redirigiendo...");
   }
-
-  useEffect(() => {
-    setValue("imgSignatureUrl", imageUploadedUrl, { shouldValidate: true,  });
-  }, [imageUploadedUrl]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
@@ -75,6 +78,7 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
     accept: {
       "image/*": [".jpeg", ".jpg", ".png", ".svg"],
     },
+    disabled: !canManagePermissions,
   });
 
   useEffect(() => {
@@ -96,9 +100,17 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
 
   const { isSubmitting, isValid } = form.formState;
 
-
-  let urlImage: string;
+  let urlImage: string | undefined;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  
+    if (!canManagePermissions) {
+      toast.error("Sin permisos para proceder");
+      return;
+    }
+
+    setLoadingApp(true);
+    let urlImage: string | null = null; // Inicializa urlImage como null
+
     if (values.file) {
       const formData = new FormData();
       formData.append("file", values.file);
@@ -110,24 +122,35 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
             "Content-Type": "multipart/form-data",
           },
         });
-       urlImage = data.url;
+        urlImage = data.url;
       } catch (error) {
-        toast.error("Ocurrió un error al subir el archivo");
+        setLoadingApp(false);
+        return toast.error("Ocurrió un error al subir el archivo");
       }
+    } else {
+      urlImage = getValues("imgSignatureUrl") || null;
+      if (!urlImage) {
+        urlImage = null;
+      }
+    }
+
+    if (!urlImage) {
+      setLoadingApp(false);
+      return toast.error("Sin imagen");
     }
     const { file, ...otherValues } = values;
 
-    if(!urlImage) {
-      return toast.error("sin imagen")
-    }
-
     try {
       if (isEdit) {
-        await axios.patch(`/api/coaches/${coach?.id}`, { ...otherValues, imgSignatureUrl: urlImage });
+        await axios.patch(`/api/coaches/${coach?.id}`, {
+          ...otherValues,
+          imgSignatureUrl: urlImage,
+        });
         toast.success("Entrenador actualizado correctamente");
       } else {
         const { data } = await axios.post(`/api/coaches/`, {
-          ...otherValues, imgSignatureUrl: urlImage,
+          ...otherValues,
+          imgSignatureUrl: urlImage,
         });
         toast.success("Entrenador creado");
       }
@@ -136,6 +159,8 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
     } catch (error) {
       console.error(error);
       toast.error("Ocurrió un error inesperado");
+    } finally {
+      setLoadingApp(false);
     }
   };
 
@@ -153,6 +178,7 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
                   control={form.control}
                   label="Nombre completo"
                   name="fullname"
+                  disabled={!canManagePermissions}
                 />
               </div>
               <div>
@@ -160,6 +186,7 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
                   control={form.control}
                   label="Cargo"
                   name="position"
+                  disabled={!canManagePermissions}
                 />
               </div>
               <div>
@@ -167,6 +194,7 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
                   control={form.control}
                   label="Licencia (opcional)"
                   name="licence"
+                  disabled={!canManagePermissions}
                 />
               </div>
             </div>
@@ -186,7 +214,7 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
                   "flex flex-col items-center justify-center w-full"
                 )}
               >
-                {selectedFile && !coach ? (
+                {selectedFile ? (
                   <div className="flex w-full bg-secondary items-center justify-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200 p-4">
                     <div className="px-3 py-2 h-full flex flex-col items-center">
                       {/* <ImageIcon className="h-6 w-6 text-white" /> */}
@@ -214,10 +242,9 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
                       height={100}
                       style={{
                         width: "auto",
-                        height: "auto"
+                        height: "auto",
                       }}
                       priority
-                      
                     />
                   </div>
                 ) : (
@@ -235,7 +262,7 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
                   </div>
                 )}
               </div>
-              <input {...getInputProps()} />
+              <input {...getInputProps()} disabled={!canManagePermissions} />
               {!selectedFile && isDragActive && (
                 <p>Haga clic o arrastre un archivo para cargarlo</p>
               )}
@@ -243,7 +270,7 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
           </div>
 
           <Button
-            disabled={isSubmitting || !isValid}
+            disabled={isSubmitting || !isValid || !canManagePermissions}
             className="w-full max-w-[500px] gap-3"
           >
             {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
@@ -253,23 +280,23 @@ export const AddCoachesForm = ({ coach }: AddCourseFormProps) => {
       </Form>
 
       <div className="w-full flex justify-center">
-      {isValid && (
-        <PDFViewer
-          showToolbar={false}
-          style={{ width: "500px", height: "400px" }}
-        >
-          <SignaturePreview
-            imgSignatureUrl={
-              selectedFile
-                ? URL.createObjectURL(selectedFile)
-                :  coach?.imgSignatureUrl && coach?.imgSignatureUrl
-            }
-            name={getValues("fullname")}
-            position={getValues("position")}
-            licence={getValues("licence")}
-          />
-        </PDFViewer>
-      )}
+        {isValid && (
+          <PDFViewer
+            showToolbar={false}
+            style={{ width: "500px", height: "400px" }}
+          >
+            <SignaturePreview
+              imgSignatureUrl={
+                selectedFile
+                  ? URL.createObjectURL(selectedFile)
+                  : coach?.imgSignatureUrl && coach?.imgSignatureUrl
+              }
+              name={watch("fullname")}
+              position={watch("position")}
+              licence={watch("licence")}
+            />
+          </PDFViewer>
+        )}
       </div>
     </div>
   );

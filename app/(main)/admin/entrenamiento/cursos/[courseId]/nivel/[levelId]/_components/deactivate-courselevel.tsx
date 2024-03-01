@@ -8,7 +8,15 @@ import { DeleteConfirmModal } from "@/components/delete-confirm-modal";
 import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/providers/loading-provider";
 
-export const DeactivateCourselevel = ({ level, course }: { level?: CourseLevel | null; course?: string | null }) => {
+export const DeactivateCourselevel = ({
+  level,
+  course,
+  canManagePermissions,
+}: {
+  level?: CourseLevel | null;
+  course?: string | null;
+  canManagePermissions: boolean;
+}) => {
   const { loadingApp, setLoadingApp } = useLoading();
 
   const handleDelete = async () => {
@@ -37,7 +45,7 @@ export const DeactivateCourselevel = ({ level, course }: { level?: CourseLevel |
       {level && level?.active && (
         <DeleteConfirmModal onConfirm={handleDelete} title={title}>
           <Button
-            disabled={loadingApp}
+            disabled={loadingApp || !canManagePermissions}
             variant="destructive"
             className="bg-red-700"
           >

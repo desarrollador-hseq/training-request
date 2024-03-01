@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { Ban } from "lucide-react";
 import { TitleOnPage } from "@/components/title-on-page";
 import { db } from "@/lib/db";
@@ -10,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { DeactivateCourse } from "./_components/deactivate-course";
+import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [
   { label: "Cursos", path: "/admin/entrenamiento/cursos" },
@@ -18,6 +20,7 @@ const crumbs = [
 
 const EditCoursePage = async ({ params }: { params: { courseId: string } }) => {
   const { courseId } = params;
+  const session = await getServerSession(authOptions);
 
   const course = await db.course.findUnique({
     where: {
@@ -50,7 +53,7 @@ const EditCoursePage = async ({ params }: { params: { courseId: string } }) => {
           bcrumb={crumbs}
         >
           <div className="flex gap-5">
-            <DeactivateCourse course={course} />
+            <DeactivateCourse course={course} canManagePermissions={session?.user.canManagePermissions || false} />
             <Link
               className={cn(buttonVariants())}
               href={`/admin/entrenamiento/cursos/${course?.id}/nivel/crear`}
@@ -61,7 +64,7 @@ const EditCoursePage = async ({ params }: { params: { courseId: string } }) => {
         </TitleOnPage>
       </div>
       <div className="w-full flex flex-col gap-3">
-        <AddCourseForm course={course} />
+        <AddCourseForm course={course} canManagePermissions={session?.user.canManagePermissions || false} />
         <Card>
           {course?.courseLevels && course?.courseLevels.length > 0 ? (
             <>

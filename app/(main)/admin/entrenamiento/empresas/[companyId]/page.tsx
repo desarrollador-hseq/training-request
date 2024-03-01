@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth";
 import { ArrowLeftToLine } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -8,6 +9,7 @@ import { EditCompanyForm } from "./_components/edit-company-form";
 import { TitleOnPage } from "@/components/title-on-page";
 import { DeactivateCompany } from "./_components/deactivate-company";
 import { ValidateCompany } from "./_components/validate-company";
+import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [
   { label: "empresas", path: "/admin/entrenamiento/empresas" },
@@ -19,6 +21,8 @@ const EditCompanyPage = async ({
 }: {
   params: { companyId: string };
 }) => {
+  const session = await getServerSession(authOptions);
+
   const company = await db.company.findUnique({
     where: {
       id: params.companyId,
@@ -32,24 +36,31 @@ const EditCompanyPage = async ({
           <TitleOnPage
             text={
               <div>
-                Editar empresa:
+                Editar empresa:{" "}
                 <span className="font-normal">{company.businessName}</span>
               </div>
             }
             bcrumb={crumbs}
           >
-            <DeactivateCompany company={company} />
+            <DeactivateCompany company={company} canManagePermissions={session?.user.canManagePermissions || false} />
           </TitleOnPage>
 
           <div className="w-full flex flex-col gap-3">
             <Card className="rounded-sm">
               <CardHeader>
                 <div className="relative">
-                  <ValidateCompany company={company} />
+                  <ValidateCompany
+                    company={company}
+                    canManageCompany={session?.user.canManageCompanies || false}
+                    canManagePermissions={session?.user.canManagePermissions || false}
+                  />
                 </div>
               </CardHeader>
               <CardContent>
-                <EditCompanyForm company={company} />
+                <EditCompanyForm company={company}
+                  canManageCompany={session?.user.canManageCompanies || false}
+                  canManagePermissions={session?.user.canManagePermissions || false}
+                />
               </CardContent>
             </Card>
           </div>

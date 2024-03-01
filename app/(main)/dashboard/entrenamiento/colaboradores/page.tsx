@@ -1,14 +1,18 @@
 import React from "react";
-import { getServerSession } from "next-auth";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { columnsCollaboratorTable } from "./_components/table-collaborator-page/collaborators-table-columns";
 import { TitleOnPage } from "@/components/title-on-page";
 import { CollaboratorsTable } from "./_components/table-collaborator-page/collaborators-table";
-import { Button, buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 import { authOptions } from "@/lib/authOptions";
+
+const bcrumbs = [
+  { label: "Colaboradores", path: "/dashboard/entrenamiento/colaboradores" },
+];
 
 const ListCollaboratorsPage = async () => {
   const session = await getServerSession(authOptions);
@@ -32,7 +36,7 @@ const ListCollaboratorsPage = async () => {
   return (
     <div>
       <div className="flex justify-between items-center">
-        <TitleOnPage text="Listado de colaboradores">
+        <TitleOnPage text="Listado de colaboradores" bcrumb={bcrumbs}>
           <Link
             className={buttonVariants()}
             href="/dashboard/entrenamiento/colaboradores/crear"

@@ -168,6 +168,8 @@ model TrainingRequestCollaborator {
 
   wasCertified Boolean @default(false)
 
+  programmedBy String? @db.Text()
+
   validDocumentBy String?
   validDocument  Boolean   @default(false)
 

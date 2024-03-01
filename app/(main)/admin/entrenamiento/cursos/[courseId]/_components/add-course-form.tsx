@@ -15,6 +15,7 @@ import { Form } from "@/components/ui/form";
 
 interface AddCourseFormProps {
   course?: Course | null;
+  canManagePermissions: boolean;
 }
 
 const formSchema = z.object({
@@ -27,7 +28,10 @@ const formSchema = z.object({
   resolution: z.string().optional(),
 });
 
-export const AddCourseForm = ({ course }: AddCourseFormProps) => {
+export const AddCourseForm = ({
+  course,
+  canManagePermissions,
+}: AddCourseFormProps) => {
   const router = useRouter();
   const isEdit = useMemo(() => course, [course]);
 
@@ -48,6 +52,10 @@ export const AddCourseForm = ({ course }: AddCourseFormProps) => {
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!canManagePermissions) {
+      toast.error("sin permisos para proceder");
+      return;
+    }
     try {
       if (isEdit) {
         await axios.patch(`/api/courses/${course?.id}`, values);
@@ -73,13 +81,19 @@ export const AddCourseForm = ({ course }: AddCourseFormProps) => {
           <div className="grid grid-cols-1 gap-6 mt-1 mb-7 w-full max-w-[50%]">
             <div className="space-y-4">
               <div>
-                <InputForm control={form.control} label="Nombre" name="name" />
+                <InputForm
+                  control={form.control}
+                  label="Nombre"
+                  name="name"
+                  disabled={!canManagePermissions}
+                />
               </div>
               <div>
                 <InputForm
                   control={form.control}
                   label="Nombre corto"
                   name="shortName"
+                  disabled={!canManagePermissions}
                 />
               </div>
               <div>
@@ -87,13 +101,14 @@ export const AddCourseForm = ({ course }: AddCourseFormProps) => {
                   control={form.control}
                   label="Resolución"
                   name="resolution"
+                  disabled={!canManagePermissions}
                 />
               </div>
             </div>
           </div>
 
           <Button
-            disabled={isSubmitting || !isValid}
+            disabled={isSubmitting || !isValid || !canManagePermissions}
             className="w-full max-w-[500px] gap-3"
           >
             {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}

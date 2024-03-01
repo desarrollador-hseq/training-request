@@ -27,6 +27,7 @@ import {
 import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { SimpleModal } from "@/components/simple-modal";
 import { useLoading } from "@/components/providers/loading-provider";
+import { DocumentCertificateTemplateCues } from "@/app/(main)/_components/document-certificate-template-cues";
 
 interface AddCourseFormProps {
   certificate?: Certificate | null;
@@ -34,7 +35,6 @@ interface AddCourseFormProps {
   coaches: Coach[] | null;
   isCreate: boolean;
   certAlreadyExists?: boolean;
-  canManageRequests: boolean;
   canManagePermissions: boolean;
 }
 
@@ -198,93 +198,93 @@ export const AddCertificateForm = ({
             <div className="space-y-4">
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Nombre del colaborador"
                   name="collaboratorFullname"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Tipo de documento del colaborador"
                   name="collaboratorTypeDoc"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Número de documento del colaborador"
                   name="collaboratorNumDoc"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Arl del colaborador"
                   name="collaboratorArlName"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Razón social de la empresa"
                   name="companyName"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Representante legal de la empresa"
                   name="legalRepresentative"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="NIT de la empresa"
                   name="companyNit"
+                  disabled={inputsDisabled}
                 />
               </div>
             </div>
             <div className="space-y-4">
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Nombre del curso"
                   name="courseName"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Nivel del curso"
                   name="levelName"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Resolución"
                   name="resolution"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <InputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Número de horas"
                   name="levelHours"
                   type="number"
+                  disabled={inputsDisabled}
                 />
               </div>
               {/* <SelectCoachCertificate
@@ -321,26 +321,26 @@ export const AddCertificateForm = ({
               </div>
               <div>
                 <CalendarInputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Fecha de expedición del certificado"
                   name="expeditionDate"
+                  disabled={inputsDisabled}
                 />
               </div>
               <div>
                 <CalendarInputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Fecha de la capacitación"
                   name="certificateDate"
-                />
+                  disabled={inputsDisabled}
+                  />
               </div>
               <div>
                 <CalendarInputForm
-                  disabled={inputsDisabled}
                   control={form.control}
                   label="Reentrenamiento para"
                   name="dueDate"
+                  disabled={inputsDisabled}
                 />
               </div>
             </div>
@@ -406,6 +406,34 @@ export const AddCertificateForm = ({
                 coachLicence={getValues("coachLicence")}
                 coachImgSignatureUrl={getValues("coachImgSignatureUrl")}
               />
+              {/* <DocumentCertificateTemplate
+                course={watch("courseName")}
+                fullname={watch("collaboratorFullname")}
+                numDoc={watch("collaboratorNumDoc")}
+                typeDoc={watch("collaboratorTypeDoc")}
+                level={watch("levelName")}
+                levelHours={`${watch("levelHours")}`}
+                resolution={watch("resolution")}
+                companyName={watch("companyName")}
+                companyNit={watch("companyNit")}
+                legalRepresentative={watch("legalRepresentative")}
+                arlName={watch("collaboratorArlName")}
+                fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
+                certificateId={certificate.id}
+                expireDate={watch("dueDate") && formatDateOf(watch("dueDate")!)}
+                endDate={
+                  watch("certificateDate") &&
+                  formatDateOf(watch("certificateDate"))
+                }
+                expeditionDate={
+                  watch("expeditionDate") &&
+                  formatDateCert(watch("expeditionDate"))
+                }
+                coachName={getValues("coachName")}
+                coachPosition={getValues("coachPosition")}
+                coachLicence={getValues("coachLicence")}
+                coachImgSignatureUrl={getValues("coachImgSignatureUrl")}
+              /> */}
             </PDFViewer>
           </>
         )}

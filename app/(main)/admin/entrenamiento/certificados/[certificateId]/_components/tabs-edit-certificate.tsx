@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useTabManager from "@/hooks/useTabManager";
 import { AddCertificateForm } from "../../_components/add-certificate-form";
 import { FileUploadForm } from "@/components/file-upload-form";
+import { DeactivateCertificate } from "./deactivate-certificate";
 
 interface TabsEditCertificateProps {
   coaches: Coach[];
@@ -18,7 +19,7 @@ export const TabsEditCertificate = ({
   coaches,
   certificate,
   baseUrl,
-  canManagePermissions
+  canManagePermissions,
 }: TabsEditCertificateProps) => {
   const { activeTab, handleTabChange } = useTabManager({
     initialTab: "datos",
@@ -43,7 +44,6 @@ export const TabsEditCertificate = ({
                 {certificate.fileUrl && "✅"}
               </span>
             </TabsTrigger>
-          
           </TabsList>
         </CardHeader>
         <CardContent>
@@ -54,8 +54,11 @@ export const TabsEditCertificate = ({
               baseUrl={`${baseUrl}`}
               isCreate={false}
               canManagePermissions={canManagePermissions}
-              canManageRequests={false}
               // certAlreadyExists
+            />
+            <DeactivateCertificate
+              certificate={certificate}
+              canManagePermissions={canManagePermissions}
             />
           </TabsContent>
           <TabsContent value="fichas">

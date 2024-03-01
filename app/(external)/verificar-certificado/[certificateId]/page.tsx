@@ -55,12 +55,9 @@ const VerifyCertificate = async ({
               <span className="font-bold">
                 Fecha minima para reentrenamiento
               </span>
-              {certificate?.monthsToExpire &&
+              {certificate?.dueDate &&
                 format(
-                  addMonths(
-                    certificate.certificateDate!,
-                    certificate?.monthsToExpire
-                  ),
+                  certificate.dueDate,
                   "P",
                   {
                     locale: es,

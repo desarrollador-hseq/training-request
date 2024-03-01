@@ -62,10 +62,9 @@ interface CertificateTemplateProps {
   endDate: string;
   expeditionDate: string | null;
   expireDate?: string | null;
-  verifying?: boolean;
 }
 
-export const DocumentCertificateTemplate = ({
+export const DocumentCertificateTemplateCues = ({
   fileUrl,
   arlName,
   companyName,
@@ -87,7 +86,6 @@ export const DocumentCertificateTemplate = ({
   expeditionDate,
   endDate,
   expireDate,
-  verifying = false,
 }: CertificateTemplateProps) => {
   return (
     <Document
@@ -99,7 +97,7 @@ export const DocumentCertificateTemplate = ({
       creator="Grupo HSEQ"
       language="es"
     >
-      <Page size="A4" style={styles.page}>
+      <Page orientation="landscape" style={styles.page}>
         <View
           style={{
             width: "100%",
@@ -127,42 +125,24 @@ export const DocumentCertificateTemplate = ({
             {/* 2 column  */}
             <View style={styles.textContent}>
               <View>
-                <Image
-                  style={styles.logoTraining}
-                  source={`/hseq-entrenamiento.png`}
-                />
-                <View style={{ marginBottom: 15 }}>
-                  <Text>
+                <Image style={styles.logoCues} source={`/cues-logo.jpg`} />
+                <View style={{ }}>
+              
                     <Text
                       style={{
                         color: "#525659",
-                        fontWeight: "semibold",
-                        fontSize: 9,
+                        fontWeight: "bold",
+                        fontSize: 18,
+                        textAlign: "center"
                       }}
                     >
-                      HSEQ Consultoría en Gestión Integral de Riesgos S.A.S,
+                      EL GRUPO HSEQ EN ALIANZA CON LA CORPORACION UNIVERSITARIA
+                      EMPRESARIAL DE SALAMANCA
                     </Text>{" "}
-                    <Text style={styles.subtitle}>
-                      NIT 900607813-2, con licencia en SST 560 de 2023,
-                      certificación NTC 6072 Icontec CS-CER602230 fecha de
-                      aprobación y vencimiento del 01 de junio de 2018 al 31 de
-                      mayo de 2024 respectivamente y aprobación del
+                    <Text style={{textAlign: "center", fontWeight: "bold",   }}>
+                    Aprobada según Resolución 3062 de 1999-12-02 expedida por el Ministerio de Educación Superior
                     </Text>
-                    <Text
-                      style={{
-                        color: "#525659",
-                        fontWeight: "semibold",
-                        fontSize: 9,
-                      }}
-                    >
-                      {" "}
-                      ministerio O8SE2018220000000025118
-                    </Text>
-                    <Text style={styles.subtitle}>
-                      {" "}
-                      de fecha 10 de Julio de 2018.
-                    </Text>
-                  </Text>
+                 
                 </View>
 
                 <Text
@@ -299,38 +279,35 @@ export const DocumentCertificateTemplate = ({
                     imageUrl={coachImgSignatureUrl}
                   />
                 )}
-
-                {!verifying && (
-                  <View
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    position: "relative",
+                    paddingTop: 32,
+                  }}
+                >
+                  <Image
+                    src="/JAIME_R.png"
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      position: "relative",
-                      paddingTop: 32,
+                      width: 140,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      minWidth: 150,
+                      borderTop: "1px solid #a30e0c",
+                      fontSize: 10,
+                      fontWeight: "bold",
                     }}
                   >
-                    <Image
-                      src="/JAIME_R.png"
-                      style={{
-                        width: 140,
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        minWidth: 150,
-                        borderTop: "1px solid #a30e0c",
-                        fontSize: 10,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Jaime Rosales Rodríguez
-                    </Text>
-                    <Text style={{ fontSize: 10 }}>Representante legal</Text>
-                  </View>
-                )}
+                    Jaime Rosales Rodríguez
+                  </Text>
+                  <Text style={{ fontSize: 10 }}>Representante legal</Text>
+                </View>
               </View>
             </View>
           </View>
@@ -385,6 +362,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
     position: "relative",
+    
   },
   container: {
     width: "100%",
@@ -421,17 +399,17 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   textContent: {
-    width: "80%",
-    height: "93%",
+    width: "95%",
+    height: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
     alignContent: "flex-start",
-    marginVertical: "10px",
+    marginVertical: "5px",
   },
-  logoTraining: {
-    width: "150px",
-    height: "auto",
+  logoCues: {
+    width: 80,
+    height: 100,
     marginBottom: 5,
   },
   title: {

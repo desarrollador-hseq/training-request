@@ -26,6 +26,7 @@ interface ButtonScheduleCollaboratorProps {
   company?: Company | null;
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
   date: DateRange | undefined | null;
+  canManagePermissions: boolean;
 }
 
 export const ButtonScheduleCollaborator = ({
@@ -40,6 +41,7 @@ export const ButtonScheduleCollaborator = ({
   isDisallowed,
   date,
   company,
+  canManagePermissions,
 }: ButtonScheduleCollaboratorProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -72,6 +74,7 @@ export const ButtonScheduleCollaborator = ({
       );
 
       router.push(pathname);
+      router.refresh()
     } catch (error) {
       toast.error(
         "Error al programar la fecha de formación, por favor intentelo nuevamente"
@@ -79,7 +82,6 @@ export const ButtonScheduleCollaborator = ({
     }
 
     if (!!!scheduledDate.from) {
-  
       if (collaboratorPhone) {
         try {
           await axios.post("/api/messages/", {
@@ -154,13 +156,12 @@ export const ButtonScheduleCollaborator = ({
       date!
     );
 
-    console.log({ cartItems });
   };
 
   return (
     <div className="w-full justify-center flex my-1">
       <SimpleModal
-        btnDisabled={isDisallowed || !date}
+        btnDisabled={isDisallowed || !date || !canManagePermissions}
         btnClass="w-[50%] shadow-sm"
         textBtn={!!!scheduledDate.from ? "Programar" : "Reprogramar"}
         onAcept={() => handleScheduleDate()}

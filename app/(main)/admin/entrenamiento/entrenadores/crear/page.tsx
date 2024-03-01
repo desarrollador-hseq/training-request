@@ -1,5 +1,7 @@
+import { getServerSession } from "next-auth";
 import { TitleOnPage } from "@/components/title-on-page";
 import { AddCoachesForm } from "../_components/add-coaches-form";
+import { authOptions } from "@/lib/authOptions";
 
 
 const crumbs = [
@@ -8,12 +10,14 @@ const crumbs = [
 ];
 
 const CreateCoaches = async () => {
+  const session = await getServerSession(authOptions);
+
   return (
     <div className="">
       <TitleOnPage text={`Crear Curso`} bcrumb={crumbs} />
 
       <div className="w-full flex flex-col gap-3">
-        <AddCoachesForm />
+        <AddCoachesForm  canManagePermissions={session?.user.canManagePermissions || false} />
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import { authOptions } from "@/lib/authOptions";
 import { db } from "@/lib/db";
 
@@ -33,6 +35,7 @@ export async function PATCH(req: Request, { params }: { params: { trainingReques
                 startDate: startDate,
                 endDate: endDate,
                 isDisallowed: false,
+                programmedBy: `${trainingRequestSaved.programmedBy ? trainingRequestSaved.programmedBy : ""}--${trainingRequestSaved.programmedBy ? "[R]" : ""}${session.user.businessName}(${startDate && format(startDate, "P", { locale: es })}|${startDate && format(endDate, "P", { locale: es })})`
             }
         })
 

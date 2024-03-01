@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { TitleOnPage } from "@/components/title-on-page";
 import { db } from "@/lib/db";
 import { TabsCorselevel } from "./_components/tabs-courselevel";
 import { DeactivateCourselevel } from "./_components/deactivate-courselevel";
+import { authOptions } from "@/lib/authOptions";
 
 const EditCourseLevelPage = async ({
   params,
@@ -10,6 +12,7 @@ const EditCourseLevelPage = async ({
   params: { courseId: string; levelId: string };
 }) => {
   const isEdit = !!params.levelId && params.levelId !== "crear";
+  const session = await getServerSession(authOptions);
 
   const crumbs = [
     { label: "Cursos", path: `/admin/entrenamiento/cursos/${params.courseId}` },
@@ -74,7 +77,11 @@ const EditCourseLevelPage = async ({
           }
           bcrumb={crumbs}
         >
-          <DeactivateCourselevel level={courseLevel} course={courseLevel?.course.name}/>
+          <DeactivateCourselevel
+            level={courseLevel}
+            course={courseLevel?.course.name}
+            canManagePermissions={session?.user.canManagePermissions || false}
+          />
         </TitleOnPage>
       </div>
       <div className="w-full flex flex-col gap-3">
@@ -82,6 +89,7 @@ const EditCourseLevelPage = async ({
           courseLevel={courseLevel}
           courseId={courseId}
           courseName={course?.name}
+          canManagePermissions={session?.user.canManagePermissions || false}
         />
       </div>
     </div>

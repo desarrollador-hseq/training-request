@@ -22,12 +22,14 @@ interface TabsCourselevelProps {
     | undefined;
   courseId: string;
   courseName?: string | null;
+  canManagePermissions: boolean;
 }
 
 export const TabsCorselevel = ({
   courseLevel,
   courseId,
   courseName,
+  canManagePermissions
 }: TabsCourselevelProps) => {
   const { activeTab, handleTabChange } = useTabManager({
     initialTab: "datos",
@@ -57,17 +59,19 @@ export const TabsCorselevel = ({
               courseLevel={courseLevel}
               courseName={courseName}
               courseId={courseId}
+              canManagePermissions={canManagePermissions}
             />
           </TabsContent>
           <TabsContent value="req">
             <div className="grid md:grid-cols-2 gap-2">
-              <AddDocumentRequiredForm courseLevelId={courseLevel?.id} />
+              <AddDocumentRequiredForm courseLevelId={courseLevel?.id} canManagePermissions={canManagePermissions} />
               <div className="flex flex-col gap-3">
                 {courseLevel?.requiredDocuments?.map((req) => (
                   <AddDocumentRequiredForm
                     key={req.id}
                     requiredDocument={req}
                     courseLevelId={courseLevel.id}
+                    canManagePermissions={canManagePermissions}
                   />
                 ))}
               </div>

@@ -43,6 +43,10 @@ export async function PATCH(req: Request, { params }: { params: { companyId: str
             }
         }
 
+        if(!companySaved.isValid && session.user.role !== "ADMIN") {
+            return new NextResponse("Empresa no válidada", { status: 400 })
+        }
+
         const company = await db.company.update({
             where: {
                 id: companyId,

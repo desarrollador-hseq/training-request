@@ -22,7 +22,7 @@ export const ValidateCompany = ({
   const handleValid = async () => {
     setLoadingApp(true);
     try {
-      await axios.patch(`/api/companies/${company.id}`, { isValid: true });
+      await axios.patch(`/api/companies/${company.id}/validate`);
 
       await axios.post(`/api/mail/company-validate`, {
         company,

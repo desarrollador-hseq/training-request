@@ -42,7 +42,10 @@ const EditCompanyPage = async ({
             }
             bcrumb={crumbs}
           >
-            <DeactivateCompany company={company} canManagePermissions={session?.user.canManagePermissions || false} />
+            <DeactivateCompany
+              company={company}
+              canManagePermissions={session?.user.canManagePermissions || false}
+            />
           </TitleOnPage>
 
           <div className="w-full flex flex-col gap-3">
@@ -52,15 +55,25 @@ const EditCompanyPage = async ({
                   <ValidateCompany
                     company={company}
                     canManageCompany={session?.user.canManageCompanies || false}
-                    canManagePermissions={session?.user.canManagePermissions || false}
+                    canManagePermissions={
+                      session?.user.canManagePermissions || false
+                    }
                   />
                 </div>
               </CardHeader>
               <CardContent>
-                <EditCompanyForm company={company}
+                <EditCompanyForm
+                  company={company}
                   canManageCompany={session?.user.canManageCompanies || false}
-                  canManagePermissions={session?.user.canManagePermissions || false}
+                  canManagePermissions={
+                    session?.user.canManagePermissions || false
+                  }
                 />
+                {company.validateBy && (
+                  <span className="text-xs text-slate-400">
+                    Validada por: {company.validateBy}
+                  </span>
+                )}
               </CardContent>
             </Card>
           </div>

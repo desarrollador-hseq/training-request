@@ -45,6 +45,8 @@ model Company {
 
   passwordResetTokens PasswordResetToken[]
 
+  validateBy String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

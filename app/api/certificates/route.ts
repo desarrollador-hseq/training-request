@@ -29,7 +29,7 @@ export async function POST(req: Request) {
             "levelHours",
             "certificateDate",
             "expeditionDate",
-            "dueDate",
+           
             // "monthsToExpire",
             "coachName",
             "coachPosition",

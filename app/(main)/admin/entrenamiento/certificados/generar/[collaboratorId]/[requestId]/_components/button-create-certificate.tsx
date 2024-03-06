@@ -1,110 +1,64 @@
 "use client";
 
-
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import { useLoading } from "@/components/providers/loading-provider";
 import { SimpleModal } from "@/components/simple-modal";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
 
 interface ButtonCreateCertificateProps {
-  collaboratorId?: string;
-  levelId?: string;
-  fullname: string | null;
-  typeDoc: string | null;
-  numDoc?: string | null;
-  arlName?: string | null;
-  companyName: string | null;
-  companyNit: string | null;
-  legalRepresentative?: string | null;
-  level: string | null;
-  course: string | null;
-  resolution?: string | null;
-  monthsToExpire: number | null;
-  levelHours?: number | null;
-  trainingRequestId: string | null;
-
-  coachId?: string | null;
-  coachName?: string | null;
-  coachPosition?: string | null;
-  coachLicence?: string | null;
-  coachImgSignatureUrl?: string | null;
-
-  endDate: Date | null;
-  expeditionDate: Date | null;
-  expireDate: Date | null;
-
-  btnDisabled: boolean;
+  values: any;
+  btnDisabled?: boolean;
+  expeditionDate: Date;
+  fullname: string;
+  companyContact?: string | null;
+  companyEmail?: string | null;
 }
 
 export const ButtonCreateCertificate = ({
-  collaboratorId,
-  levelId,
+  values,
   fullname,
-  numDoc,
-  typeDoc,
-  arlName,
-  companyName,
-  companyNit,
-  legalRepresentative,
-  level,
-  course,
-  resolution,
-  levelHours,
-
-  coachId,
-  coachName,
-  coachPosition,
-  coachLicence,
-  coachImgSignatureUrl,
-
   expeditionDate,
-  endDate,
-  expireDate,
-  monthsToExpire,
-  trainingRequestId,
-
   btnDisabled,
+  companyContact,
+  companyEmail,
 }: ButtonCreateCertificateProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
+  const [notifyCertificate, setNotifyCertificate] = useState(true);
 
   const handleCreateCertificate = async () => {
-    if(!collaboratorId) return
     setLoadingApp(true);
 
     // Crear certificado
     try {
-      const { data } = await axios.post(
-        `/api/certificates/course-level/${levelId}/collaborator/${collaboratorId}`,
-        {
-          collaboratorFullname: fullname,
-          collaboratorNumDoc: numDoc,
-          collaboratorTypeDoc: typeDoc,
-          collaboratorArlName: arlName,
-          companyName,
-          companyNit,
-          legalRepresentative,
-          courseName: course,
-          resolution,
-          levelName: level,
-          levelHours,
+      const { data } = await axios.post(`/api/certificates/`, values);
 
-          coachId,
-          coachName,
-          coachPosition,
-          coachLicence,
-          coachImgSignatureUrl,
+      console.log({dadas: data})
 
-          expeditionDate,
-          certificateDate: endDate,
-          dueDate: expireDate,
-          monthsToExpire,
-          trainingRequestId,
+      if (notifyCertificate) {
+        try {
+         await axios.post(`/api/mail/certificate-created`, {
+            certificate: {
+              collaboratorFullname: values.collaboratorFullname,
+              course: values.courseName,
+              level:
+                values.courseName === values.levelName
+                  ? null
+                  : values.levelName,
+              companyContact: companyContact,
+              certificateId: data.id,
+            },
+            email: companyEmail,
+          });
+        } catch (error) {
+          toast.error("Ocurrió un error al notificar por correo a la empresa");
         }
-      );
-      
-      router.push(`/admin/entrenamiento/certificados/${data.id}`);
+      }
+
+       router.push(`/admin/entrenamiento/certificados/${data.id}`);
 
       toast.success("Certificado guardado correctamente");
     } catch (error) {
@@ -122,10 +76,27 @@ export const ButtonCreateCertificate = ({
       btnClass="w-full max-w-[200px] py-8"
       textBtn={"Certificar"}
       onAcept={() => handleCreateCertificate()}
+      large={false}
       title={"Certificar al colaborador"}
     >
-      <div className="items-top flex space-x-2 border-2 border-slate-300 my-3 p-2">
+      <div className="items-top flex flex-col space-x-2  my-3 p-2">
         <h5>¿Desea certificar al colaborador de nombre: {fullname}</h5>
+        <div className="items-top flex space-x-2  my-3 p-2 max-w-[300px]">
+          <Checkbox
+            id="notify"
+            checked={notifyCertificate}
+            onCheckedChange={(e) => setNotifyCertificate(!!e)}
+            className=""
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="notify"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Informar a la empresa
+            </label>
+          </div>
+        </div>
       </div>
     </SimpleModal>
   );

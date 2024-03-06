@@ -49,7 +49,7 @@ const generateEmailContent = (certificate: CertificateWithCompanyEmail) => {
                                   <div>&nbsp;</div>
                                   <div>Le notificamos que uno de los certificados de sus colaboradores está próximo a vencer. Según nuestros registros, el certificado de ${collaboratorFullname} en el curso: [${
     certificate.courseName
-  }-${certificate.levelName}] está programado para vencer el ${
+  } ${certificate.levelName !== certificate.courseName ? `- ${certificate.levelName}` : ""}] está programado para vencer el ${
     dueDate ? formatDateOf(dueDate) : ""
   }</div>
                                   <div>&nbsp;</div>

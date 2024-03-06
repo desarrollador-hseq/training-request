@@ -28,6 +28,8 @@ interface CertificatePreviewProps {
   endDate: Date | null;
   trainingRequestId: string;
   baseUrl: string;
+  companyContact?: string | null;
+  companyEmail?: string | null;
   coaches: Coach[] | null;
   certificateWasCreatedId?: string;
   canManageRequests: boolean;
@@ -43,6 +45,8 @@ export const CertificatePreview = ({
   coaches,
   canManageRequests,
   canManagePermissions,
+  companyContact,
+  companyEmail,
 }: CertificatePreviewProps) => {
   const [expeditionDate, setExpeditionDate] = useState<Date | null | undefined>(
     new Date()
@@ -143,6 +147,8 @@ export const CertificatePreview = ({
             coaches={coaches}
             isCreate={true}
             certAlreadyExists={certificateWasCreatedId !== undefined}
+            companyContact={companyContact}
+            companyEmail={companyEmail}
           />
         </CardContent>
       </Card>

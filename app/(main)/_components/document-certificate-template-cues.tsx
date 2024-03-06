@@ -40,51 +40,26 @@ Font.register({
 
 interface CertificateTemplateProps {
   fileUrl?: string | null;
-  arlName?: string | null;
-  companyName?: string | null;
-  companyNit?: string | null;
-  legalRepresentative?: string | null;
   certificateId?: string | null;
   // consecutive: string | null;
   fullname: string | null;
   numDoc: string | null;
   typeDoc: string | null;
-  level: string | null;
   course: string | null;
-  resolution?: string | null;
   levelHours: string | null;
 
-  coachName?: string | null;
-  coachPosition?: string | null;
-  coachLicence?: string | null;
-  coachImgSignatureUrl?: string | null;
-
-  endDate: string;
   expeditionDate: string | null;
   expireDate?: string | null;
 }
 
 export const DocumentCertificateTemplateCues = ({
   fileUrl,
-  arlName,
-  companyName,
-  companyNit,
-  legalRepresentative,
   fullname,
   numDoc,
   typeDoc,
-  level,
   course,
-  resolution,
   levelHours,
-
-  coachName,
-  coachPosition,
-  coachLicence,
-  coachImgSignatureUrl,
-
   expeditionDate,
-  endDate,
   expireDate,
 }: CertificateTemplateProps) => {
   return (
@@ -101,7 +76,7 @@ export const DocumentCertificateTemplateCues = ({
         <View
           style={{
             width: "100%",
-            height: "95%",
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -109,7 +84,7 @@ export const DocumentCertificateTemplateCues = ({
         >
           <View style={styles.container}>
             {/* 1column  */}
-            <View style={styles.sideContent}>
+            {/* <View style={styles.sideContent}>
               <View style={{ marginVertical: 17 }}></View>
               <View style={styles.textMain}>
                 <Text style={{ fontWeight: "semibold" }}>
@@ -121,235 +96,248 @@ export const DocumentCertificateTemplateCues = ({
               <View style={{ margin: 15 }}></View>
 
               <Image source={`/hseq.png`} />
-            </View>
+            </View> */}
             {/* 2 column  */}
             <View style={styles.textContent}>
-              <View>
-                <Image style={styles.logoCues} source={`/cues-logo.jpg`} />
-                <View style={{ }}>
-              
-                    <Text
-                      style={{
-                        color: "#525659",
-                        fontWeight: "bold",
-                        fontSize: 18,
-                        textAlign: "center"
-                      }}
-                    >
-                      EL GRUPO HSEQ EN ALIANZA CON LA CORPORACION UNIVERSITARIA
-                      EMPRESARIAL DE SALAMANCA
-                    </Text>{" "}
-                    <Text style={{textAlign: "center", fontWeight: "bold",   }}>
-                    Aprobada según Resolución 3062 de 1999-12-02 expedida por el Ministerio de Educación Superior
-                    </Text>
-                 
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    display: "flex",
+                    width: "50%",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                    marginBottom: 30,
+                  }}
+                >
+                  <Image
+                    style={{
+                      width: 140,
+                      height: 56,
+                    }}
+                    source={`/hseq-sin-b.png`}
+                  />
+                  <Image
+                    style={{
+                      width: 170,
+                      height: 80,
+                    }}
+                    source={`/cues-logo.png`}
+                  />
                 </View>
-
+                <View
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 18,
+                    textAlign: "center",
+                    marginBottom: 15,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 5,
+                  }}
+                >
+                  <Text style={{}}>EL GRUPO HSEQ EN ALIANZA CON</Text>{" "}
+                  <Text>
+                    LA CORPORACIÓN UNIVERSITARIA EMPRESARIAL DE SALAMANCA
+                  </Text>
+                </View>
                 <Text
                   style={{
-                    fontSize: 14,
+                    textAlign: "center",
+                    fontWeight: "semibold",
+                    fontSize: 13,
+                    marginBottom: 20,
+                    color: "#444749",
+                  }}
+                >
+                  Aprobada bajo Resolución 3062 de 1999-12-02, expedida por el
+                  Ministerio de Educación Superior
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
                     fontWeight: "bold",
                     marginBottom: 5,
                   }}
                 >
-                  CERTIFICA QUE
+                  Certifica que:
                 </Text>
-                <View style={{ marginBottom: 15 }}>
-                  <View
+                <View
+                  style={{
+                    marginBottom: 5,
+                    justifyContent: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
                     style={{
-                      borderBottom: "2px solid #a30e0c",
-                      marginBottom: 3,
+                      fontSize: 18,
+                      fontWeight: "black",
+                      textTransform: "uppercase",
+                      marginBottom: 12,
                     }}
                   >
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontWeight: "black",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {fullname}
-                    </Text>
-                  </View>
+                    {fullname}
+                  </Text>
+
                   <Text
                     style={{
                       fontSize: 12,
-                      marginBottom: 5,
+                      marginBottom: 10,
                       color: "#444749",
+                      textAlign: "center",
                     }}
                   >
                     Con <Text style={{ fontWeight: "bold" }}>{typeDoc}</Text>.{" "}
                     <Text style={{ fontWeight: "bold" }}>{numDoc}</Text>
                   </Text>
                 </View>
-
-                {arlName &&
-                  companyName &&
-                  companyNit &&
-                  legalRepresentative && (
-                    <Text style={{ ...styles.text, marginBottom: 10 }}>
-                      Afiliado a la ARL{" "}
-                      <Text style={{ fontWeight: "semibold" }}>{arlName}</Text>{" "}
-                      contratado por{" "}
-                      <Text style={{ fontWeight: "semibold" }}>
-                        {companyName}
-                      </Text>{" "}
-                      registrada bajo NIT{" "}
-                      <Text style={{ fontWeight: "semibold" }}>
-                        {companyNit}
-                      </Text>
-                      , representante legal{" "}
-                      <Text style={{ fontWeight: "semibold" }}>
-                        {legalRepresentative}
-                      </Text>
-                      .
-                    </Text>
-                  )}
-
-                <Text style={styles.text}>
-                  Asistió y aprobó la acción de capacitación y entrenamiento en
-                  nivel
+                <Text style={{ color: "#444749", fontSize: 13 }}>
+                  Asistió y aprobó la acción de formación al
                 </Text>
-                <Text
+                <View
                   style={{
-                    fontSize: 20,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    marginBottom: 10,
+                    fontSize: 16,
                     marginTop: 10,
                     fontWeight: "bold",
                     textTransform: "uppercase",
+                    gap: 5,
                   }}
                 >
-                  {level}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {course}
-                </Text>
-                {resolution && (
-                  <Text style={{ fontSize: 13, fontWeight: "bold" }}>
-                    {resolution}
+                  <Text>CURSO BÁSICO OBLIGATORIO PARA LOS CONDUCTORES</Text>
+                  <Text>
+                    {" "}
+                    QUE TRANSPORTAN MERCANCIAS PELIGROSAS, SEGÚN RESOLUCIóN 1223
+                    DE 2014
                   </Text>
-                )}
-                <View style={{ marginBottom: 15, marginTop: 10 }}>
-                  <Text style={styles.text}>
+                </View>
+                <View
+                  style={{
+                    marginBottom: 25,
+                    marginTop: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 6,
+                    fontSize: 12,
+                    color: "#444749",
+                    lineHeight: "1.3px",
+                  }}
+                >
+                  <Text>
                     Con una intensidad de{" "}
                     <Text style={{ fontWeight: "bold" }}>
                       {levelHours} Horas.
                     </Text>{" "}
                   </Text>
+                  <Text
+                    style={{
+                      maxWidth: 580,
+                      textAlign: "center",
+                    }}
+                  >
+                    En testimonio de lo anterior, se firma y autoriza en
+                    Barranquilla a los {expeditionDate}
+                    {expireDate
+                      ? `, con actualización minima programada para el ${expireDate}`
+                      : "."}
+                  </Text>
                 </View>
-                <Text style={styles.text}>
-                  La presente capacitación y entrenamiento se realizó en
-                  Barranquilla el {endDate}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "bold",
-                    marginTop: 15,
-                  }}
-                >
-                  Se expide en Barranquilla a los {expeditionDate}
-                  {expireDate
-                    ? `, con reentrenamiento mínimo programado para el ${expireDate}`
-                    : "."}
-                </Text>
               </View>
 
               <View
                 style={{
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "flex-end",
-                  width: "95%",
+                  width: "70%",
                   gap: 30,
-                  marginTop: 50,
+                  marginVertical: 15,
+                  marginHorizontal: "auto",
                 }}
               >
-                {coachName && coachImgSignatureUrl && coachPosition && (
-                  <DocumentSignatureCertificate
-                    licence={coachLicence}
-                    name={coachName}
-                    position={coachPosition}
-                    imageUrl={coachImgSignatureUrl}
-                  />
-                )}
                 <View
                   style={{
                     display: "flex",
                     flexDirection: "column",
                     position: "relative",
-                    paddingTop: 32,
+                    paddingTop: 42,
                   }}
                 >
                   <Image
                     src="/JAIME_R.png"
                     style={{
-                      width: 140,
+                      width: 160,
                       position: "absolute",
-                      top: 0,
+                      top: 5,
                       left: 0,
                     }}
                   />
-                  <Text
+                  <View
                     style={{
-                      minWidth: 150,
-                      borderTop: "1px solid #a30e0c",
-                      fontSize: 10,
+                      display: "flex",
+                      flexDirection: "column",
+                      fontSize: 12,
                       fontWeight: "bold",
+                      minWidth: 150,
+                      justifyContent: "flex-end",
                     }}
                   >
-                    Jaime Rosales Rodríguez
+                    <Text
+                      style={{
+                        borderTop: "1px solid #111",
+                      }}
+                    >
+                      Jaime Rosales Rodríguez
+                    </Text>
+                    <Text style={{ fontWeight: "normal", fontSize: 10 }}>
+                      Director de Operaciones centro de entrenamiento
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  {fileUrl && (
+                    <Link src={fileUrl}>
+                      <Image
+                        style={{ width: 80, height: 80, alignSelf: "flex-end" }}
+                        src={QRCode.toDataURL(fileUrl)}
+                      />
+                    </Link>
+                  )}
+                  <Text style={{ fontSize: 8, textAlign: "right" }}>
+                    Para verificar el presente documento, escanea el código QR.
                   </Text>
-                  <Text style={{ fontSize: 10 }}>Representante legal</Text>
+                  <Text style={{ fontSize: 8, textAlign: "right" }}>
+                    También en el sitio web del Ministerio de Transporte:
+                  </Text>
+                  <Text style={{ fontSize: 8, textAlign: "right" }}>
+                    https://web.mintransporte.gov.co/sisconmp2/ConsultasCapacitaciones
+                  </Text>
                 </View>
               </View>
             </View>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 9,
-              textAlign: "center",
-            }}
-          >
-            {fileUrl && (
-              <Link src={fileUrl}>
-                <Image
-                  style={{ width: 80, height: 80 }}
-                  src={QRCode.toDataURL(fileUrl)}
-                />
-              </Link>
-            )}
-
-            {/* <Text style={{ fontWeight: "semibold" }}>
-              N° de verificación:
-              {certificateId && (
-                <View>
-                  <Text style={{ fontWeight: "bold" }}>{certificateId}</Text>
-                  {consecutive && (
-                    <Text style={{ fontWeight: "light" }}>@{consecutive}</Text>
-                  )}
-                </View>
-              )}
-            </Text> */}
-            <Text style={{}}>
-              Para verificar el presente documento, escanear el código QR.
-              También al correo info@grupohseq.com
-            </Text>
-            <Text style={{}}>
-              tel. (605) 3662030 - (605) 3851821 - 3145468721 - 3235824200{" "}
-            </Text>
-            <Text style={{}}>Calle 30 # 10-230 L. 1 y Bodega interna 33</Text>
-            <Text style={{}}>Barranquilla - Atlántico</Text>
           </View>
         </View>
       </Page>
@@ -362,7 +350,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
     position: "relative",
-    
   },
   container: {
     width: "100%",
@@ -399,7 +386,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   textContent: {
-    width: "95%",
+    width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
@@ -407,16 +394,7 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
     marginVertical: "5px",
   },
-  logoCues: {
-    width: 80,
-    height: 100,
-    marginBottom: 5,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
+
   subtitle: {
     fontSize: 9,
     marginBottom: 10,

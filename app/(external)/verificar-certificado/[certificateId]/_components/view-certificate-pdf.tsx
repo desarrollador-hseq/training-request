@@ -10,12 +10,13 @@ import { addMonths } from "date-fns";
 import { Certificate } from "@prisma/client";
 
 import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
-import { formatDateOf } from "@/lib/utils";
+import { formatDateCert, formatDateOf } from "@/lib/utils";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { CardContent } from "@/components/ui/card";
+import { DocumentCertificateTemplateCues } from "@/app/(main)/_components/document-certificate-template-cues";
 
 export const ViewCertificatePdf = ({
   certificate,
@@ -56,30 +57,46 @@ export const ViewCertificatePdf = ({
           showToolbar={false}
           style={{ width: "100%", height: "1200px" }}
         >
-          <DocumentCertificateTemplate
-            fullname={certificate.collaboratorFullname}
-            numDoc={certificate.collaboratorNumDoc}
-            typeDoc={certificate.collaboratorTypeDoc}
-            level={certificate.levelName}
-            course={certificate.courseName}
-            levelHours={"" + certificate.levelHours}
-            resolution={certificate.resolution}
-            endDate={formatDateOf(certificate.certificateDate!)}
-            expeditionDate={formatDateOf(certificate.expeditionDate!)}
-            expireDate={formatDateOf(
-              addMonths(
-                certificate.certificateDate!,
-                certificate?.monthsToExpire!
-              )
-            )}
-            certificateId={certificate.id}
-            companyName={certificate.companyName}
-            companyNit={certificate.companyNit}
-            arlName={certificate.collaboratorArlName}
-            legalRepresentative={certificate.legalRepresentative}
-            fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-            verifying
-          />
+          {certificate.courseName === "Mercancías peligrosas" ? (
+            <DocumentCertificateTemplateCues
+              course={certificate.courseName}
+              fullname={certificate.collaboratorFullname}
+              numDoc={certificate.collaboratorNumDoc}
+              typeDoc={certificate.collaboratorTypeDoc}
+              levelHours={"" + certificate.levelHours}
+              fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
+              certificateId={certificate.id}
+              expireDate={
+                certificate.dueDate && formatDateOf(certificate.dueDate)
+              }
+              expeditionDate={
+                certificate.expeditionDate &&
+                formatDateCert(certificate.expeditionDate!)
+              }
+            />
+          ) : (
+            <DocumentCertificateTemplate
+              fullname={certificate.collaboratorFullname}
+              numDoc={certificate.collaboratorNumDoc}
+              typeDoc={certificate.collaboratorTypeDoc}
+              level={certificate.levelName}
+              course={certificate.courseName}
+              levelHours={"" + certificate.levelHours}
+              resolution={certificate.resolution}
+              endDate={formatDateOf(certificate.certificateDate!)}
+              arlName={certificate.collaboratorArlName}
+              certificateId={certificate.id}
+              fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
+              expeditionDate={formatDateCert(certificate.expeditionDate!)}
+              expireDate={
+                certificate.dueDate && formatDateOf(certificate.dueDate)
+              }
+              coachName={certificate.coachName}
+              coachPosition={certificate.coachPosition}
+              coachImgSignatureUrl={certificate.coachImgSignatureUrl}
+              coachLicence={certificate.coachLicence}
+            />
+          )}
         </PDFViewer>
       )}
     </CardContent>

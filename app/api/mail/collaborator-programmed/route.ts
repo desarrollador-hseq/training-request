@@ -38,7 +38,7 @@ const generateEmailContent = (collaborator: CollaboratorData, rescheduled: boole
       : `Nos complace informarte que has sido inscrito por parte de: ${companyName}, en el siguiente curso:`}</p>
                             <ul style="list-style-type: disc;">
                               <li style="line-height: 19.6px;"><strong>Nombre del Curso:</strong> ${courseName}</li>
-                              <li style="line-height: 19.6px;"><strong>Nivel</strong>: ${levelName}</li>
+                              ${levelName !== courseName ? `<li style="line-height: 19.6px;"><strong>Nivel</strong>: ${levelName}</li>` : ""}
                               <li style="line-height: 19.6px;"><strong>Fecha de inicio:</strong> ${courseDate.from ? formatDateOf(courseDate.from!) : ""}</li>
                               <li style="line-height: 19.6px;"><strong>Hora:</strong> 7 : 30 AM</li>
                               <li style="line-height: 19.6px;"><strong>Lugar:</strong> Calle 30 # 10 - 230 Local 1</li>

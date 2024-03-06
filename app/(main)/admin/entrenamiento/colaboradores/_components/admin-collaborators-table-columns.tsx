@@ -64,7 +64,7 @@ export const columnsAdminCollaboratorTable: ColumnDef<TrainingRequestCollaborato
       },
       cell: ({ row }) => {
         const name = row.original?.collaborator?.fullname;
-        return <div className="capitalize">{name}</div>;
+        return <div className="max-w-[200px] truncate">{name}</div>;
       },
     },
     {
@@ -156,42 +156,42 @@ export const columnsAdminCollaboratorTable: ColumnDef<TrainingRequestCollaborato
         return <div className="capitalize">{name}</div>;
       },
     },
-    {
-      accessorKey: "email",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-secondary/30 hover:text-secondary-foreground"
-          >
-            Email
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const name = row.original?.collaborator?.email;
-        return <div className="capitalize">{name}</div>;
-      },
-    },
-    {
-      accessorKey: "phone",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-secondary/30 hover:text-secondary-foreground"
-          >
-            Teléfono
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const name = row.original?.collaborator?.phone;
-        return <div className="capitalize">{name}</div>;
-      },
-    },
+    // {
+    //   accessorKey: "email",
+    //   header: ({ column }) => {
+    //     return (
+    //       <Button
+    //         variant="ghost"
+    //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    //         className="hover:bg-secondary/30 hover:text-secondary-foreground"
+    //       >
+    //         Email
+    //         <ArrowUpDown className="ml-2 h-4 w-4" />
+    //       </Button>
+    //     );
+    //   },
+    //   cell: ({ row }) => {
+    //     const name = row.original?.collaborator?.email;
+    //     return <div className="lowercase">{name}</div>;
+    //   },
+    // },
+    // {
+    //   accessorKey: "phone",
+    //   header: ({ column }) => {
+    //     return (
+    //       <Button
+    //         variant="ghost"
+    //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    //         className="hover:bg-secondary/30 hover:text-secondary-foreground"
+    //       >
+    //         Teléfono
+    //         <ArrowUpDown className="ml-2 h-4 w-4" />
+    //       </Button>
+    //     );
+    //   },
+    //   cell: ({ row }) => {
+    //     const name = row.original?.collaborator?.phone;
+    //     return <div className="capitalize">{name}</div>;
+    //   },
+    // },
   ];

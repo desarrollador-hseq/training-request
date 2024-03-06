@@ -225,8 +225,11 @@ export const AdminScheduleCollaboratorForm = ({
           collaboratorPhone={trainingRequestCollaborator?.collaborator?.phone}
           collaboratorMail={trainingRequestCollaborator?.collaborator?.email}
           trainingRequestId={trainingRequestCollaborator?.trainingRequestId}
-          courseName={
+          shortName={
             trainingRequestCollaborator?.courseLevel?.course?.shortName
+          }
+          courseName={
+            trainingRequestCollaborator?.courseLevel?.course?.name
           }
           levelName={trainingRequestCollaborator?.courseLevel?.name}
           isDisallowed={isDisallowed}

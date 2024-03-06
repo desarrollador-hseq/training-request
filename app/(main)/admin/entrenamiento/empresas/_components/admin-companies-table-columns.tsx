@@ -21,7 +21,7 @@ export const columnsAdminCompaniesTable: ColumnDef<Company>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("businessName")}</div>
+      <div className="capitalize  max-w-[200px] truncate">{row.getValue("businessName")}</div>
     ),
   },
   {
@@ -63,6 +63,7 @@ export const columnsAdminCompaniesTable: ColumnDef<Company>[] = [
   },
   {
     accessorKey: "email",
+    maxSize: 100,
     header: ({ column }) => {
       return (
         <Button
@@ -74,7 +75,7 @@ export const columnsAdminCompaniesTable: ColumnDef<Company>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div className="lowercase max-w-[180px] truncate">{row.getValue("email")}</div>,
   },
   {
     accessorKey: "nameContact",
@@ -90,7 +91,7 @@ export const columnsAdminCompaniesTable: ColumnDef<Company>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("nameContact")}</div>
+      <div className="lowercase  max-w-[180px] truncate">{row.getValue("nameContact")}</div>
     ),
   },
   {

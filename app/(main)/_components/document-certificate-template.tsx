@@ -99,11 +99,11 @@ export const DocumentCertificateTemplate = ({
       creator="Grupo HSEQ"
       language="es"
     >
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" orientation="landscape" style={styles.page}>
         <View
           style={{
-            width: "100%",
-            height: "95%",
+            width: "90%",
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -112,7 +112,7 @@ export const DocumentCertificateTemplate = ({
           <View style={styles.container}>
             {/* 1column  */}
             <View style={styles.sideContent}>
-              <View style={{ marginVertical: 17 }}></View>
+              <View style={{ marginVertical: 2 }}></View>
               <View style={styles.textMain}>
                 <Text style={{ fontWeight: "semibold" }}>
                   {" "}
@@ -122,16 +122,35 @@ export const DocumentCertificateTemplate = ({
               </View>
               <View style={{ margin: 15 }}></View>
 
-              <Image source={`/hseq.png`} />
+              <Image
+                style={{ width: 100, height: 40 }}
+                source={`/hseq-sin-b.png`}
+              />
             </View>
             {/* 2 column  */}
             <View style={styles.textContent}>
-              <View>
-                <Image
-                  style={styles.logoTraining}
-                  source={`/hseq-entrenamiento.png`}
-                />
-                <View style={{ marginBottom: 15 }}>
+              <View style={{ height: "100%" }}>
+                <View
+                  style={{
+                    height: 38,
+                    width: 150,
+                    marginTop: 23,
+                    marginBottom: 5,
+                  }}
+                >
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    source={`/hseq-entrenamiento.png`}
+                  />
+                </View>
+                <View
+                  style={{
+                    marginBottom: 10,
+                  }}
+                >
                   <Text>
                     <Text
                       style={{
@@ -140,27 +159,54 @@ export const DocumentCertificateTemplate = ({
                         fontSize: 9,
                       }}
                     >
-                      HSEQ Consultoría en Gestión Integral de Riesgos S.A.S,
-                    </Text>{" "}
-                    <Text style={styles.subtitle}>
-                      NIT 900607813-2, con licencia en SST 560 de 2023,
-                      certificación NTC 6072 Icontec CS-CER602230 fecha de
-                      aprobación y vencimiento del 01 de junio de 2018 al 31 de
-                      mayo de 2024 respectivamente y aprobación del
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#525659",
-                        fontWeight: "semibold",
-                        fontSize: 9,
-                      }}
-                    >
-                      {" "}
-                      ministerio O8SE2018220000000025118
+                      HSEQ Consultoría en Gestión Integral de Riesgos S.A.S, NIT
+                      900607813-2
                     </Text>
                     <Text style={styles.subtitle}>
-                      {" "}
-                      de fecha 10 de Julio de 2018.
+                      , con licencia en SST 560 de 2023
+                      {course === "Trabajo en altura" ? (
+                        // altura
+                        <Text>
+                          <Text>
+                            , certificación NTC 6072 Icontec CS-CER602230 fecha
+                            de aprobación y vencimiento del 01 de junio de 2018
+                            al 31 de mayo de 2024 respectivamente y aprobación
+                            del
+                          </Text>
+                          <Text
+                            style={{
+                              color: "#525659",
+                              fontWeight: "semibold",
+                              fontSize: 9,
+                            }}
+                          >
+                            {" "}
+                            ministerio O8SE2018220000000025118
+                          </Text>
+                          <Text style={styles.subtitle}>
+                            {" "}
+                            de fecha 10 de Julio de 2018.
+                          </Text>
+                        </Text>
+                      ) : course === "Espacios confinados" ? (
+                        // confinado
+                        <Text>
+                          <Text> y aprobación del</Text>
+                          <Text
+                            style={{
+                              color: "#525659",
+                              fontWeight: "semibold",
+                              fontSize: 9,
+                            }}
+                          >
+                            {" "}
+                            ministerio O8SE2023220000000004039
+                          </Text>{" "}
+                          <Text>de fecha 08 de febrero de 2023.</Text>
+                        </Text>
+                      ) : (
+                        "."
+                      )}
                     </Text>
                   </Text>
                 </View>
@@ -169,45 +215,45 @@ export const DocumentCertificateTemplate = ({
                   style={{
                     fontSize: 14,
                     fontWeight: "bold",
-                    marginBottom: 5,
+                    marginBottom: 10,
+                    marginTop: (course !== "Trabajo en altura" &&
+                    course !== "Espacios confinados") ? 23 : 1
                   }}
                 >
                   CERTIFICA QUE
                 </Text>
-                <View style={{ marginBottom: 15 }}>
-                  <View
-                    style={{
-                      borderBottom: "2px solid #a30e0c",
-                      marginBottom: 3,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontWeight: "black",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {fullname}
-                    </Text>
-                  </View>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      marginBottom: 5,
-                      color: "#444749",
-                    }}
-                  >
-                    Con <Text style={{ fontWeight: "bold" }}>{typeDoc}</Text>.{" "}
-                    <Text style={{ fontWeight: "bold" }}>{numDoc}</Text>
-                  </Text>
-                </View>
+
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: "black",
+                    textTransform: "uppercase",
+                    borderBottom: "2px solid #a30e0c",
+                    display: "flex",
+                  }}
+                >
+                  {fullname}
+                </Text>
+
+                <Text
+                  style={{
+                    fontSize: 12,
+                    marginBottom: 5,
+                    color: "#444749",
+                  }}
+                >
+                  Con <Text style={{ fontWeight: "bold" }}>{typeDoc}</Text>.{" "}
+                  <Text style={{ fontWeight: "bold" }}>{numDoc}</Text>
+                </Text>
 
                 {arlName &&
                   companyName &&
                   companyNit &&
                   legalRepresentative && (
-                    <Text style={{ ...styles.text, marginBottom: 10 }}>
+                    <Text style={{  fontSize: 10,
+                      marginBottom: 10,
+                      color: "#444749",
+                      lineHeight: "1.3px", }}>
                       Afiliado a la ARL{" "}
                       <Text style={{ fontWeight: "semibold" }}>{arlName}</Text>{" "}
                       contratado por{" "}
@@ -226,35 +272,51 @@ export const DocumentCertificateTemplate = ({
                     </Text>
                   )}
 
-                <Text style={styles.text}>
+                <Text style={{ ...styles.text, marginBottom: 5 }}>
                   Asistió y aprobó la acción de capacitación y entrenamiento en
-                  nivel
+                  {course === "Trabajo en altura" ||
+                  course === "Espacios confinados"
+                    ? " nivel"
+                    : ""}
                 </Text>
-                <Text
+
+                <View
                   style={{
-                    fontSize: 20,
-                    marginTop: 10,
-                    fontWeight: "bold",
-                    textTransform: "uppercase",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0,
+                    marginBottom: 6,
                   }}
                 >
-                  {level}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {course}
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginTop: 5,
+                      fontWeight: "bold",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {level}
+                  </Text>
+                  {course != level && (
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {course}
+                    </Text>
+                  )}
+                </View>
+
                 {resolution && (
-                  <Text style={{ fontSize: 13, fontWeight: "bold" }}>
+                  <Text style={{ fontSize: 11, fontWeight: "semibold" }}>
                     {resolution}
                   </Text>
                 )}
-                <View style={{ marginBottom: 15, marginTop: 10 }}>
+                <View style={{ marginBottom: 5, marginTop: 12 }}>
                   <Text style={styles.text}>
                     Con una intensidad de{" "}
                     <Text style={{ fontWeight: "bold" }}>
@@ -283,22 +345,27 @@ export const DocumentCertificateTemplate = ({
               <View
                 style={{
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "flex-end",
                   width: "95%",
-                  gap: 30,
+                  height: 100,
+                  gap: 5,
                   marginTop: 50,
                 }}
               >
-                {coachName && coachImgSignatureUrl && coachPosition && (
-                  <DocumentSignatureCertificate
-                    licence={coachLicence}
-                    name={coachName}
-                    position={coachPosition}
-                    imageUrl={coachImgSignatureUrl}
-                  />
-                )}
+                {(course === "Trabajo en altura" ||
+                  course === "Espacios confinados") &&
+                  coachName &&
+                  coachImgSignatureUrl &&
+                  coachPosition && (
+                    <DocumentSignatureCertificate
+                      licence={coachLicence}
+                      name={coachName}
+                      position={coachPosition}
+                      imageUrl={coachImgSignatureUrl}
+                    />
+                  )}
 
                 {!verifying && (
                   <View
@@ -329,50 +396,41 @@ export const DocumentCertificateTemplate = ({
                       Jaime Rosales Rodríguez
                     </Text>
                     <Text style={{ fontSize: 10 }}>Representante legal</Text>
+                    {(course === "Trabajo en altura" ||
+                      course === "Espacios confinados") && (
+                      <Text style={{ fontSize: 10 }}> </Text>
+                    )}
                   </View>
                 )}
+
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  {fileUrl && (
+                    <Link src={fileUrl}>
+                      <Image
+                        style={{ width: 80, height: 80 }}
+                        src={QRCode.toDataURL(fileUrl)}
+                      />
+                    </Link>
+                  )}
+                  <View style={{ display: "flex", flexDirection: "column" }}>
+                    <Text style={{ fontSize: 7, textAlign: "right" }}>
+                      Para verificar el presente documento, escanear el código
+                      QR.
+                    </Text>
+                    <Text style={{ fontSize: 7, textAlign: "right" }}>
+                      {" "}
+                      También al correo info@grupohseq.com
+                    </Text>
+                  </View>
+                </View>
               </View>
             </View>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 9,
-              textAlign: "center",
-            }}
-          >
-            {fileUrl && (
-              <Link src={fileUrl}>
-                <Image
-                  style={{ width: 80, height: 80 }}
-                  src={QRCode.toDataURL(fileUrl)}
-                />
-              </Link>
-            )}
-
-            {/* <Text style={{ fontWeight: "semibold" }}>
-              N° de verificación:
-              {certificateId && (
-                <View>
-                  <Text style={{ fontWeight: "bold" }}>{certificateId}</Text>
-                  {consecutive && (
-                    <Text style={{ fontWeight: "light" }}>@{consecutive}</Text>
-                  )}
-                </View>
-              )}
-            </Text> */}
-            <Text style={{}}>
-              Para verificar el presente documento, escanear el código QR.
-              También al correo info@grupohseq.com
-            </Text>
-            <Text style={{}}>
-              tel. (605) 3662030 - (605) 3851821 - 3145468721 - 3235824200{" "}
-            </Text>
-            <Text style={{}}>Calle 30 # 10-230 L. 1 y Bodega interna 33</Text>
-            <Text style={{}}>Barranquilla - Atlántico</Text>
           </View>
         </View>
       </Page>
@@ -383,7 +441,7 @@ const styles = StyleSheet.create({
   page: {
     fontFamily: "Open Sans",
     backgroundColor: "#fff",
-    padding: 20,
+    padding: 15,
     position: "relative",
   },
   container: {
@@ -392,13 +450,13 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingBottom: 10,
+    paddingBottom: 5,
   },
   sideContent: {
     display: "flex",
     flexDirection: "column",
     width: "15%",
-    height: "80%",
+    height: "85%",
     justifyContent: "space-between",
     alignItems: "center",
     padding: 8,
@@ -406,7 +464,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   textMain: {
-    width: "440px",
+    width: "350px",
     height: "80px",
     backgroundColor: "#a30e0c",
     display: "flex",
@@ -417,22 +475,17 @@ const styles = StyleSheet.create({
     transform: "rotate(-90deg)",
     padding: "18px",
     paddingTop: "10px",
-    fontSize: 23,
+    fontSize: 19,
     gap: 10,
   },
   textContent: {
     width: "80%",
-    height: "93%",
+    height: "95%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
     alignContent: "flex-start",
-    marginVertical: "10px",
-  },
-  logoTraining: {
-    width: "150px",
-    height: "auto",
-    marginBottom: 5,
+    marginVertical: "5px",
   },
   title: {
     fontSize: 18,

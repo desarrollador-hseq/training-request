@@ -28,10 +28,14 @@ import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { SimpleModal } from "@/components/simple-modal";
 import { useLoading } from "@/components/providers/loading-provider";
 import { DocumentCertificateTemplateCues } from "@/app/(main)/_components/document-certificate-template-cues";
+import { ButtonCreateCertificate } from "../generar/[collaboratorId]/[requestId]/_components/button-create-certificate";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface AddCourseFormProps {
   certificate?: Certificate | null;
   baseUrl: string;
+  companyContact?: string | null;
+  companyEmail?: string | null;
   coaches: Coach[] | null;
   isCreate: boolean;
   certAlreadyExists?: boolean;
@@ -87,11 +91,14 @@ export const AddCertificateForm = ({
   isCreate,
   certAlreadyExists,
   canManagePermissions,
+  companyContact,
+  companyEmail,
 }: AddCourseFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
   const [isClient, setIsClient] = useState(false);
   const [inputsDisabled, setInputsDisabled] = useState(!canManagePermissions);
+  const [notifyCertificate, setNotifyCertificate] = useState(false);
 
   if (!certificate) {
     router.replace("/admin/entrenamiento/certificados");
@@ -171,13 +178,44 @@ export const AddCertificateForm = ({
     }
     setLoadingApp(true);
     try {
-      if (!isCreate) {
-        await axios.patch(`/api/certificates/${certificate?.id}`, values);
-        toast.info("Certificado actualizado correctamente");
-      } else {
-        const { data } = await axios.post(`/api/certificates/`, values);
-        toast.success("Certificado creado correctamente");
+
+      if(isCreate) {
+
+        const { data } = await axios.post(
+          `/api/certificates/`,
+          values
+          );
+     
+      toast.info("Certificado actualizado correctamente");
+
+      if (notifyCertificate) {
+        try {
+          await axios.post(`/api/mail/certificate-created`, {
+            certificate: {
+              collaboratorFullname: values.collaboratorFullname,
+              course: values.courseName,
+              level:
+                values.courseName === values.levelName
+                  ? null
+                  : values.levelName,
+              companyContact: companyContact,
+              certificateId: data?.id,
+            },
+            email: companyEmail,
+          });
+          toast.info("Correo enviado correctamente");
+        } catch (error) {
+          toast.error("Ocurrió un error al notificar por correo a la empresa");
+        }
       }
+    } else {
+      setLoadingApp(true)
+      const { data } = await axios.patch(
+        `/api/certificates/${certificate?.id}`,
+        values
+        );
+    }
+
       // router.push(`/admin/entrenamiento/certificados`);
       router.refresh();
     } catch (error) {
@@ -187,6 +225,7 @@ export const AddCertificateForm = ({
       setLoadingApp(false);
     }
   };
+
   return (
     <div className="max-w-[1500px] w-full h-full">
       <Form {...form}>
@@ -333,7 +372,7 @@ export const AddCertificateForm = ({
                   label="Fecha de la capacitación"
                   name="certificateDate"
                   disabled={inputsDisabled}
-                  />
+                />
               </div>
               <div>
                 <CalendarInputForm
@@ -357,7 +396,32 @@ export const AddCertificateForm = ({
                 Por favor confirme si desea crear el certificado, recuerde que
                 ya se encuentra creado un certificado para este colaborador
               </h3>
+              <div className="items-top flex space-x-2  my-3 p-2 max-w-[300px]">
+                <Checkbox
+                  id="notify"
+                  checked={notifyCertificate}
+                  onCheckedChange={(e) => setNotifyCertificate(!!e)}
+                  className=""
+                />
+                <div className="grid gap-1.5 leading-none">
+                  <label
+                    htmlFor="notify"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Informar a la empresa
+                  </label>
+                </div>
+              </div>
             </SimpleModal>
+          ) : isCreate ? (
+            <ButtonCreateCertificate
+              companyContact={companyContact}
+              companyEmail={companyEmail}
+              values={{ ...getValues() }}
+              expeditionDate={watch("expeditionDate")}
+              fullname={watch("collaboratorFullname")}
+              btnDisabled={isSubmitting || !isValid}
+            />
           ) : (
             <Button
               disabled={isSubmitting || !isValid}
@@ -376,64 +440,57 @@ export const AddCertificateForm = ({
             <SubtitleSeparator text="Previsualización del certificado" />
             <PDFViewer
               showToolbar={false}
-              style={{ width: "100%", height: "1200px" }}
+              style={{ width: "100%", height: "856px" }}
             >
-              <DocumentCertificateTemplate
-                course={watch("courseName")}
-                fullname={watch("collaboratorFullname")}
-                numDoc={watch("collaboratorNumDoc")}
-                typeDoc={watch("collaboratorTypeDoc")}
-                level={watch("levelName")}
-                levelHours={`${watch("levelHours")}`}
-                resolution={watch("resolution")}
-                companyName={watch("companyName")}
-                companyNit={watch("companyNit")}
-                legalRepresentative={watch("legalRepresentative")}
-                arlName={watch("collaboratorArlName")}
-                fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-                certificateId={certificate.id}
-                expireDate={watch("dueDate") && formatDateOf(watch("dueDate")!)}
-                endDate={
-                  watch("certificateDate") &&
-                  formatDateOf(watch("certificateDate"))
-                }
-                expeditionDate={
-                  watch("expeditionDate") &&
-                  formatDateCert(watch("expeditionDate"))
-                }
-                coachName={getValues("coachName")}
-                coachPosition={getValues("coachPosition")}
-                coachLicence={getValues("coachLicence")}
-                coachImgSignatureUrl={getValues("coachImgSignatureUrl")}
-              />
-              {/* <DocumentCertificateTemplate
-                course={watch("courseName")}
-                fullname={watch("collaboratorFullname")}
-                numDoc={watch("collaboratorNumDoc")}
-                typeDoc={watch("collaboratorTypeDoc")}
-                level={watch("levelName")}
-                levelHours={`${watch("levelHours")}`}
-                resolution={watch("resolution")}
-                companyName={watch("companyName")}
-                companyNit={watch("companyNit")}
-                legalRepresentative={watch("legalRepresentative")}
-                arlName={watch("collaboratorArlName")}
-                fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-                certificateId={certificate.id}
-                expireDate={watch("dueDate") && formatDateOf(watch("dueDate")!)}
-                endDate={
-                  watch("certificateDate") &&
-                  formatDateOf(watch("certificateDate"))
-                }
-                expeditionDate={
-                  watch("expeditionDate") &&
-                  formatDateCert(watch("expeditionDate"))
-                }
-                coachName={getValues("coachName")}
-                coachPosition={getValues("coachPosition")}
-                coachLicence={getValues("coachLicence")}
-                coachImgSignatureUrl={getValues("coachImgSignatureUrl")}
-              /> */}
+              {watch("courseName") === "Mercancías peligrosas" ? (
+                <DocumentCertificateTemplateCues
+                  course={watch("courseName")}
+                  fullname={watch("collaboratorFullname")}
+                  numDoc={watch("collaboratorNumDoc")}
+                  typeDoc={watch("collaboratorTypeDoc")}
+                  levelHours={`${watch("levelHours")}`}
+                  fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
+                  certificateId={certificate.id}
+                  expireDate={
+                    watch("dueDate") && formatDateOf(watch("dueDate")!)
+                  }
+                  expeditionDate={
+                    watch("expeditionDate") &&
+                    formatDateCert(watch("expeditionDate"))
+                  }
+                />
+              ) : (
+                <DocumentCertificateTemplate
+                  course={watch("courseName")}
+                  fullname={watch("collaboratorFullname")}
+                  numDoc={watch("collaboratorNumDoc")}
+                  typeDoc={watch("collaboratorTypeDoc")}
+                  level={watch("levelName")}
+                  levelHours={`${watch("levelHours")}`}
+                  resolution={watch("resolution")}
+                  companyName={watch("companyName")}
+                  companyNit={watch("companyNit")}
+                  legalRepresentative={watch("legalRepresentative")}
+                  arlName={watch("collaboratorArlName")}
+                  fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
+                  certificateId={certificate.id}
+                  expireDate={
+                    watch("dueDate") && formatDateOf(watch("dueDate")!)
+                  }
+                  endDate={
+                    watch("certificateDate") &&
+                    formatDateOf(watch("certificateDate"))
+                  }
+                  expeditionDate={
+                    watch("expeditionDate") &&
+                    formatDateCert(watch("expeditionDate"))
+                  }
+                  coachName={getValues("coachName")}
+                  coachPosition={getValues("coachPosition")}
+                  coachLicence={getValues("coachLicence")}
+                  coachImgSignatureUrl={getValues("coachImgSignatureUrl")}
+                />
+              )}
             </PDFViewer>
           </>
         )}

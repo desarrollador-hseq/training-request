@@ -20,6 +20,7 @@ interface ButtonScheduleCollaboratorProps {
   collaboratorPhone?: string | null;
   collaboratorName?: string;
   courseName?: string | null;
+  shortName?: string | null;
   collaboratorMail?: string | null;
   levelName?: string | null;
   trainingRequestCollaborator?: any;
@@ -35,6 +36,7 @@ export const ButtonScheduleCollaborator = ({
   collaboratorName,
   collaboratorPhone,
   courseName,
+  shortName,
   levelName,
   collaboratorMail,
   scheduledDate,
@@ -50,11 +52,10 @@ export const ButtonScheduleCollaborator = ({
   const { addCartItem, cartItems } = useCollaboratorsCart();
   const pathname = usePathname();
 
-
   const handleScheduleDate = async () => {
     setLoadingApp(true);
     // router.refresh();
-    console.log({collaboratorMail})
+    console.log({ collaboratorMail });
     const colData = {
       name: collaboratorName,
       companyName: company?.businessName,
@@ -63,6 +64,7 @@ export const ButtonScheduleCollaborator = ({
       courseDate: date,
       email: collaboratorMail,
     };
+
     try {
       const { data } = await axios.patch(
         `/api/training-requests/${trainingRequestId}/members/${collaboratorId}/schedule`,
@@ -74,7 +76,7 @@ export const ButtonScheduleCollaborator = ({
       );
 
       router.push(pathname);
-      router.refresh()
+      router.refresh();
     } catch (error) {
       toast.error(
         "Error al programar la fecha de formación, por favor intentelo nuevamente"
@@ -86,11 +88,11 @@ export const ButtonScheduleCollaborator = ({
         try {
           await axios.post("/api/messages/", {
             msisdn: collaboratorPhone,
-            message: `[GRUPOHSEQ] Se le informa que ud ha sido inscrito a curso: ${courseName} - ${levelName}, dia ${format(
-              date?.from!,
-              "P",
-              { locale: es }
-            )} H: 7:30am ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/3T9vy8h`,
+            message: `[GRUPOHSEQ] informa que ud ha sido inscrito a curso: ${
+              levelName === courseName ? shortName :  `${courseName} - ${levelName}` 
+            }, dia ${format(date?.from!, "P", {
+              locale: es,
+            })} 7:30am ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/3T9vy8h`,
           });
           toast.success("SMS enviado");
         } catch (error) {
@@ -103,7 +105,7 @@ export const ButtonScheduleCollaborator = ({
         try {
           await axios.post(`/api/mail/collaborator-programmed`, {
             collaborator: colData,
-            rescheduled: false
+            rescheduled: false,
           });
           toast.success("Correo enviado");
         } catch (error) {
@@ -116,11 +118,11 @@ export const ButtonScheduleCollaborator = ({
         try {
           await axios.post("/api/messages/", {
             msisdn: collaboratorPhone,
-            message: `[GRUPOHSEQ] Se le informa que ud ha sido reprogramado en el curso: ${courseName} - ${levelName}, dia ${format(
-              date?.from!,
-              "P",
-              { locale: es }
-            )} H: 7:30am ubicacion: calle30#10-232 L-1 requisitos: https://bit.ly/3T9vy8h`,
+            message: `[GRUPOHSEQ] informa que ud ha sido inscrito a curso: ${
+              levelName === courseName ? shortName :  `${courseName} - ${levelName}` 
+            }, dia ${format(date?.from!, "P", {
+              locale: es,
+            })} 7:30am ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/3T9vy8h`,
           });
           toast.success("SMS reprogramacion enviado");
         } catch (error) {
@@ -128,18 +130,18 @@ export const ButtonScheduleCollaborator = ({
           console.log({ errorApiSms: error });
         }
       }
-      if(collaboratorMail) {
+      if (collaboratorMail) {
         // send email reprogrammed
-      try {
-        await axios.post(`/api/mail/collaborator-programmed`, {
-          collaborator: colData,
-          rescheduled: true
-        });
-        toast.success("Correo de reprogramación enviado");
-      } catch (error) {
-        toast.error("Error al enviar correo de confirmación al colaborador");
-        console.log({ errorApieMAIL: error });
-      }
+        try {
+          await axios.post(`/api/mail/collaborator-programmed`, {
+            collaborator: colData,
+            rescheduled: true,
+          });
+          toast.success("Correo de reprogramación enviado");
+        } catch (error) {
+          toast.error("Error al enviar correo de confirmación al colaborador");
+          console.log({ errorApieMAIL: error });
+        }
       }
     }
 
@@ -155,7 +157,6 @@ export const ButtonScheduleCollaborator = ({
       levelName!,
       date!
     );
-
   };
 
   return (

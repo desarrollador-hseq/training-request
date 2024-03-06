@@ -400,7 +400,7 @@ export const RegisterForm = ({
                       </FormControl>
                       <div className="">
                         <p className="flex flex-wrap">
-                          Aceptar condiciones sobre uso de datos
+                          Acepto las condiciones sobre uso de datos
                         </p>
                         <FormDescription className="text-sm font-normal text-slate-400">
                           ver condiciones{" "}

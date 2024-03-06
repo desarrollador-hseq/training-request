@@ -83,6 +83,8 @@ const GenerateCertificatePage = async ({
         baseUrl={`${baseUrl}`}
         canManageRequests={session?.user.canManageRequests || false}
         canManagePermissions={session?.user.canManagePermissions || false}
+        companyContact={trainingCollaborator.collaborator.company?.nameContact}
+        companyEmail={trainingCollaborator.collaborator.company?.email}
       />
     </div>
   );

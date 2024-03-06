@@ -1,9 +1,9 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { Collaborator } from "@prisma/client";
 import { authOptions } from "@/lib/authOptions";
 import { db } from "@/lib/db";
 import { mailOptions, transporter } from "@/lib/nodemailer";
-import { Collaborator } from "@prisma/client";
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
 
 const generateEmailContent = (trainingRequest: any) => {
   const { course, collaborators, company } = trainingRequest;
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
     generateEmailContent(trainingRequest);
     await transporter.sendMail({
       ...mailOptions,
-      to: emailFormNotification!,
+      to: [emailFormNotification!, 'auxiliar1grupohseq@gmail.com'],
       ...generateEmailContent(trainingRequest),
       subject: `** Nueva solicitud recibida: [${trainingRequest?.company.businessName}]`,
     });

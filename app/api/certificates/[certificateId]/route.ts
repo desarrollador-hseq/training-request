@@ -25,7 +25,7 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
             "levelHours",
             "certificateDate",
             "expeditionDate",
-            "dueDate",
+            // "dueDate",
             // "monthsToExpire",
         ];
 

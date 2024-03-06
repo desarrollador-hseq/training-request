@@ -206,9 +206,9 @@ const generateEmailContent = (trainingRequest: CartItem) => {
         <td width="20%" style="padding: 10px; vertical-align: top;">
     
       <p class="form-answer">
-      ${collaborator.courseDate.from && formatDateOf(collaborator.courseDate.from)}
+      ${collaborator.courseDate.from ? formatDateOf(collaborator.courseDate.from) : ""}
       hasta
-      ${collaborator.courseDate.to && formatDateOf(collaborator.courseDate.to)}
+      ${collaborator.courseDate.to ? formatDateOf(collaborator.courseDate.to) : ""}
       </p>
     </td> </tr>
   `

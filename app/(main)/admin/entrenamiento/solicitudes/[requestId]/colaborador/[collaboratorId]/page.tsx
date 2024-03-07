@@ -104,6 +104,7 @@ const AdminScheduleCollaborator = async ({
               trainingRequestCollaborator={trainingRequestCollaborator}
               canManageRequests={session?.user.canManageRequests || false}
               canManagePermissions={session?.user.canManagePermissions || false}
+              canManageCompanies={session?.user.canManageCompanies || false}
             />
           </CardContent>
         </Card>

@@ -8,7 +8,7 @@ import { ClientCookiesProvider } from "@/components/providers/cookies-provider";
 import { NextAuthProvider } from "@/components/providers/nextauth-provider";
 import { LoadingProvider } from "@/components/providers/loading-provider";
 import { LoaderFullpage } from "@/components/loader-fullpage";
-import { cronCertificateToExpireSoon } from "@/scripts/cron-jobs";
+import { cronCertificateToExpireSoons } from "@/scripts/cron-jobs";
 
 export const metadata: Metadata = {
   title: "HSEQ Entrenamiento",
@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   // cron para enviar email antes de vencer certificado. 1mes
-  cronCertificateToExpireSoon();
+  cronCertificateToExpireSoons();
 
   return (
     <ClientCookiesProvider value={cookies().getAll()}>

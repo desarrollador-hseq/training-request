@@ -10,6 +10,7 @@ import PdfFullscreen from "./pdf-fullscreen";
 import {
   ChevronDown,
   ChevronUp,
+  Download,
   Loader2,
   RotateCw,
   XCircle,
@@ -119,7 +120,7 @@ const PdfRenderer = ({ url, className }: PdfRendererProps) => {
           </Button>
         </div>
 
-        <div className="space-x-2">
+        <div className="space-x-2 flex items-center">
           <Button
             type="button"
             onClick={() => setRotation((prev) => prev + 90)}
@@ -128,6 +129,10 @@ const PdfRenderer = ({ url, className }: PdfRendererProps) => {
           >
             <RotateCw className="h-4 w-4" />
           </Button>
+
+          <a href={url} target="_blank" rel="noopener">
+            <Download className="h-4 w-4" />
+          </a>
 
           <PdfFullscreen fileUrl={url} />
         </div>

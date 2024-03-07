@@ -12,6 +12,7 @@ import { CollaboratorsSimpleTable } from "./_components/collaborators-simple-tab
 import { SelectCollaborators } from "./_components/select-collaborators";
 import { SendTraining } from "./_components/send-training";
 import { TooltipInfo } from "@/components/tooltip-info";
+import { CreateColaboratorsFromAdmin } from "./_components/create-colaborators-from-admin";
 
 const crumbs = [
   { label: "solicitudes", path: "/dashboard/entrenamiento/solicitudes" },
@@ -37,6 +38,7 @@ const TrainingRequestPage = async ({
     },
     include: {
       course: true,
+      company: true,
       collaborators: {
         include: {
           collaborator: {
@@ -146,7 +148,23 @@ const TrainingRequestPage = async ({
         </Banner>
       )}
 
-      <TitleOnPage text={`Editar solicitud de entrenamiento `} bcrumb={crumbs}>
+      <TitleOnPage
+        text={
+          <div>
+            Editar solicitud de entrenamiento
+            {session.user.canManageRequests ||
+              (session.user.canManagePermissions && (
+                <span className="block text-slate-200">
+                  EMPRESA:{" "}
+                  <span className="">
+                    {trainingRequest.company.businessName}
+                  </span>
+                </span>
+              ))}
+          </div>
+        }
+        bcrumb={crumbs}
+      >
         <div className="flex flex-col items-end">
           <SendTraining
             isAdmin={isAdmin}
@@ -182,23 +200,47 @@ const TrainingRequestPage = async ({
               <div className="p-0">
                 <SubtitleSeparator text="Datos de Colaboradores">
                   {/* Sheet para agregar colaboradores */}
-                  <SelectCollaborators
-                    isPending={isPending}
-                    canManageRequests={session?.user?.canManageRequests || false}
-                    canManagePermissions={session?.user?.canManagePermissions || false}
-                    trainingRequestId={trainingRequest.id}
-                    collaborators={collaborators}
-                    collaboratorSelected={trainingRequest.collaborators.map(
-                      (col) => col.collaborator
-                    )}
-                  />
+
+                  <div className="flex gap-3">
+                    {session.user.canManageRequests ||
+                      (session.user.canManagePermissions && (
+                        <CreateColaboratorsFromAdmin
+                          companyId={trainingRequest.company.id}
+                          canManageCompanies={
+                            session.user.canManageCompanies || false
+                          }
+                          canManageRequests={
+                            session.user.canManageRequests || false
+                          }
+                          canManagePermissions={
+                            session.user.canManagePermissions || false
+                          }
+                        />
+                      ))}
+                    <SelectCollaborators
+                      isPending={isPending}
+                      canManageRequests={
+                        session?.user?.canManageRequests || false
+                      }
+                      canManagePermissions={
+                        session?.user?.canManagePermissions || false
+                      }
+                      trainingRequestId={trainingRequest.id}
+                      collaborators={collaborators}
+                      collaboratorSelected={trainingRequest.collaborators.map(
+                        (col) => col.collaborator
+                      )}
+                    />
+                  </div>
                 </SubtitleSeparator>
               </div>
               {/* Listar colaboradores de una solicitud y con collapsible de documentos */}
               <div className="p-2">
                 <CollaboratorsSimpleTable
-                   canManageRequests={session?.user.canManageRequests || false}
-                   canManagePermissions={session?.user.canManagePermissions || false}
+                  canManageRequests={session?.user.canManageRequests || false}
+                  canManagePermissions={
+                    session?.user.canManagePermissions || false
+                  }
                   collaborators={trainingRequest.collaborators}
                   trainingRequestId={trainingRequest.id}
                   // courseId={trainingRequest.courseId}

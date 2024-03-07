@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { db } from "@/lib/db";
+import { TrainingRequest } from "@prisma/client";
 
 
 export async function GET(req: Request) {
@@ -29,15 +30,39 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
     const session = await getServerSession(authOptions)
     if (!session) return new NextResponse("Unauthorized", { status: 401 })
     const values = await req.json()
+    let companyId: string | undefined;
+    let creatorUser: string | undefined;
+    let isAdmin: boolean = false;
+    let request: TrainingRequest;
     try {
 
-        const companyId = session.user.id
+        if (values.companyId) {
+            isAdmin = true
+            companyId = values.companyId
+            creatorUser = session.user.businessName;
+        } else {
+            companyId = session.user.id
+            creatorUser = "user"
+        }
 
-        const request = await db.trainingRequest.create({
-            data: {
-                companyId, ...values
-            }
-        })
+        if (isAdmin) {
+             request = await db.trainingRequest.create({
+                data: {
+                    companyId, state: "ACTIVE", activeFrom: new Date(), createdByAdmin: creatorUser, ...values
+                }
+            })
+        } else {
+            request = await db.trainingRequest.create({
+                data: {
+                    companyId, createdByAdmin: creatorUser, ...values
+                }
+            })
+        }
+
+
+
+
+
 
         return NextResponse.json(request)
 

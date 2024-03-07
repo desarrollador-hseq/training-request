@@ -41,5 +41,7 @@ export const getCertificatesToExpireSoon = async (): Promise<CertificateWithComp
     },
   });
 
+  console.log({getcert: certificates})
+
   return certificates;
 };

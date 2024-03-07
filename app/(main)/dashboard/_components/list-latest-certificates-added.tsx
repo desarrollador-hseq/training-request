@@ -52,9 +52,9 @@ export const ListLatestCertificatesAdded = ({
                       <span className="">{cert?.levelName}</span>
                     </span>
 
-                    <span className="">{formatDateOf(cert.dueDate!)}</span>
+                    <span className="">{cert.dueDate && formatDateOf(cert.dueDate!)}</span>
 
-                    <span className="">{formatDateOf(cert.createdAt!)}</span>
+                    <span className="">{cert.createdAt && formatDateOf(cert.createdAt!)}</span>
                     <div className="flex justify-center items-center max-w-[15px] absolute right-0 top-0 bottom-0">
                       <Link
                         href={`/dashboard/entrenamiento/certificados/${cert.id}`}

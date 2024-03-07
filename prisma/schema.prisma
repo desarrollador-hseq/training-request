@@ -101,6 +101,8 @@ model TrainingRequest {
 
   active Boolean @default(true)
 
+  createdByAdmin String? 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -32,6 +32,7 @@ import { Banner } from "@/components/banner";
 
 interface AddCollaboratorFormProps {
   collaborator?: Collaborator | null;
+  companyId?: string | null;
 }
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = [
@@ -71,6 +72,7 @@ const formSchema = z.object({
 
 export const AddCollaboratorForm = ({
   collaborator,
+  companyId,
 }: AddCollaboratorFormProps) => {
   const router = useRouter();
   const isEdit = useMemo(() => collaborator, [collaborator]);
@@ -100,10 +102,11 @@ export const AddCollaboratorForm = ({
         await axios.patch(`/api/collaborators/${collaborator?.id}`, values);
         toast.success("Colaborador actualizado");
       } else {
-        const { data } = await axios.post(`/api/collaborators/`, values);
+        const postDat = companyId ? { ...values, companyId } : { ...values };
+        const { data } = await axios.post(`/api/collaborators/`, {  ...postDat} );
         toast.success("Colaborador creado");
       }
-      router.push(`/dashboard/entrenamiento/colaboradores`);
+      // router.push(`/dashboard/entrenamiento/colaboradores`);
       router.refresh();
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -128,6 +131,8 @@ export const AddCollaboratorForm = ({
         console.error(error);
         toast.error("Ocurrió un error inesperado");
       }
+    } finally {
+      form.reset()
     }
   };
 

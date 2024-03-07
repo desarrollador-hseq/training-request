@@ -49,7 +49,7 @@ export const ListLatestCollaboratorsAdded = ({
 
                     <span className="">{col?.phone}</span>
 
-                    <span className="">{formatDateOf(col?.createdAt!)}</span>
+                    <span className="">{col?.createdAt && formatDateOf(col?.createdAt!)}</span>
 
                     <div className="flex justify-center items-center max-w-[15px] absolute right-0 top-0 bottom-0">
                       <Link

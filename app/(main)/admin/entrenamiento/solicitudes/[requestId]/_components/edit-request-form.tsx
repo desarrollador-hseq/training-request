@@ -58,7 +58,7 @@ export const EditRequestForm = ({
   const { setLoadingApp } = useLoading();
 
   const stateEsp = [
-    { text: "No enviada", value: "PENDING" },
+    // { text: "No enviada", value: "PENDING" },
     { text: "Activa", value: "ACTIVE" },
     { text: "Ejectutada", value: "EXECUTED" },
     { text: "Cancelada", value: "CANCELLED" },

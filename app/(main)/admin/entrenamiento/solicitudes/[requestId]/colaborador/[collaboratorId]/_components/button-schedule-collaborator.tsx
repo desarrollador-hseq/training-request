@@ -28,6 +28,8 @@ interface ButtonScheduleCollaboratorProps {
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
   date: DateRange | undefined | null;
   canManagePermissions: boolean;
+  canManageRequests: boolean;
+  canManageCompanies: boolean;
 }
 
 export const ButtonScheduleCollaborator = ({
@@ -44,10 +46,13 @@ export const ButtonScheduleCollaborator = ({
   date,
   company,
   canManagePermissions,
+  canManageRequests,
+  canManageCompanies
 }: ButtonScheduleCollaboratorProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
   const [notifyReschedule, setNotifyReschedule] = useState(false);
+  const [notifyFirstTime, setNotifyFirstTime] = useState(true);
 
   const { addCartItem, cartItems } = useCollaboratorsCart();
   const pathname = usePathname();
@@ -55,7 +60,6 @@ export const ButtonScheduleCollaborator = ({
   const handleScheduleDate = async () => {
     setLoadingApp(true);
     // router.refresh();
-    console.log({ collaboratorMail });
     const colData = {
       name: collaboratorName,
       companyName: company?.businessName,
@@ -84,33 +88,39 @@ export const ButtonScheduleCollaborator = ({
     }
 
     if (!!!scheduledDate.from) {
-      if (collaboratorPhone) {
-        try {
-          await axios.post("/api/messages/", {
-            msisdn: collaboratorPhone,
-            message: `[GRUPOHSEQ] informa que ud ha sido inscrito a curso: ${
-              levelName === courseName ? shortName :  `${courseName} - ${levelName}` 
-            }, dia ${format(date?.from!, "P", {
-              locale: es,
-            })} 7:30am ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/3T9vy8h`,
-          });
-          toast.success("SMS enviado");
-        } catch (error) {
-          toast.error("Error al enviar el mensaje de texto al colaborador");
-          console.log({ errorApiSms: error });
+      if (notifyFirstTime) {
+        if (collaboratorPhone) {
+          try {
+            await axios.post("/api/messages/", {
+              msisdn: collaboratorPhone,
+              message: `[GRUPOHSEQ] informa que ud ha sido inscrito a curso: ${
+                levelName === courseName
+                  ? shortName
+                  : `${courseName} - ${levelName}`
+              }, dia ${format(date?.from!, "P", {
+                locale: es,
+              })} 7:30am ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/3T9vy8h`,
+            });
+            toast.success("SMS enviado");
+          } catch (error) {
+            toast.error("Error al enviar el mensaje de texto al colaborador");
+            console.log({ errorApiSms: error });
+          }
         }
-      }
-      if (collaboratorMail) {
-        // send email
-        try {
-          await axios.post(`/api/mail/collaborator-programmed`, {
-            collaborator: colData,
-            rescheduled: false,
-          });
-          toast.success("Correo enviado");
-        } catch (error) {
-          toast.error("Error al enviar correo de confirmación al colaborador");
-          console.log({ errorApieMAIL: error });
+        if (collaboratorMail) {
+          // send email
+          try {
+            await axios.post(`/api/mail/collaborator-programmed`, {
+              collaborator: colData,
+              rescheduled: false,
+            });
+            toast.success("Correo enviado");
+          } catch (error) {
+            toast.error(
+              "Error al enviar correo de confirmación al colaborador"
+            );
+            console.log({ errorApieMAIL: error });
+          }
         }
       }
     } else if (notifyReschedule) {
@@ -119,7 +129,9 @@ export const ButtonScheduleCollaborator = ({
           await axios.post("/api/messages/", {
             msisdn: collaboratorPhone,
             message: `[GRUPOHSEQ] informa que ud ha sido inscrito a curso: ${
-              levelName === courseName ? shortName :  `${courseName} - ${levelName}` 
+              levelName === courseName
+                ? shortName
+                : `${courseName} - ${levelName}`
             }, dia ${format(date?.from!, "P", {
               locale: es,
             })} 7:30am ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/3T9vy8h`,
@@ -162,7 +174,9 @@ export const ButtonScheduleCollaborator = ({
   return (
     <div className="w-full justify-center flex my-1">
       <SimpleModal
-        btnDisabled={isDisallowed || !date || !canManagePermissions}
+        btnDisabled={
+          isDisallowed || !date || !((canManageCompanies && canManageRequests) || canManagePermissions)
+        }
         btnClass="w-[50%] shadow-sm"
         textBtn={!!!scheduledDate.from ? "Programar" : "Reprogramar"}
         onAcept={() => handleScheduleDate()}
@@ -175,11 +189,34 @@ export const ButtonScheduleCollaborator = ({
         {!!date?.from && !!date.to && (
           <div>
             {!!!scheduledDate?.from && !!!scheduledDate?.to ? (
-              <p>
-                Desea programar el colaborador {collaboratorName}, desde el día
-                {format(date?.from, "PPP", { locale: es })} hasta el día
-                {format(date?.to, "PPP", { locale: es })}
-              </p>
+              <div>
+                <div className="items-top flex space-x-2 border-2 border-slate-300 my-3 p-2">
+                  <Checkbox
+                    id="notify"
+                    checked={notifyFirstTime}
+                    onCheckedChange={(e) => setNotifyFirstTime(!!e)}
+                  />
+                  <div className="grid gap-1.5 leading-none">
+                    <label
+                      htmlFor="notify"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Notificar al colaborador con la fecha de inicio del curso
+                      por sms y correo,
+                      <span className="text-red-500 font-bold">
+                        {" "}
+                        OJO desmarcar cuando la formación es virtual
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <p>
+                  Desea programar el colaborador {collaboratorName}, desde el
+                  día
+                  {format(date?.from, "PPP", { locale: es })} hasta el día
+                  {format(date?.to, "PPP", { locale: es })}
+                </p>
+              </div>
             ) : (
               <div>
                 <p>

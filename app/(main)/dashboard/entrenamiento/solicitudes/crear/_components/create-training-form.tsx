@@ -63,6 +63,8 @@ export const CreateTrainingForm = ({ courses }: { courses?: Course[] }) => {
       );
     }
   };
+
+  
   return (
     <div className="max-w-5xl mx-auto flex md:items-center md:justify-start h-full p-6">
       <div className="">

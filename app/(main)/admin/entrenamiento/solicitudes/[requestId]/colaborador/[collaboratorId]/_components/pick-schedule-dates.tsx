@@ -37,6 +37,7 @@ interface PickDatesProps {
   scheduledDate: { to: Date | null | undefined; from: Date | null | undefined };
   canManageRequests: boolean;
   canManagePermissions: boolean;
+  canManageCompanies: boolean;
   validDocuments: boolean;
 }
 
@@ -48,6 +49,7 @@ export const PickScheduleDates = ({
   isDisallowed,
   canManageRequests,
   canManagePermissions,
+  canManageCompanies,
   validDocuments,
 }: PickDatesProps) => {
   // const { date, setDate } = useDashboard();
@@ -147,7 +149,7 @@ export const PickScheduleDates = ({
                 disabled={
                   isDisallowed ||
                   !!!scheduledDate ||
-                  !(canManagePermissions || canManageRequests)
+                  !((canManageCompanies && canManageRequests) || canManagePermissions)
                 }
                 initialFocus
                 mode="range"
@@ -167,7 +169,7 @@ export const PickScheduleDates = ({
           {validDocuments ? (
             <Button
               disabled={
-                isDisallowed || !(canManagePermissions || canManageRequests)
+                isDisallowed || !((canManageCompanies && canManageRequests) || canManagePermissions)
               }
               variant="secondary"
               className="text-white bg-accent w-full"

@@ -37,11 +37,11 @@ export const LogoGHseq = ({
       <Image
         className={cn("inline", goRoot && "cursor-pointer", className)}
         src="/hseq.png"
-        alt="logo de Claro"
+        alt="logo de GrupoHSEQ"
         height={height}
         width={width}
         style={{
-          width: "auto",
+          width: width,
           height: "auto",
         }}
         priority

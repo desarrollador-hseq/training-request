@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 export const LogoMain = ({
   goRoot,
   className,
-  height = 100,
-  width = 110,
+  height = 44,
+  width = 140,
 }: {
   goRoot?: boolean;
   height?: number;
@@ -37,11 +37,11 @@ export const LogoMain = ({
       <Image
         className={cn("inline", goRoot && "cursor-pointer", className)}
         src="/hseq-entrenamiento-white.png"
-        alt="logo de Claro"
+        alt="logo de Hseq entrenamiento - GrupoHSEQ"
         height={height}
         width={width}
         style={{
-          width: "auto",
+          width: width,
           height: "auto",
         }}
         priority

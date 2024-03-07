@@ -83,6 +83,7 @@ interface AdminScheduleCollaboratorFormProps {
   courseLevels: CourseLevel[] | null | undefined;
   canManageRequests: boolean;
   canManagePermissions: boolean;
+  canManageCompanies: boolean;
 }
 
 export const AdminScheduleCollaboratorForm = ({
@@ -90,6 +91,7 @@ export const AdminScheduleCollaboratorForm = ({
   courseLevels,
   canManageRequests,
   canManagePermissions,
+  canManageCompanies
 }: AdminScheduleCollaboratorFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -212,6 +214,7 @@ export const AdminScheduleCollaboratorForm = ({
           }}
           canManageRequests={canManageRequests}
           canManagePermissions={canManagePermissions}
+          canManageCompanies={canManageCompanies}
           validDocuments={trainingRequestCollaborator?.validDocument || false}
         />
         <div />
@@ -239,6 +242,8 @@ export const AdminScheduleCollaboratorForm = ({
           }}
           date={date}
           canManagePermissions={canManagePermissions}
+          canManageRequests={canManageRequests}
+          canManageCompanies={canManageCompanies}
         />
       )}
 

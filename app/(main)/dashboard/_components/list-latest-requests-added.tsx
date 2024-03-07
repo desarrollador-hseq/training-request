@@ -59,7 +59,7 @@ export const ListLatestRequestsAdded = ({
                    
                     <span> {stateEsp[`${req?.state}`].text}</span>
 
-                    <span className="">{formatDateOf(req?.createdAt!)}</span>
+                    <span className="">{req?.createdAt && formatDateOf(req?.createdAt!)}</span>
 
                     <div className="flex justify-center items-center max-w-[15px] absolute right-0 top-0 bottom-0">
                       <Link

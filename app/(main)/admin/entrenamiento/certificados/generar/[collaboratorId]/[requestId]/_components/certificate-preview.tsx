@@ -90,6 +90,7 @@ export const CertificatePreview = ({
     id: "",
     createdAt: new Date(),
     updatedAt: new Date(),
+    wasSent: false
   });
 
   return (

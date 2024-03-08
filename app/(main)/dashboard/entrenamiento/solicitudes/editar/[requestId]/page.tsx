@@ -152,15 +152,13 @@ const TrainingRequestPage = async ({
         text={
           <div>
             Editar solicitud de entrenamiento
-            {session.user.canManageRequests ||
-              (session.user.canManagePermissions && (
-                <span className="block text-slate-200">
-                  EMPRESA:{" "}
-                  <span className="">
-                    {trainingRequest.company.businessName}
-                  </span>
-                </span>
-              ))}
+            {(session.user.canManageRequests ||
+              session.user.canManagePermissions) && (
+              <span className="block text-slate-200">
+                EMPRESA:{" "}
+                <span className="">{trainingRequest.company.businessName}</span>
+              </span>
+            )}
           </div>
         }
         bcrumb={crumbs}
@@ -202,21 +200,21 @@ const TrainingRequestPage = async ({
                   {/* Sheet para agregar colaboradores */}
 
                   <div className="flex gap-3">
-                    {session.user.canManageRequests ||
-                      (session.user.canManagePermissions && (
-                        <CreateColaboratorsFromAdmin
-                          companyId={trainingRequest.company.id}
-                          canManageCompanies={
-                            session.user.canManageCompanies || false
-                          }
-                          canManageRequests={
-                            session.user.canManageRequests || false
-                          }
-                          canManagePermissions={
-                            session.user.canManagePermissions || false
-                          }
-                        />
-                      ))}
+                    {(session.user.canManageRequests ||
+                      session.user.canManagePermissions) && (
+                      <CreateColaboratorsFromAdmin
+                        companyId={trainingRequest.company.id}
+                        canManageCompanies={
+                          session.user.canManageCompanies || false
+                        }
+                        canManageRequests={
+                          session.user.canManageRequests || false
+                        }
+                        canManagePermissions={
+                          session.user.canManagePermissions || false
+                        }
+                      />
+                    )}
                     <SelectCollaborators
                       isPending={isPending}
                       canManageRequests={

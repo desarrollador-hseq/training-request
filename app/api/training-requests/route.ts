@@ -60,15 +60,11 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
         }
 
 
-
-
-
-
         return NextResponse.json(request)
 
     } catch (error) {
         console.log("[TRAINING-REQUEST-CREATE]", error)
-        return new NextResponse("Internal Errorr", { status: 500 })
+        return new NextResponse("Internal Errorr "  + error, { status: 500 })
     }
 }
 

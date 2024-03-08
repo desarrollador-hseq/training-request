@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  Certificate,
-} from "@prisma/client";
+import { Certificate } from "@prisma/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useTabManager from "@/hooks/useTabManager";
@@ -25,23 +23,23 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
   });
 
   const certificatesNotExpired = certificates.filter((cer) => {
-    if (cer.certificateDate && cer.dueDate) {
-      const expirationDate = addMonths(
-        cer.certificateDate,
-        cer?.courseLevel?.monthsToExpire!
-      );
-      return isAfter(expirationDate, currentDate);
+    if (cer.wasSent) {
+      if (cer.active !== true) return false;
+      if (cer.dueDate) {
+        return isAfter(cer.dueDate, currentDate);
+      } else {
+        return true;
+      }
     }
     return false;
   });
 
   const certificatesExpired = certificates.filter((cer) => {
-    if (cer.dueDate && cer.certificateDate) {
-      const expirationDate = addMonths(
-        cer.certificateDate,
-        cer.courseLevel.monthsToExpire!
-      );
-      return isAfter(currentDate, expirationDate);
+    if (cer.wasSent) {
+      if (cer.active !== true) return false;
+      if (cer.dueDate) {
+        return isAfter(currentDate, cer.dueDate);
+      }
     }
     return false;
   });
@@ -69,15 +67,21 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
             <TableDefault
               columns={columnCertificatesTable}
               data={certificatesNotExpired}
-              editHref={{href: "/dashboard/entrenamiento/certificados", btnText: "ver"}}
-              />
+              editHref={{
+                href: "/dashboard/entrenamiento/certificados",
+                btnText: "ver",
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="vencidos">
             <TableDefault
               columns={columnCertificatesTable}
               data={certificatesExpired}
-              editHref={{href: "/dashboard/entrenamiento/certificados", btnText: "ver"}}
+              editHref={{
+                href: "/dashboard/entrenamiento/certificados",
+                btnText: "ver",
+              }}
             />
           </TabsContent>
         </CardContent>

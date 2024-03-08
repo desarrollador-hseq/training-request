@@ -223,9 +223,11 @@ model Certificate {
   expeditionDate  DateTime?
   dueDate         DateTime?
 
-  active Boolean @default(true)
+  wasSent Boolean @default(false)
 
   certificateEvent CertificateEvent[]
+  
+  active Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -238,6 +240,8 @@ model Certificate {
 enum EventType {
   UPDATED
   CREATED
+  SENT
+  UNSEND
   DELETED
 }
 

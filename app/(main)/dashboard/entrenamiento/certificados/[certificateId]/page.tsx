@@ -30,6 +30,7 @@ const ShowCertificatePage = async ({
     where: {
       id: params.certificateId,
       active: true,
+      wasSent: true,
       collaborator: {
         companyId: session.user.id,
       },

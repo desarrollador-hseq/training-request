@@ -30,6 +30,18 @@ const EditCertificate = async ({
       id: certificateId,
       active: true,
     },
+    include: {
+      collaborator: {
+        select: {
+          company: {
+            select: {
+              nameContact: true,
+              email: true
+            }
+          }
+        }
+      }
+    }
   });
 
   if (!certificate) {
@@ -56,7 +68,11 @@ const EditCertificate = async ({
 
   return (
     <div>
-      <TitleOnPage text={`Editar Certificado`} bcrumb={bcrumb} className="bg-gradient-to-b from-red-700 to-red-900">
+      <TitleOnPage
+        text={`Editar Certificado`}
+        bcrumb={bcrumb}
+        className="bg-gradient-to-b from-red-700 to-red-900"
+      >
         <SimpleModal
           textBtn={<GanttChartSquare />}
           btnClass={`bg-accent text-white`}
@@ -75,9 +91,10 @@ const EditCertificate = async ({
         coaches={coaches}
         certificate={certificate}
         baseUrl={`${baseUrl}`}
+        companyContact={certificate.collaborator.company?.nameContact}
+        companyEmail={certificate.collaborator.company?.email}
         canManagePermissions={session?.user.canManagePermissions || false}
       />
-
     </div>
   );
 };

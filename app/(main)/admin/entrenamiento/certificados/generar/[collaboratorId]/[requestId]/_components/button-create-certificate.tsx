@@ -36,29 +36,7 @@ export const ButtonCreateCertificate = ({
     try {
       const { data } = await axios.post(`/api/certificates/`, values);
 
-      console.log({dadas: data})
-
-      if (notifyCertificate) {
-        try {
-         await axios.post(`/api/mail/certificate-created`, {
-            certificate: {
-              collaboratorFullname: values.collaboratorFullname,
-              course: values.courseName,
-              level:
-                values.courseName === values.levelName
-                  ? null
-                  : values.levelName,
-              companyContact: companyContact,
-              certificateId: data.id,
-            },
-            email: companyEmail,
-          });
-        } catch (error) {
-          toast.error("Ocurrió un error al notificar por correo a la empresa");
-        }
-      }
-
-       router.push(`/admin/entrenamiento/certificados/${data.id}`);
+      router.push(`/admin/entrenamiento/certificados/${data.id}`);
 
       toast.success("Certificado guardado correctamente");
     } catch (error) {

@@ -19,21 +19,34 @@ interface TabsCertificatesProps {
 export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
   const currentDate = new Date();
   const { activeTab, handleTabChange } = useTabManager({
-    initialTab: "activos",
+    initialTab: "por-enviar",
+  });
+
+  const certificatesToSend = certificates.filter((cer) => {
+    if (!cer.wasSent && cer.active) {
+      return true;
+    }
+    return false;
   });
 
   const certificatesNotExpired = certificates.filter((cer) => {
-    if (cer.certificateDate && cer.dueDate) {
+    if (cer.wasSent) {
       if (cer.active !== true) return false;
-      return isAfter(cer.dueDate, currentDate);
+      if (cer.dueDate) {
+        return isAfter(cer.dueDate, currentDate);
+      } else {
+        return true;
+      }
     }
     return false;
   });
 
   const certificatesExpired = certificates.filter((cer) => {
-    if (cer.dueDate && cer.certificateDate) {
+    if (cer.wasSent) {
       if (cer.active !== true) return false;
-      return isAfter(currentDate, cer.dueDate);
+      if (cer.dueDate) {
+        return isAfter(currentDate, cer.dueDate);
+      }
     }
     return false;
   });
@@ -44,7 +57,7 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
 
   return (
     <Tabs
-      defaultValue="activos"
+      defaultValue="por-enviar"
       onValueChange={handleTabChange}
       value={activeTab}
       className="w-full flex flex-col items-center"
@@ -52,6 +65,9 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
       <Card className="w-full rounded-sm shadow-md ">
         <CardHeader className="flex justify-center items-center">
           <TabsList className="w-[70%]">
+            <TabsTrigger className="w-full" value="por-enviar">
+              Por enviar
+            </TabsTrigger>
             <TabsTrigger className="w-full" value="activos">
               Activos
             </TabsTrigger>
@@ -64,6 +80,16 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
           </TabsList>
         </CardHeader>
         <CardContent>
+          <TabsContent value="por-enviar">
+            <TableDefault
+              columns={columnsAdminCertificatesTable}
+              data={certificatesToSend}
+              editHref={{
+                btnText: `Ver`,
+                href: `/admin/entrenamiento/certificados`,
+              }}
+            />
+          </TabsContent>
           <TabsContent value="activos">
             <TableDefault
               columns={columnsAdminCertificatesTable}

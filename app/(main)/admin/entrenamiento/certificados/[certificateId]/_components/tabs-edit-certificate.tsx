@@ -65,6 +65,7 @@ export const TabsEditCertificate = ({
               baseUrl={`${baseUrl}`}
               isCreate={false}
               canManagePermissions={canManagePermissions}
+              trainingRequestId=""
               // certAlreadyExists
             />
             <DeactivateCertificate

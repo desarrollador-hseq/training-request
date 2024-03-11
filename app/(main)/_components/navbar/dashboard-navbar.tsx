@@ -11,11 +11,15 @@ import { DropdownCompany } from "./dropdown-company";
 export const DashboardNavbar = ({
   businessName,
   isAdmin,
-  canManagePermissions
+  canManagePermissions,
+  canManageCompanies,
+  canManageRequests,
 }: {
   isAdmin: boolean;
-  canManagePermissions: boolean
   businessName?: string;
+  canManagePermissions: boolean;
+  canManageCompanies: boolean;
+  canManageRequests: boolean;
 }) => {
   const [openSidebar, setOpenSidebar] = useState(false);
 
@@ -47,7 +51,13 @@ export const DashboardNavbar = ({
 
           <div className="flex gap-5 items-center">
             {isAdmin && <span>Administrador</span>}
-            {isAdmin && <SheetCollaboratorsCart canManagePermissions={canManagePermissions} />}
+            {isAdmin && (
+              <SheetCollaboratorsCart
+                canManagePermissions={canManagePermissions}
+                canManageCompanies={canManageCompanies}
+                canManageRequests={canManageRequests}
+              />
+            )}
             <DropdownCompany companyName={businessName} />
           </div>
         </div>

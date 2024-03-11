@@ -81,7 +81,14 @@ export const EditRequestForm = ({
   };
 
   return (
-    <div>
+    <div className="flex flex-col">
+      <div className="flex justify-self-end self-end text-sm italic">
+        {trainingRequest?.createdByAdmin !== "user" && (
+          <span>
+            Creada por: administración - {trainingRequest?.createdByAdmin}
+          </span>
+        )}
+      </div>
       <Card className="bg-slate-100 ">
         <CardHeader className="mb-3 p-0">
           <div className="p-0 overflow-hidden rounded-md bg-blue-50">
@@ -135,7 +142,7 @@ export const EditRequestForm = ({
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Link
             className={cn(
               buttonVariants(),

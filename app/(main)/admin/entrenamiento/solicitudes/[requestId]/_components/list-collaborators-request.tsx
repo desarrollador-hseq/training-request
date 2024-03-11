@@ -3,17 +3,14 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatDateOf } from "@/lib/utils";
-import {
-  Collaborator,
-  TrainingRequestCollaborator,
-} from "@prisma/client";
+import { Collaborator, TrainingRequestCollaborator } from "@prisma/client";
 import {
   Ban,
   Calendar,
   CalendarSearch,
+  Clock8,
   Eye,
   GraduationCap,
-  Loader2,
   Pencil,
 } from "lucide-react";
 
@@ -31,7 +28,7 @@ export const ListCollaboratorsRequest = ({
   collaborators,
 }: ListCollaboratorsRequestProps) => {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 min-w-[900px]">
       <div className="grid grid-cols-6 place-content-center place-items-center h-full font-bold">
         <span>Nombre</span>
         <span>Documento</span>
@@ -80,7 +77,7 @@ export const ListCollaboratorsRequest = ({
                   {!collaborators[index].isScheduled &&
                     !collaborators[index].wasCertified &&
                     !collaborators[index].isDisallowed && (
-                      <Loader2 className="w-4 h-4 animate-spin text-secondary" />
+                      <Clock8 className="w-4 h-4 animate-spin text-secondary" />
                     )}
                 </span>
               </div>

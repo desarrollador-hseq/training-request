@@ -28,8 +28,8 @@ export const ListLatestRequestsAdded = ({
     <Card className="overflow-hidden">
       <SubtitleSeparator text="Últimas solicitudes" />
 
-      <CardContent>
-        <div className="flex flex-col gap-1">
+      <CardContent className="overflow-x-auto">
+        <div className="flex flex-col gap-1 min-w-[900px]">
           <div className="grid grid-cols-5 place-content-center place-items-center h-full font-bold my-2">
             <span>Curso</span>
             <span># de colaboradores</span>

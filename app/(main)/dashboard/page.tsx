@@ -1,4 +1,3 @@
-
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { ClipboardCheck, ScrollText, UsersRound } from "lucide-react";
@@ -23,8 +22,8 @@ const DashboardPage = async () => {
       active: true,
     },
     orderBy: {
-      createdAt: "desc"
-    }
+      createdAt: "desc",
+    },
   });
 
   const trainingRequests = await db.trainingRequest.findMany({
@@ -45,18 +44,18 @@ const DashboardPage = async () => {
       },
     },
     orderBy: {
-      createdAt: "desc"
+      createdAt: "desc",
     },
   });
   const certificates = await db.certificate.findMany({
     where: {
-      collaborator: { companyId: session.user.id, active: true },
+      collaborator: { companyId: session.user.id },
       active: true,
+      wasSent: true,
     },
     orderBy: {
-      createdAt: "desc"
+      updatedAt: "desc",
     },
-
   });
 
   return (
@@ -82,11 +81,11 @@ const DashboardPage = async () => {
           number={certificates.length}
           title="Certificados"
         />
-
-        
       </div>
 
-      <ListLatestRequestsAdded trainingRequests={trainingRequests.slice(0, 5)} />
+      <ListLatestRequestsAdded
+        trainingRequests={trainingRequests.slice(0, 5)}
+      />
       <ListLatestCollaboratorsAdded collaborators={collaborators.slice(0, 5)} />
       <ListLatestCertificatesAdded certificates={certificates.slice(0, 5)} />
     </div>

@@ -63,7 +63,7 @@ export const SimpleModal = ({
       </AlertDialogTrigger>
 
       <AlertDialogContent
-        className={`${
+        className={`overflow-y-auto ${
           large ? "max-w-screen-lg min-h-[300px]" : "max-w-[600px]"
         }  max-h-screen `}
       >

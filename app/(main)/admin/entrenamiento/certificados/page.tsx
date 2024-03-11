@@ -25,7 +25,6 @@ const CertificatePage = async () => {
       <TitleOnPage text="Certificados" bcrumb={crumbs} />
 
       <TabsCertificates certificates={certificates} />
-      
     </div>
   );
 };

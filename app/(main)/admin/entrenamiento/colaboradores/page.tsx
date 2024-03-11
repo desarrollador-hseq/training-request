@@ -50,6 +50,7 @@ const AdminCollaboratorPage = async () => {
     },
   });
 
+
   return (
     <div>
       <TitleOnPage text="Colaboradores" bcrumb={crumbs} />

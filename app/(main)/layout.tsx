@@ -17,9 +17,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "HSEQ Entrenamiento",
-  description:
-    "HSEQ Entrenamiento - Agendamiento y certificados en trabajo en altura en la ciudad de barranquilla",
+  // title: "HSEQ Entrenamiento",
 };
 
 const MainLayout = async ({ children }: { children: ReactNode }) => {
@@ -41,6 +39,8 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
           isAdmin={session.user.role === "ADMIN"}
           businessName={session.user.businessName}
           canManagePermissions={session.user.canManagePermissions || false}
+          canManageCompanies={session.user.canManageCompanies || false}
+          canManageRequests={session.user.canManageRequests || false}
         />
         <div className="mt-1 md:pl-[223px] min-h-screen xl:flex justify-center items-start xl:w-full relative">
           <div className="mx-1 min-h-full mt-[56px] max-w-[1200px] w-full">

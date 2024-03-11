@@ -41,7 +41,7 @@ export const LogoGHseq = ({
         height={height}
         width={width}
         style={{
-          width: width,
+          width: "auto",
           height: "auto",
         }}
         priority

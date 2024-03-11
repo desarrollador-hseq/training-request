@@ -8,7 +8,8 @@ import { AdminCollaboratorsProgrammingTable } from "./entrenamiento/colaboradore
 import { KpiCard } from "@/components/kpi-card";
 import { Separator } from "@/components/ui/separator";
 import { adminRequestTablecolumns } from "./entrenamiento/solicitudes/_components/admin-requests-table-columns";
-import { RequestReport } from "../dashboard/_components/request-report";
+import { RequestReport } from "./_components/request-report";
+import { ModalMoreReports } from "./_components/modal-more-reports";
 
 const crumbs = [{ label: "inicio", path: "inicio" }];
 
@@ -153,7 +154,11 @@ const AdminPage = async () => {
               />
             </div>
 
+            <div>
             <RequestReport requests={requests} />
+            {/* <ModalMoreReports requests={requests} companies={companies}  /> */}
+            </div>
+
           </div>
         </div>
       </div>

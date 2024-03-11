@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link";
 import { Certificate } from "@prisma/client";
 import { Eye } from "lucide-react";
@@ -10,12 +12,13 @@ export const ListLatestCertificatesAdded = ({
 }: {
   certificates: Certificate[];
 }) => {
+
   return (
     <Card className="overflow-hidden">
       <SubtitleSeparator text="Últimos Certificados" />
 
-      <CardContent>
-        <div className="flex flex-col gap-1">
+      <CardContent className="overflow-x-auto">
+        <div className="flex flex-col gap-1 min-w-[900px]">
           <div className="grid grid-cols-5 place-content-center place-items-center h-full font-bold my-2">
             <span>Colaborador</span>
             <span>Curso</span>

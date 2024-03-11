@@ -109,7 +109,6 @@ export function AdminCollaboratorsCertificateTable<TData, TValue>({
           onChange={(e) => setFiltering(e.target.value)}
           className="max-w-sm"
         />
-       
       </div>
       <div className="rounded-md border border-input overflow-hidden">
         <Table className="">
@@ -165,17 +164,19 @@ export function AdminCollaboratorsCertificateTable<TData, TValue>({
                       }`}
                     >
                       <TableCell className="max-w-[60px] flex">
-                        {initialData[index]?.wasCertified! &&
-                          initialData[index]?.isScheduled! && (
-                            <GraduationCap className="w-4 h-4" />
-                          )}
-                        {initialData[index]?.isScheduled! &&
-                          !initialData[index]?.wasCertified! && (
-                            <CalendarClock className="w-4 h-4" />
-                          )}
-                        {initialData[index]?.isDisallowed! && (
+                        {row.original.isDisallowed && (
                           <Ban className="w-4 h-4" />
                         )}
+                        {!row.original.isDisallowed &&
+                          row.original.wasCertified && (
+                            <GraduationCap className="w-4 h-4" />
+                          )}
+                        {!row.original.isDisallowed &&
+                          !row.original.wasCertified &&
+                          row.original.isScheduled && (
+                            <CalendarClock className="w-4 h-4" />
+                          )}
+                          {row.original.wasCertified}
                       </TableCell>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="p-2">
@@ -204,7 +205,7 @@ export function AdminCollaboratorsCertificateTable<TData, TValue>({
                             >
                               <Link
                                 className="flex justify-center"
-                                href={`/admin/entrenamiento/certificados/generar/${row.original.collaborator.id}/${initialData[index].trainingRequestId}`}
+                                href={`/admin/entrenamiento/certificados/generar/${row.original.collaborator.id}/${row.original.trainingRequestId}`}
                               >
                                 <CalendarDays className="w-4 h-4 mr-2" />
                                 Certificar

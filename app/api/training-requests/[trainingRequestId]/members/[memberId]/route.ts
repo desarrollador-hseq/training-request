@@ -36,7 +36,6 @@ export async function PATCH(req: Request, { params }: { params: { trainingReques
       }
     })
 
-    console.log({first: "in patch trainingrequestcollaborator"})
 
     return NextResponse.json(request)
 

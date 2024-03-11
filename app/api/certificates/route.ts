@@ -43,9 +43,38 @@ export async function POST(req: Request) {
             return new NextResponse(`Missing property: ${missingProperty}`, { status: 400 });
         }
 
+        const {trainingRequestId, ...otherValues} = values
+
+        const trainingRequestCollaborator = await db.trainingRequestCollaborator.findUnique({
+            where: {
+                collaboratorId_trainingRequestId: {
+                    collaboratorId: otherValues.collaboratorId,
+                    trainingRequestId: trainingRequestId,
+                }
+            }
+        })
+
+        if (!trainingRequestCollaborator) {
+            return new NextResponse(`No se encontro una solicitud asociada a este colaborador`, { status: 400 });
+        }
+
+
+
         const certificate = await db.certificate.create({
             data: {
-                ...values
+                ...otherValues
+            }
+        })
+
+        const trainingUpdated = await db.trainingRequestCollaborator.update({
+            where: {
+                collaboratorId_trainingRequestId: {
+                    collaboratorId: otherValues.collaboratorId,
+                    trainingRequestId: trainingRequestId
+                }
+            },
+            data: {
+                wasCertified: true
             }
         })
 

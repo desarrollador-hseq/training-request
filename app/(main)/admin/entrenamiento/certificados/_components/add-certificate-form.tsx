@@ -40,6 +40,7 @@ interface AddCourseFormProps {
   isCreate: boolean;
   certAlreadyExists?: boolean;
   canManagePermissions: boolean;
+  trainingRequestId: string;
 }
 
 const formSchema = z.object({
@@ -93,6 +94,7 @@ export const AddCertificateForm = ({
   canManagePermissions,
   companyContact,
   companyEmail,
+  trainingRequestId
 }: AddCourseFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -183,7 +185,7 @@ export const AddCertificateForm = ({
 
         const { data } = await axios.post(
           `/api/certificates/`,
-          values
+          {trainingRequestId, ...values}
           );
      
       toast.info("Certificado actualizado correctamente");
@@ -421,6 +423,7 @@ export const AddCertificateForm = ({
               expeditionDate={watch("expeditionDate")}
               fullname={watch("collaboratorFullname")}
               btnDisabled={isSubmitting || !isValid}
+              trainingRequestId={trainingRequestId}
             />
           ) : (
             <Button

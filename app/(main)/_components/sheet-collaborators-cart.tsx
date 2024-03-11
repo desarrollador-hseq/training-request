@@ -16,7 +16,15 @@ import { SimpleModal } from "@/components/simple-modal";
 import { useCollaboratorsCart } from "@/components/providers/collaborators-cart-provider";
 import { formatDateOf } from "@/lib/utils";
 
-export const SheetCollaboratorsCart = ({canManagePermissions}: {canManagePermissions: boolean}) => {
+export const SheetCollaboratorsCart = ({
+  canManagePermissions,
+  canManageCompanies,
+  canManageRequests,
+}: {
+  canManagePermissions: boolean;
+  canManageCompanies: boolean;
+  canManageRequests: boolean;
+}) => {
   const {
     cartItems,
     removeCartItem,
@@ -27,11 +35,11 @@ export const SheetCollaboratorsCart = ({canManagePermissions}: {canManagePermiss
   const [items, setItems] = useState<number>(0);
 
   const onRemoveCompany = (id: string | null) => {
-    if(!id) return
+    if (!id) return;
     removeCartItem(id);
   };
-  const onRemoveCollaborator = (id: string | null)  => {
-    if(!id) return
+  const onRemoveCollaborator = (id: string | null) => {
+    if (!id) return;
     removeCollaboratorItem(id);
   };
 
@@ -42,6 +50,7 @@ export const SheetCollaboratorsCart = ({canManagePermissions}: {canManagePermiss
   useEffect(() => {
     setItems(cartItems.length);
   }, [cartItems]);
+
 
   return (
     <div className="">
@@ -106,7 +115,7 @@ export const SheetCollaboratorsCart = ({canManagePermissions}: {canManagePermiss
                 </div>
                 {cart.collaborators?.map((col, index) => (
                   <div
-                    key={col?.collaboratorId && col?.collaboratorId  + index}
+                    key={col?.collaboratorId && col?.collaboratorId + index}
                     className="flex justify-between items-center p-2 rounded-sm bg-primary/50 text-white mt-2"
                   >
                     <div className="flex flex-col">
@@ -156,7 +165,13 @@ export const SheetCollaboratorsCart = ({canManagePermissions}: {canManagePermiss
             <div className=" w-full">
               <SimpleModal
                 btnAsChild={true}
-                btnDisabled={items <= 0 || !canManagePermissions}
+                btnDisabled={
+                  items <= 0 ||
+                  !(
+                    (canManageCompanies && canManageRequests) ||
+                    canManagePermissions
+                  )
+                }
                 title="Notificación a empresas"
                 large={false}
                 onAcept={handleSendNotification}

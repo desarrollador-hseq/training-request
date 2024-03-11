@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { Certificate, Collaborator, Course, CourseLevel } from "@prisma/client";
 import { format } from "date-fns";
-import { Ban, Link2 } from "lucide-react";
+import { Ban, Eye, Link2 } from "lucide-react";
 import { es } from "date-fns/locale";
 
 interface CertificateWithCourseLevel extends Certificate {
@@ -49,13 +49,16 @@ export const AdminCollaboratorTableCollapsibleContent = ({
                     <TableHead className="text-primary">Curso</TableHead>
                     <TableHead className="text-primary">Nivel</TableHead>
                     <TableHead className="text-primary">Fecha</TableHead>
-                    <TableHead className="text-primary">Link</TableHead>
+                    <TableHead className="text-primary">Certificado</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {certificates &&
                     certificates.map((certificate) => (
-                      <TableRow key={certificate.id} className="border border-b-primary">
+                      <TableRow
+                        key={certificate.id}
+                        className="border border-b-primary"
+                      >
                         {certificate && (
                           <>
                             <TableCell>
@@ -69,22 +72,14 @@ export const AdminCollaboratorTableCollapsibleContent = ({
                                 locale: es,
                               })}
                             </TableCell>
-                            <TableCell>
-                              {certificate?.fileUrl ? (
-                                <a
-                                  href={certificate?.fileUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <div className="bg-emerald-700 px-1 rounded-sm w-[28px] flex justify-center">
-                                    <Link2 className="w-6 h-6 text-center text-white" />
-                                  </div>
-                                </a>
-                              ) : (
-                                <div className="bg-red-700 px-1 rounded-sm p-1 w-[28px] flex justify-center cursor-not-allowed">
-                                  <Ban className="w-4 h-4 text-white" />
-                                </div>
-                              )}
+                            <TableCell className="ms-3">
+                              <a
+                                href={`/admin/entrenamiento/certificados/${certificate.id}`}
+                                target="_blank"
+                                rel="noopener"
+                              >
+                                <Eye className="w-4 h-4 text-secondary" />
+                              </a>
                             </TableCell>
                           </>
                         )}

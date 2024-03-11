@@ -15,6 +15,7 @@ interface ButtonCreateCertificateProps {
   fullname: string;
   companyContact?: string | null;
   companyEmail?: string | null;
+  trainingRequestId?: string | null;
 }
 
 export const ButtonCreateCertificate = ({
@@ -24,17 +25,17 @@ export const ButtonCreateCertificate = ({
   btnDisabled,
   companyContact,
   companyEmail,
+  trainingRequestId,
 }: ButtonCreateCertificateProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
-  const [notifyCertificate, setNotifyCertificate] = useState(true);
 
   const handleCreateCertificate = async () => {
     setLoadingApp(true);
 
     // Crear certificado
     try {
-      const { data } = await axios.post(`/api/certificates/`, values);
+      const { data } = await axios.post(`/api/certificates/`, {trainingRequestId, ...values});
 
       router.push(`/admin/entrenamiento/certificados/${data.id}`);
 
@@ -59,22 +60,6 @@ export const ButtonCreateCertificate = ({
     >
       <div className="items-top flex flex-col space-x-2  my-3 p-2">
         <h5>¿Desea certificar al colaborador de nombre: {fullname}</h5>
-        <div className="items-top flex space-x-2  my-3 p-2 max-w-[300px]">
-          <Checkbox
-            id="notify"
-            checked={notifyCertificate}
-            onCheckedChange={(e) => setNotifyCertificate(!!e)}
-            className=""
-          />
-          <div className="grid gap-1.5 leading-none">
-            <label
-              htmlFor="notify"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Informar a la empresa
-            </label>
-          </div>
-        </div>
       </div>
     </SimpleModal>
   );

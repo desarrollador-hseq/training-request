@@ -90,7 +90,7 @@ export const CertificatePreview = ({
     id: "",
     createdAt: new Date(),
     updatedAt: new Date(),
-    wasSent: false
+    wasSent: false,
   });
 
   return (
@@ -150,6 +150,7 @@ export const CertificatePreview = ({
             certAlreadyExists={certificateWasCreatedId !== undefined}
             companyContact={companyContact}
             companyEmail={companyEmail}
+            trainingRequestId={trainingRequestId}
           />
         </CardContent>
       </Card>

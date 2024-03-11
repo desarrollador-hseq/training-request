@@ -70,7 +70,6 @@ export const IdentificationFileForm = ({
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
@@ -99,7 +98,6 @@ export const IdentificationFileForm = ({
   });
   const { isSubmitting, isValid } = form.formState;
   const { setValue } = form;
-
 
   useEffect(() => {
     setLoadingApp(true);
@@ -221,8 +219,12 @@ export const IdentificationFileForm = ({
       </div>
       {!isEditing &&
         (!fileUrl ? (
-          <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md w-full">
-            <ImageIcon className="w-10 h-10 text-slate-500" />
+          <div className="flex  flex-col items-center justify-center min-h-[120px] mt-3 h-full bg-slate-500 rounded-md w-full">
+            <ImageIcon className="w-10 h-10 text-slate-200" />
+            <div className="flex flex-col text-sm">
+              <div className="font-thin text-xs text-slate-200"><span className="font-bold text-sm" >Formatos Aceptados:</span> JPG, PNG Y PDF</div>
+              <div className="text-slate-200"><span className="font-bold ">Tamaño Max:</span> 1MB</div>
+            </div>
           </div>
         ) : (
           <div className="mt-2 min-w-full">
@@ -298,9 +300,10 @@ export const IdentificationFileForm = ({
                           </span>{" "}
                           o arrastra el archivo aquí
                         </p>
-                        <p className="text-sm text-zinc-200">
+                        <p className="text-sm text-slate-200">
                           Formatos aceptados: jpg, jpeg, png y pdf
                         </p>
+                        <div className="text-slate-200 text-sm"><span className="">Tamaño Max:</span> 1MB</div>
                       </div>
                     )}
                   </div>

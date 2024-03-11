@@ -17,8 +17,10 @@ const CertificatePage = async () => {
     where: {
       collaborator: {
         companyId: session.user.id,
+        // active: true,
       },
       active: true,
+      wasSent: true,
     },
     include: {
       courseLevel: {
@@ -28,7 +30,7 @@ const CertificatePage = async () => {
       },
     },
     orderBy: {
-      collaboratorId: "desc",
+      collaboratorFullname: "desc",
     },
   });
 

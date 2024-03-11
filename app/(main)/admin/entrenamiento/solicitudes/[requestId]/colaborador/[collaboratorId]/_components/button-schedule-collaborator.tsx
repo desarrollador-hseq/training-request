@@ -47,7 +47,7 @@ export const ButtonScheduleCollaborator = ({
   company,
   canManagePermissions,
   canManageRequests,
-  canManageCompanies
+  canManageCompanies,
 }: ButtonScheduleCollaboratorProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -175,7 +175,9 @@ export const ButtonScheduleCollaborator = ({
     <div className="w-full justify-center flex my-1">
       <SimpleModal
         btnDisabled={
-          isDisallowed || !date || !((canManageCompanies && canManageRequests) || canManagePermissions)
+          isDisallowed ||
+          !date ||
+          !((canManageCompanies && canManageRequests) || canManagePermissions)
         }
         btnClass="w-[50%] shadow-sm"
         textBtn={!!!scheduledDate.from ? "Programar" : "Reprogramar"}
@@ -190,7 +192,13 @@ export const ButtonScheduleCollaborator = ({
           <div>
             {!!!scheduledDate?.from && !!!scheduledDate?.to ? (
               <div>
-                <div className="items-top flex space-x-2 border-2 border-slate-300 my-3 p-2">
+                <p>
+                  Desea programar el colaborador {collaboratorName}, desde el
+                  día
+                  {format(date?.from, "PPP", { locale: es })} hasta el día
+                  {format(date?.to, "PPP", { locale: es })}
+                </p>
+                <div className="items-top flex space-x-2 w-fit rounded-md border-2 border-accent my-3 p-3 bg-red-100">
                   <Checkbox
                     id="notify"
                     checked={notifyFirstTime}
@@ -210,12 +218,6 @@ export const ButtonScheduleCollaborator = ({
                     </label>
                   </div>
                 </div>
-                <p>
-                  Desea programar el colaborador {collaboratorName}, desde el
-                  día
-                  {format(date?.from, "PPP", { locale: es })} hasta el día
-                  {format(date?.to, "PPP", { locale: es })}
-                </p>
               </div>
             ) : (
               <div>
@@ -231,19 +233,20 @@ export const ButtonScheduleCollaborator = ({
                     {format(date?.to, "PPP", { locale: es })}
                   </span>
                 </p>
-                <div className="items-top flex space-x-2 border-2 border-slate-300 my-3 p-2">
+                <div className="items-top w-fit rounded-md flex space-x-2 border-2 border-accent my-3 p-3 bg-red-100">
                   <Checkbox
                     id="notify"
                     checked={notifyReschedule}
                     onCheckedChange={(e) => setNotifyReschedule(!!e)}
+                    className="w-5 h-5"
                   />
-                  <div className="grid gap-1.5 leading-none">
+                  <div className="grid gap-1.5 leading-none place-items-center ">
                     <label
                       htmlFor="notify"
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
-                      Volver a notificar la fecha de inicio del curso por sms y
-                      correo electrónico al colaborador
+                      Notificar sobre la reprogramación de la fecha de inicio
+                      del curso por sms y correo electrónico al colaborador
                     </label>
                   </div>
                 </div>

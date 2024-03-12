@@ -17,7 +17,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import { cn, formatDateOf } from "@/lib/utils";
 
 const stateEsp = {
   PENDING: { text: "No enviada", col: "slate-500" },
@@ -82,7 +82,7 @@ export const adminRequestTablecolumns: ColumnDef<courseCompanyAndCollaborators>[
     },
     {
       accessorKey: "state",
-      accessorFn: (value) => value.state,
+      enableColumnFilter: false,
       header: ({ column }) => {
         return (
           <Button
@@ -95,18 +95,23 @@ export const adminRequestTablecolumns: ColumnDef<courseCompanyAndCollaborators>[
         );
       },
       cell: ({ row }) => {
-       
-        const stateTr = stateEsp[row.original.state] ;
+        const stateTr = stateEsp[row.original.state];
 
         return (
-          <div className={cn(`rounded-xl  bg-${stateTr.col}  text-white w-fit px-3 text-sm`)}>
-             {stateTr.text}
+          <div
+            className={cn(
+              `rounded-xl  bg-${stateTr.col}  text-white w-fit px-3 text-sm`
+            )}
+          >
+            {stateTr.text}
           </div>
         );
       },
     },
     {
-      accessorKey: "createdAt",
+      accessorKey: "activeFrom",
+      accessorFn: (value) =>
+        value.activeFrom && formatDateOf(new Date(value.activeFrom)),
       header: ({ column }) => {
         return (
           <Button

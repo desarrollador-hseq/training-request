@@ -31,6 +31,7 @@ import { cn } from "@/lib/utils";
 import { DataTablePagination } from "@/components/datatable-pagination";
 import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { AdminCollaboratorsSimpleTable } from "./admin-collaborators-simple-table";
+import TableColumnFiltering from "@/components/table-column-filtering";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -74,8 +75,6 @@ export function AdminRequestsTable<TData, TValue>({
     }
   };
 
-
-
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -89,7 +88,6 @@ export function AdminRequestsTable<TData, TValue>({
           }
           className="max-w-sm"
         />
- 
       </div>
       <div className="rounded-md border">
         <Table>
@@ -105,6 +103,16 @@ export function AdminRequestsTable<TData, TValue>({
                             header.column.columnDef.header,
                             header.getContext()
                           )}
+                      {header.column.getCanFilter() ? (
+                        <div className=" flex flex-col justify-around">
+                          <TableColumnFiltering
+                            column={header.column}
+                            table={table}
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-6"></div>
+                      )}
                     </TableHead>
                   );
                 })}
@@ -132,7 +140,7 @@ export function AdminRequestsTable<TData, TValue>({
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
-                            )}
+                          )}
                         </TableCell>
                       ))}
                       <CollapsibleTrigger

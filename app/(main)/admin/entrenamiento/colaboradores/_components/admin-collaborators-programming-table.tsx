@@ -113,11 +113,11 @@ export function AdminCollaboratorsProgrammingTable<TData, TValue>({
       </div>
       <div className="rounded-md border border-input overflow-hidden">
         <Table className="">
-          <TableHeader className="bg-primary">
+          <TableHeader className="bg-secondary">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="bg-primary hover:bg-primary"
+                className="bg-secondary"
               >
                 <TableHead />
                 {headerGroup.headers.map((header) => (

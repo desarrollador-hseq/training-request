@@ -91,12 +91,12 @@ export function AdminRequestsTable<TData, TValue>({
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-secondary text-white">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="py-2 text-secondary-foreground">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -116,6 +116,7 @@ export function AdminRequestsTable<TData, TValue>({
                     </TableHead>
                   );
                 })}
+                <TableHead />
               </TableRow>
             ))}
           </TableHeader>

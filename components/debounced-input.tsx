@@ -39,7 +39,7 @@ function DebouncedInput({
       type={type}
       value={value}
       onChange={(e) => setValue(e.target.value)}
-      className="h-7 rounded-none placeholder:text-slate-400 placeholder:text-xs"
+      className="h-7 rounded-none placeholder:text-slate-400 placeholder:text-xs text-slate-700"
       list={list}
       {...props}
     />

@@ -49,6 +49,7 @@ const UploadCollaboratorsExcel = () => {
     } finally {
       setisSubmitting(false);
       setLoadingApp(false)
+      setUsersLoaded([])
     }
   };
 

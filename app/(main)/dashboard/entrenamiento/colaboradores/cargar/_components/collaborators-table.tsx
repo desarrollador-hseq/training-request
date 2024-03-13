@@ -41,40 +41,43 @@ export const CollaboratorsExcelTable = ({
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       parsedData = XLSX.utils.sheet_to_json(sheet);
-
       const filteredData = (
         XLSX.utils.sheet_to_json(sheet) as Record<string, unknown>[]
       ).filter((row: Record<string, unknown>, index) => {
-        if (index === 0) return;
-        return Object.values(row).some(
-          (cell) => cell !== null || cell !== undefined || cell !== ""
-        );
+        if (index === 0) return true; // Mantener la fila de encabezados
+        const {
+          "Nombre completo": fullname,
+          "Tipo de documento": docType,
+          "# Documento": numDoc,
+          "Correo Electrónico": email,
+          "Teléfono móvil": phone,
+        } = row;
+        // Verificar campos obligatorios
+        if (!fullname || !docType || !numDoc) {
+          return false; // No pasar el filtro si falta un campo obligatorio
+        }
+        const trimmedEmail = (email || "").toString().trim();
+        const trimmedPhone = (phone || "").toString().trim();
+        // Guardar datos filtrados
+        setUsersLoaded((prevUsers) => [
+          ...prevUsers,
+          {
+            fullname: (fullname as string).trim(),
+            docType: (docType as string).trim(),
+            numDoc: ("" + numDoc).replace(/[.,]/g, "").trim(),
+            email: trimmedEmail,
+            phone: trimmedPhone,
+          },
+        ]);
+        return true;
       });
-
-      try {
-        setUsersLoaded(
-          filteredData.map((row: Record<string, unknown>) => ({
-            fullname: (row["Nombre completo"] as string).trim(),
-            docType: (row["Tipo de documento"] as string).trim(),
-            numDoc: ("" + row["# Documento"]).replace(/[.,]/g, "").trim(),
-            email: (row["Correo Electrónico"] as string).trim(),
-            phone: ("" + row["Teléfono móvil"]).trim(),
-          }))
-        );
-      } catch (error) {
-        setFile(null);
-        setUsersLoaded([]);
-        toast.error(
-          "Hubo un error al cargar los colaboradores por favor verifica el archivo seleccionado"
-        );
-      }
     };
   }, [file]);
 
   const handleFilterList = (indexToRemove: number) => {
     setUsersLoaded((prevUsersLoaded) =>
-    prevUsersLoaded.filter((_, index) => index !== indexToRemove)
-  );
+      prevUsersLoaded.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   return (
@@ -197,7 +200,10 @@ export const CollaboratorsExcelTable = ({
                       <TableCell key={index}>{value}</TableCell>
                     ))}
                     <TableCell key={index}>
-                      <Button className="p-1 h-fit" onClick={(e) => handleFilterList(index)}>
+                      <Button
+                        className="p-1 h-fit"
+                        onClick={(e) => handleFilterList(index)}
+                      >
                         <X className="w-5 h-5 " />
                       </Button>
                     </TableCell>

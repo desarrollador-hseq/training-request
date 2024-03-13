@@ -41,14 +41,18 @@ export const ValidateDocuments = ({
     <div className="w-full flex justify-center px-6 mt-3">
       <SimpleModal
         large={false}
-        btnClass="max-w-[200px] w-full"
-        textBtn={<FileCheck />}
+        btnClass="max-w-fit w-full"
+        textBtn={
+          <span className="flex items-center gap-2">
+            <FileCheck /> Validar todos los documentos{" "}
+          </span>
+        }
         onAcept={onClick}
         btnDisabled={!(canManagePermissions || canManageRequest)}
         title="¿Desea validar los documentos actuales?"
       >
         <h3>
-          Si los documentos actuales del presente colaborador son correctos
+          Si los documentos actuales del presente colaborador son correctos,
           presione aceptar
         </h3>
       </SimpleModal>

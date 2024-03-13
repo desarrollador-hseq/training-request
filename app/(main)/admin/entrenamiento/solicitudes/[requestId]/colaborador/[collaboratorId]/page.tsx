@@ -11,8 +11,8 @@ import { Banner } from "@/components/banner";
 import { authOptions } from "@/lib/authOptions";
 
 const crumbs = [
-  { label: "solicitudes", path: "solicitudes" },
-  { label: "colaborador", path: "colaborador" },
+  { label: "solicitudes", path: "/admin/entrenamiento/solicitudes/" },
+  { label: "colaborador", path: "colaborador", click: false  },
   { label: "programar", path: "programar" },
 ];
 

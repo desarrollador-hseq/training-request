@@ -5,12 +5,13 @@ import { Card, CardHeader } from "./ui/card";
 
 interface KpiCardProps {
   icon: ReactNode;
+  btnStatistics?: ReactNode;
   title: string;
   color: string;
   number: number | string;
 }
 
-export const KpiCard = ({ number, title, color, icon: Icon }: KpiCardProps) => {
+export const KpiCard = ({ number, title, color, icon: Icon, btnStatistics }: KpiCardProps) => {
   
   return (
     <Card className="p-1 flex flex-col justify-center  border-secondary rounded-xl">
@@ -28,6 +29,8 @@ export const KpiCard = ({ number, title, color, icon: Icon }: KpiCardProps) => {
               <div className="text-3xl font-bold text-secondary text-center">
                 {number}
               </div>
+
+              {btnStatistics}
             </div>
           </div>
         </div>

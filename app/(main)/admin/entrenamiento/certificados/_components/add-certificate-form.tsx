@@ -3,19 +3,24 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { PDFViewer } from "@react-pdf/renderer";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Certificate, Coach } from "@prisma/client";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { InputForm } from "@/components/input-form";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { CalendarInputForm } from "@/components/calendar-input-form";
 import { DocumentCertificateTemplate } from "../../../../_components/document-certificate-template";
-import { formatDateCert, formatDateOf } from "@/lib/utils";
+import {
+  cn,
+  formatDateCert,
+  formatDateOf,
+  removeSpecialChars,
+} from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -30,6 +35,7 @@ import { useLoading } from "@/components/providers/loading-provider";
 import { DocumentCertificateTemplateCues } from "@/app/(main)/_components/document-certificate-template-cues";
 import { ButtonCreateCertificate } from "../generar/[collaboratorId]/[requestId]/_components/button-create-certificate";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ButtonDownloadCertificatePdf } from "@/app/(main)/_components/button-download-certificate-pdf";
 
 interface AddCourseFormProps {
   certificate?: Certificate | null;
@@ -94,7 +100,7 @@ export const AddCertificateForm = ({
   canManagePermissions,
   companyContact,
   companyEmail,
-  trainingRequestId
+  trainingRequestId,
 }: AddCourseFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
@@ -180,43 +186,43 @@ export const AddCertificateForm = ({
     }
     setLoadingApp(true);
     try {
+      if (isCreate) {
+        const { data } = await axios.post(`/api/certificates/`, {
+          trainingRequestId,
+          ...values,
+        });
 
-      if(isCreate) {
+        toast.info("Certificado actualizado correctamente");
 
-        const { data } = await axios.post(
-          `/api/certificates/`,
-          {trainingRequestId, ...values}
-          );
-     
-      toast.info("Certificado actualizado correctamente");
-
-      if (notifyCertificate) {
-        try {
-          await axios.post(`/api/mail/certificate-created`, {
-            certificate: {
-              collaboratorFullname: values.collaboratorFullname,
-              course: values.courseName,
-              level:
-                values.courseName === values.levelName
-                  ? null
-                  : values.levelName,
-              companyContact: companyContact,
-              certificateId: data?.id,
-            },
-            email: companyEmail,
-          });
-          toast.info("Correo enviado correctamente");
-        } catch (error) {
-          toast.error("Ocurrió un error al notificar por correo a la empresa");
+        if (notifyCertificate) {
+          try {
+            await axios.post(`/api/mail/certificate-created`, {
+              certificate: {
+                collaboratorFullname: values.collaboratorFullname,
+                course: values.courseName,
+                level:
+                  values.courseName === values.levelName
+                    ? null
+                    : values.levelName,
+                companyContact: companyContact,
+                certificateId: data?.id,
+              },
+              email: companyEmail,
+            });
+            toast.info("Correo enviado correctamente");
+          } catch (error) {
+            toast.error(
+              "Ocurrió un error al notificar por correo a la empresa"
+            );
+          }
         }
-      }
-    } else {
-      setLoadingApp(true)
-      const { data } = await axios.patch(
-        `/api/certificates/${certificate?.id}`,
-        values
+      } else {
+        setLoadingApp(true);
+        const { data } = await axios.patch(
+          `/api/certificates/${certificate?.id}`,
+          values
         );
-    }
+      }
 
       // router.push(`/admin/entrenamiento/certificados`);
       router.refresh();
@@ -333,7 +339,7 @@ export const AddCertificateForm = ({
                 certificateId={certificate?.id}
                 coachId={certificate?.coachId}
               /> */}
-              <div className="w-full">
+              <div className="w-full gap-y-3 mt-2 flex flex-col">
                 <Label className="font-bold" htmlFor="coachId">
                   Entrenador
                 </Label>
@@ -360,29 +366,31 @@ export const AddCertificateForm = ({
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <CalendarInputForm
-                  control={form.control}
-                  label="Fecha de expedición del certificado"
-                  name="expeditionDate"
-                  disabled={inputsDisabled}
-                />
-              </div>
-              <div>
-                <CalendarInputForm
-                  control={form.control}
-                  label="Fecha de la capacitación"
-                  name="certificateDate"
-                  disabled={inputsDisabled}
-                />
-              </div>
-              <div>
-                <CalendarInputForm
-                  control={form.control}
-                  label="Reentrenamiento para"
-                  name="dueDate"
-                  disabled={inputsDisabled}
-                />
+              <div className="grid md:grid-cols-1 xl:grid-cols-2 grid-cols-2 gap-y-5 pt-4">
+                <div>
+                  <CalendarInputForm
+                    control={form.control}
+                    label="Fecha de expedición del certificado"
+                    name="expeditionDate"
+                    disabled={inputsDisabled}
+                  />
+                </div>
+                <div>
+                  <CalendarInputForm
+                    control={form.control}
+                    label="Fecha final de la capacitación"
+                    name="certificateDate"
+                    disabled={inputsDisabled}
+                  />
+                </div>
+                <div>
+                  <CalendarInputForm
+                    control={form.control}
+                    label="Reentrenamiento para"
+                    name="dueDate"
+                    disabled={inputsDisabled}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -438,9 +446,12 @@ export const AddCertificateForm = ({
       </Form>
 
       <div className="relative">
-        {isClient && certificate && canManagePermissions && (
+        {isClient && certificate && canManagePermissions ? (
           <>
-            <SubtitleSeparator text="Previsualización del certificado" />
+            <SubtitleSeparator text="Previsualización del certificado">
+              <ButtonDownloadCertificatePdf baseUrl={baseUrl} certificate={certificate} />
+            </SubtitleSeparator>
+
             <PDFViewer
               showToolbar={false}
               style={{ width: "100%", height: "856px" }}
@@ -496,8 +507,12 @@ export const AddCertificateForm = ({
               )}
             </PDFViewer>
           </>
+        ) : (
+          <span></span>
         )}
       </div>
     </div>
   );
 };
+
+

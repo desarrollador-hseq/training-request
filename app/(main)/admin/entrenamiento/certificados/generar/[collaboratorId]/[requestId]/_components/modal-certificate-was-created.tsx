@@ -30,7 +30,7 @@ export const ModalCertificateWasCreated = ({}: {}) => {
           <AlertDialogContent className="w-full max-w-[700px]">
             <AlertDialogHeader>
               <AlertDialogTitle>
-                <h2 className="text-2xl text-bold">¡Atención!</h2>
+                <span className="text-2xl text-bold">¡Atención!</span>
               </AlertDialogTitle>
               <AlertDialogDescription className="mt-5 text-slate-700 text-lg flex flex-col gap-2 ">
                 Ya existe un certificado para este colaborador en el mismo curso

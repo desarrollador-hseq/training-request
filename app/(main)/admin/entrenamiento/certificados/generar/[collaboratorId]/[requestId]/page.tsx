@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { db } from "@/lib/db";
 import { CertificatePreview } from "./_components/certificate-preview";
 import { TitleOnPage } from "@/components/title-on-page";
 import { ModalCertificateWasCreated } from "./_components/modal-certificate-was-created";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 
 interface GenerateCertificatePageProps {

@@ -42,3 +42,14 @@ export const capitalize = (sentence: string) => {
     return sentence.charAt(0).toUpperCase() + sentence.slice(1);
   }
 };
+
+export const removeSpecialChars = (str: string) => {
+  // Define un mapa de caracteres especiales y sus equivalentes sin acentos
+  const specialCharsMap: { [key: string]: string } = {
+    "á": "a", "é": "e", "í": "i", "ó": "o", "ú": "u",
+    "ñ": "n", "ü": "u", "Á": "A", "É": "E", "Í": "I",
+    "Ó": "O", "Ú": "U", "Ñ": "N", "Ü": "U"
+  };
+  // Utiliza una expresión regular para buscar caracteres especiales y reemplazarlos
+  return str.replace(/[áéíóúñüÁÉÍÓÚÑÜ]/g, (match) => specialCharsMap[match]);
+};

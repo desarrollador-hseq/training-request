@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   // cron para enviar email antes de vencer certificado. 1mes
-  cronCertificateToExpireSoons();
+  // cronCertificateToExpireSoons();
 
   return (
     <ClientCookiesProvider value={cookies().getAll()}>

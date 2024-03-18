@@ -45,7 +45,7 @@ const UploadCollaboratorsExcel = () => {
         );
       }
     } catch (error) {
-      console.log({ iserror: error });
+      console.log({ error: error });
     } finally {
       setisSubmitting(false);
       setLoadingApp(false)
@@ -74,10 +74,10 @@ const UploadCollaboratorsExcel = () => {
         text="Cargar colaboradores desde un archivo"
         bcrumb={bcrumbs}
       >
-        <div className="flex items-center gap-2">
-          <Button onClick={handleDownloadTemplate} className="gap-2">
+        <div className="flex items-center gap-2 ">
+          <Button onClick={handleDownloadTemplate} className="gap-2  py-7 px-6">
             <FileDown />
-            Plantilla de excel
+            Descargar plantilla de excel
           </Button>
           <TooltipInfo text="Se debe descargar y llenar esta plantilla para cargar los colaboradores de la empresa">
             <Info className="text-white w-6 h-6" />

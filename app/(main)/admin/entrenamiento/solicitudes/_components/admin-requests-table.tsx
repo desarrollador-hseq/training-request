@@ -16,7 +16,6 @@ import {
 import { ChevronDownSquare, ChevronUpSquare } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -78,16 +77,7 @@ export function AdminRequestsTable<TData, TValue>({
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Buscar por tipo"
-          value={
-            (table.getColumn("courseId")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("courseId")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+     
       </div>
       <div className="rounded-md border">
         <Table>

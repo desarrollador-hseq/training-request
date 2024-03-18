@@ -93,13 +93,13 @@ export const ButtonScheduleCollaborator = ({
           try {
             await axios.post("/api/messages/", {
               msisdn: collaboratorPhone,
-              message: `[GRUPOHSEQ] informa que ud ha sido inscrito a curso: ${
+              message: `[GRUPOHSEQ] informa que ud fue inscrito a curso: ${
                 levelName === courseName
                   ? shortName
                   : `${courseName} - ${levelName}`
               }, dia ${format(date?.from!, "P", {
                 locale: es,
-              })} 7:30am ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/3T9vy8h`,
+              })} 7:30am - calle30#10-232 L.1 - requisito: https://bit.ly/3T9vy8h`,
             });
             toast.success("SMS enviado");
           } catch (error) {
@@ -128,13 +128,13 @@ export const ButtonScheduleCollaborator = ({
         try {
           await axios.post("/api/messages/", {
             msisdn: collaboratorPhone,
-            message: `[GRUPOHSEQ] informa que ud ha sido inscrito a curso: ${
+            message: `[GRUPOHSEQ] informa que ud fue reprogramado, curso: ${
               levelName === courseName
                 ? shortName
                 : `${courseName} - ${levelName}`
             }, dia ${format(date?.from!, "P", {
               locale: es,
-            })} 7:30am ubicacion: calle30#10-232 L-1 requisito: https://bit.ly/3T9vy8h`,
+            })} 7:30am - calle30#10-232 L.1 requisito: https://bit.ly/3T9vy8h`,
           });
           toast.success("SMS reprogramacion enviado");
         } catch (error) {

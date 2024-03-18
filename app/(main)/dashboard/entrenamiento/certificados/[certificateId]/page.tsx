@@ -37,6 +37,7 @@ const ShowCertificatePage = async ({
     },
   });
 
+
   return (
     <div>
       {certificate && (

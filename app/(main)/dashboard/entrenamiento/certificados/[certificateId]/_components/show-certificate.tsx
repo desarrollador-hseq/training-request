@@ -6,6 +6,7 @@ import { Certificate } from "@prisma/client";
 import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
 import { formatDateCert, formatDateOf } from "@/lib/utils";
 import { DocumentCertificateTemplateCues } from "@/app/(main)/_components/document-certificate-template-cues";
+import { ButtonDownloadCertificatePdf } from "@/app/(main)/_components/button-download-certificate-pdf";
 
 export const ShowCertificate = ({
   certificate,
@@ -21,9 +22,18 @@ export const ShowCertificate = ({
   }, []);
 
   return (
-    <div>
+    <div className="w-full">
+      <div className="my-3 w-full justify-end flex ">
+        <ButtonDownloadCertificatePdf
+          baseUrl={baseUrl}
+          certificate={certificate}
+        />
+      </div>
       {isClient && (
-        <PDFViewer style={{ width: "100%", height: "870px" }}>
+        <PDFViewer
+          showToolbar={false}
+          style={{ width: "100%", height: "856px" }}
+        >
           {certificate.courseName === "Mercancías peligrosas" ? (
             <DocumentCertificateTemplateCues
               course={certificate.courseName}
@@ -51,6 +61,9 @@ export const ShowCertificate = ({
               levelHours={"" + certificate.levelHours}
               resolution={certificate.resolution}
               endDate={formatDateOf(certificate.certificateDate!)}
+              legalRepresentative={certificate.legalRepresentative}
+              companyNit={certificate.companyNit}
+              companyName={certificate.companyName}
               arlName={certificate.collaboratorArlName}
               certificateId={certificate.id}
               fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}

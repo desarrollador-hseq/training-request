@@ -318,13 +318,15 @@ export const DocumentCertificateTemplateCues = ({
                     alignItems: "flex-end",
                   }}
                 >
-                  {fileUrl && (
+                  {fileUrl ? (
                     <Link src={fileUrl}>
                       <Image
                         style={{ width: 80, height: 80, alignSelf: "flex-end" }}
                         src={QRCode.toDataURL(fileUrl)}
                       />
                     </Link>
+                  ) : (
+                    <View style={{display: "none"}} />
                   )}
                   <Text style={{ fontSize: 8, textAlign: "right" }}>
                     Para verificar el presente documento, escanea el código QR.

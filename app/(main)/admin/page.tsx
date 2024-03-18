@@ -1,4 +1,4 @@
-import { BookOpen, Building2, PersonStanding, ScrollText } from "lucide-react";
+import { BarChart3, BookOpen, Building2, PersonStanding, PieChart, ScrollText } from "lucide-react";
 import { db } from "@/lib/db";
 import { TitleOnPage } from "@/components/title-on-page";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { adminRequestTablecolumns } from "./entrenamiento/solicitudes/_components/admin-requests-table-columns";
 import { RequestReport } from "./_components/request-report";
 import { ModalMoreReports } from "./_components/modal-more-reports";
+import { SimpleModal } from "@/components/simple-modal";
 
 const crumbs = [{ label: "inicio", path: "inicio" }];
 
@@ -120,13 +121,18 @@ const AdminPage = async () => {
       <TitleOnPage text="Panel" bcrumb={crumbs} />
       <div className="flex items-center w-full">
         <div className="w-full my-2">
-          <div className="grid md:grid-cols-2 gap-2">
-            <div className="grid gap-3 sm:grid-cols-2  w-full">
+          <div className=" gap-2">
+            <div className="grid gap-2 sm:grid-cols-3 w-full">
               <KpiCard
                 color="yellow"
                 icon={<Building2 className="text-yellow-500 w-8 h-8" />}
                 title="Empresas"
                 number={companies.length}
+                btnStatistics={
+                  <SimpleModal textBtn={<BarChart3 />} title="Estadisticas" btnClass=" px-3 w-fit">
+                    asdf
+                  </SimpleModal>
+                }
               />
               <KpiCard
                 color="cyan"
@@ -152,14 +158,20 @@ const AdminPage = async () => {
                 title="Administradores"
                 number={admins.length}
               />
+              <KpiCard
+                color="emerald"
+                icon={<PersonStanding className="text-emerald-500 w-8 h-8" />}
+                title="Administradores"
+                number={admins.length}
+              />
             </div>
 
-            <div>
+            {/* <div>
             <RequestReport requests={requests} />
-            {/* <ModalMoreReports requests={requests} companies={companies}  /> */}
-            </div>
+            </div> */}
 
           </div>
+            {/* <ModalMoreReports requests={requests} companies={companies}  /> */}
         </div>
       </div>
 

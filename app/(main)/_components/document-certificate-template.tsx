@@ -89,6 +89,7 @@ export const DocumentCertificateTemplate = ({
   expireDate,
   verifying = false,
 }: CertificateTemplateProps) => {
+
   return (
     <Document
       style={{ height: "100%" }}
@@ -246,10 +247,10 @@ export const DocumentCertificateTemplate = ({
                   <Text style={{ fontWeight: "bold" }}>{numDoc}</Text>
                 </Text>
 
-                {arlName &&
+                {(arlName &&
                   companyName &&
                   companyNit &&
-                  legalRepresentative && (
+                  legalRepresentative) ? (
                     <Text style={{  fontSize: 10,
                       marginBottom: 10,
                       color: "#444749",
@@ -270,14 +271,14 @@ export const DocumentCertificateTemplate = ({
                       </Text>
                       .
                     </Text>
-                  )}
+                  ) : <View />}
 
                 <Text style={{ ...styles.text, marginBottom: 5 }}>
                   Asistió y aprobó la acción de capacitación y entrenamiento en
-                  {course === "Trabajo en altura" ||
-                  course === "Espacios confinados"
+                  {(course === "Trabajo en altura" ||
+                  course === "Espacios confinados")
                     ? " nivel"
-                    : ""}
+                    : <View />}
                 </Text>
 
                 <View
@@ -298,7 +299,7 @@ export const DocumentCertificateTemplate = ({
                   >
                     {level}
                   </Text>
-                  {course != level && (
+                  {course != level ? (
                     <Text
                       style={{
                         fontSize: 20,
@@ -308,14 +309,14 @@ export const DocumentCertificateTemplate = ({
                     >
                       {course}
                     </Text>
-                  )}
+                  ): <View />}
                 </View>
 
-                {resolution && (
+                {resolution ? (
                   <Text style={{ fontSize: 11, fontWeight: "semibold" }}>
                     {resolution}
                   </Text>
-                )}
+                ): <View />}
                 <View style={{ marginBottom: 5, marginTop: 12 }}>
                   <Text style={styles.text}>
                     Con una intensidad de{" "}
@@ -354,20 +355,20 @@ export const DocumentCertificateTemplate = ({
                   marginTop: 50,
                 }}
               >
-                {(course === "Trabajo en altura" ||
+                {((course === "Trabajo en altura" ||
                   course === "Espacios confinados") &&
                   coachName &&
                   coachImgSignatureUrl &&
-                  coachPosition && (
+                  coachPosition) ? (
                     <DocumentSignatureCertificate
                       licence={coachLicence}
                       name={coachName}
                       position={coachPosition}
                       imageUrl={coachImgSignatureUrl}
                     />
-                  )}
+                  ): <View style={{display: "none"}} />}
 
-                {!verifying && (
+             
                   <View
                     style={{
                       display: "flex",
@@ -397,11 +398,11 @@ export const DocumentCertificateTemplate = ({
                     </Text>
                     <Text style={{ fontSize: 10 }}>Representante legal</Text>
                     {(course === "Trabajo en altura" ||
-                      course === "Espacios confinados") && (
+                      course === "Espacios confinados") ? (
                       <Text style={{ fontSize: 10 }}> </Text>
-                    )}
+                    ): <View />}
                   </View>
-                )}
+               
 
                 <View
                   style={{
@@ -410,14 +411,14 @@ export const DocumentCertificateTemplate = ({
                     alignItems: "flex-end",
                   }}
                 >
-                  {fileUrl && (
+                  {fileUrl ? (
                     <Link src={fileUrl}>
                       <Image
                         style={{ width: 80, height: 80 }}
                         src={QRCode.toDataURL(fileUrl)}
                       />
                     </Link>
-                  )}
+                  ): <View />}
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={{ fontSize: 7, textAlign: "right" }}>
                       Para verificar el presente documento, escanear el código

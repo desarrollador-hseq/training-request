@@ -134,7 +134,7 @@ export const ButtonScheduleCollaborator = ({
                 : `${courseName} - ${levelName}`
             }, dia ${format(date?.from!, "P", {
               locale: es,
-            })} 7:30am - calle30#10-232 L.1 requisito: https://bit.ly/3T9vy8h`,
+            })} 7:30am - calle30#10-232 L.1 - requisito: https://bit.ly/3T9vy8h`,
           });
           toast.success("SMS reprogramacion enviado");
         } catch (error) {

@@ -1,4 +1,14 @@
-import { BarChart3, BookOpen, Building2, PersonStanding, PieChart, ScrollText } from "lucide-react";
+import {
+  BarChart3,
+  BookOpen,
+  Building2,
+  KeyRound,
+  KeySquare,
+  Lock,
+  PersonStanding,
+  PieChart,
+  ScrollText,
+} from "lucide-react";
 import { db } from "@/lib/db";
 import { TitleOnPage } from "@/components/title-on-page";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -95,7 +105,7 @@ const AdminPage = async () => {
             company: {
               select: {
                 nit: true,
-                active: true
+                active: true,
               },
             },
             certificates: {
@@ -116,6 +126,12 @@ const AdminPage = async () => {
       },
     });
 
+  const coaches = await db.coach.findMany({
+    where: {
+      active: true,
+    },
+  });
+
   return (
     <div>
       <TitleOnPage text="Panel" bcrumb={crumbs} />
@@ -128,17 +144,30 @@ const AdminPage = async () => {
                 icon={<Building2 className="text-yellow-500 w-8 h-8" />}
                 title="Empresas"
                 number={companies.length}
-                btnStatistics={
-                  <SimpleModal textBtn={<BarChart3 />} title="Estadisticas" btnClass=" px-3 w-fit">
-                    asdf
-                  </SimpleModal>
-                }
+                // btnStatistics={
+                //   <SimpleModal
+                //     textBtn={<BarChart3 />}
+                //     title="Estadisticas"
+                //     btnClass=" px-3 w-fit"
+                //   >
+                //     soon
+                //   </SimpleModal>
+                // }
               />
               <KpiCard
                 color="cyan"
                 icon={<ScrollText className="text-cyan-500 w-8 h-8" />}
                 title="Solicitudes"
                 number={trainingRequests.length}
+                btnStatistics={
+                  <SimpleModal
+                    textBtn={<BarChart3 />}
+                    title="Estadisticas"
+                    btnClass=" px-3 w-fit"
+                  >
+                    <RequestReport requests={requests} />
+                  </SimpleModal>
+                }
               />
               <KpiCard
                 color="blue"
@@ -155,12 +184,12 @@ const AdminPage = async () => {
               <KpiCard
                 color="emerald"
                 icon={<PersonStanding className="text-emerald-500 w-8 h-8" />}
-                title="Administradores"
-                number={admins.length}
+                title="Entrenadores"
+                number={coaches.length}
               />
               <KpiCard
-                color="emerald"
-                icon={<PersonStanding className="text-emerald-500 w-8 h-8" />}
+                color="slate"
+                icon={<KeySquare className=" text-slate-500 w-8 h-8" />}
                 title="Administradores"
                 number={admins.length}
               />
@@ -169,9 +198,8 @@ const AdminPage = async () => {
             {/* <div>
             <RequestReport requests={requests} />
             </div> */}
-
           </div>
-            {/* <ModalMoreReports requests={requests} companies={companies}  /> */}
+          {/* <ModalMoreReports requests={requests} companies={companies}  /> */}
         </div>
       </div>
 
@@ -187,7 +215,9 @@ const AdminPage = async () => {
           <CardContent>
             <AdminRequestsTable
               columns={adminRequestTablecolumns}
-              data={requestsActives.filter(req => req.company.active === true)}
+              data={requestsActives.filter(
+                (req) => req.company.active === true
+              )}
             />
           </CardContent>
         </Card>
@@ -201,7 +231,9 @@ const AdminPage = async () => {
           <CardContent>
             <AdminCollaboratorsProgrammingTable
               columns={columnsAdminCollaboratorTableSimple}
-              data={trainingRequestCollaborator.filter(traCol => traCol?.collaborator?.company?.active === true)}
+              data={trainingRequestCollaborator.filter(
+                (traCol) => traCol?.collaborator?.company?.active === true
+              )}
             />
           </CardContent>
         </Card>

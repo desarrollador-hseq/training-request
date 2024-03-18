@@ -14,7 +14,7 @@ interface KpiCardProps {
 export const KpiCard = ({ number, title, color, icon: Icon, btnStatistics }: KpiCardProps) => {
   
   return (
-    <Card className="p-1 flex flex-col justify-center  border-secondary rounded-xl">
+    <Card className="p-1 flex flex-col justify-center  border-secondary rounded-xl relative overflow-hidden">
       <CardHeader className="p-2">
         <div className="grid grid-cols-3 grid-rows-2 gap-2 place-content-center place-items-center">
           <div
@@ -30,7 +30,9 @@ export const KpiCard = ({ number, title, color, icon: Icon, btnStatistics }: Kpi
                 {number}
               </div>
 
+              <div className="absolute bottom-0 right-0">
               {btnStatistics}
+              </div>
             </div>
           </div>
         </div>

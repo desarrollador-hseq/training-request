@@ -43,7 +43,8 @@ export async function POST(req: Request) {
             return new NextResponse(`Missing property: ${missingProperty}`, { status: 400 });
         }
 
-        const {trainingRequestId, ...otherValues} = values
+        const {trainingRequestId,levelHours,  ...otherValues} = values
+        const levelHoursParse = parseInt(levelHours) ?? 8;
 
         const trainingRequestCollaborator = await db.trainingRequestCollaborator.findUnique({
             where: {
@@ -59,10 +60,10 @@ export async function POST(req: Request) {
         }
 
 
-
         const certificate = await db.certificate.create({
             data: {
-                ...otherValues
+                ...otherValues,
+                levelHours: levelHoursParse
             }
         })
 

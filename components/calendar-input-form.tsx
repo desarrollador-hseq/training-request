@@ -72,6 +72,10 @@ export const CalendarInputForm: React.FC<InputFormProps<any>> = ({
                 onSelect={field.onChange}
                 disabled={((date) => date < new Date("1900-01-01")) || disabled}
                 initialFocus
+                fromYear={2010}
+                toYear={2040}
+                captionLayout="dropdown-buttons"
+
               />
             </PopoverContent>
           </Popover>

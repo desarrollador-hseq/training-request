@@ -138,7 +138,7 @@ export function CollaboratorsSelectTable<TData, TValue>({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <div className="flex items-center py-4">
         <Input
           placeholder="Buscar por documento"
@@ -150,8 +150,8 @@ export function CollaboratorsSelectTable<TData, TValue>({
         />
   
       </div>
-      <div className="rounded-md border">
-        <Table>
+      <div className="rounded-md border ">
+        <Table className="">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -170,7 +170,7 @@ export function CollaboratorsSelectTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="overflow-y-auto">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <Collapsible
@@ -195,7 +195,7 @@ export function CollaboratorsSelectTable<TData, TValue>({
                         </TableCell>
                       ))}
                       {/*------- collapsible trigger -------*/}
-                      <CollapsibleTrigger
+                      {/* <CollapsibleTrigger
                         onClick={() => handleCollapsible(row.id)}
                         asChild
                       >
@@ -208,19 +208,19 @@ export function CollaboratorsSelectTable<TData, TValue>({
                             )}
                           </Button>
                         </td>
-                      </CollapsibleTrigger>
+                      </CollapsibleTrigger> */}
                     </TableRow>
                     <CollapsibleContentTable
                       colSpan={5}
                       openCollapsible={idOpenCollapsible === row.id}
                     >
                       <div>
-                        <Card className="bg-slate-200">
+                        {/* <Card className="bg-slate-200">
                           <CardHeader>
                             <h3>Datos de formacion</h3>
                           </CardHeader>
                           <CardContent>item</CardContent>
-                        </Card>
+                        </Card> */}
                       </div>
                     </CollapsibleContentTable>
                   </>

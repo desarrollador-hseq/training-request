@@ -149,6 +149,8 @@ enum DocType {
   CC
   TI
   CE
+  PP
+  PE
 }
 
 model TrainingRequestCollaborator {

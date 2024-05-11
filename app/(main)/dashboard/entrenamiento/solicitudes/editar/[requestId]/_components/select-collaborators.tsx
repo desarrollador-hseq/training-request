@@ -97,17 +97,17 @@ export const SelectCollaborators = ({
               </span>
             </div>
           </SheetTrigger>
-          <SheetContent side="top">
+          <SheetContent side="top" className="h-[96%] overflow-auto">
             <SheetHeader>
               <SheetTitle>Añadir colaboradores a la solicitud</SheetTitle>
-              <SheetDescription className="text-[16px] mt-1">
+              <SheetDescription className="text-[14px] mt-1">
                 Selecciona todos los colaboradores que desees agregar a la
                 solicitud. Recuerda que los colaboradores resaltados ya están
                 seleccionados. Una vez que hayas completado la selección, haz
                 clic en el botón de guardar.
               </SheetDescription>
             </SheetHeader>
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-4 pb-4">
               <CollaboratorsSelectTable
                 collaboratorsSelected={collaboratorsSelected}
                 columns={columnsCollaboratorSelectTable}

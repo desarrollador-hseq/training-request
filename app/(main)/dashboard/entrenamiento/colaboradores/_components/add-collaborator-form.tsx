@@ -201,6 +201,12 @@ export const AddCollaboratorForm = ({
                           <SelectItem value="TI">
                             Tarjeta de Identidad
                           </SelectItem>
+                          <SelectItem value="PP">
+                            Permiso por Protección temporal
+                          </SelectItem>
+                          <SelectItem value="PE">
+                            Permiso Especial de Permanencia
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage className="ml-6 text-[0.8rem] text-red-500 font-medium" />

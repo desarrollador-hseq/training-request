@@ -6,7 +6,6 @@ import { pdfjs } from "react-pdf";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMonths } from "date-fns";
 import { Certificate } from "@prisma/client";
 
 import { DocumentCertificateTemplate } from "@/app/(main)/_components/document-certificate-template";
@@ -83,11 +82,23 @@ export const ViewCertificatePdf = ({
               course={certificate.courseName}
               levelHours={"" + certificate.levelHours}
               resolution={certificate.resolution}
-              endDate={formatDateOf(certificate.certificateDate!)}
+              endDate={
+                certificate.certificateDate
+                  ? formatDateOf(certificate.certificateDate!)
+                  : ""
+              }
+              startDate={
+                certificate.startDate
+                  ? formatDateOf(certificate.startDate!)
+                  : ""
+              }
               arlName={certificate.collaboratorArlName}
               certificateId={certificate.id}
               fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-              expeditionDate={formatDateCert(certificate.expeditionDate!)}
+              expeditionDate={
+                certificate.expeditionDate &&
+                formatDateCert(certificate.expeditionDate!)
+              }
               expireDate={
                 certificate.dueDate && formatDateOf(certificate.dueDate)
               }

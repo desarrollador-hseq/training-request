@@ -30,12 +30,14 @@ export async function POST(req: Request, { params }: { params: { certificateId: 
             }
         })
 
+        
+
         await db.certificateEvent.create({
             data: {
                 eventType: "UNSEND",
                 adminId:  session.user.id!,
                 certificateId: certificateValidate.id,
-                certificateData: JSON.stringify(certificateValidate),
+                // certificateData: JSON.stringify(certificateValidate),
             }
         })
 

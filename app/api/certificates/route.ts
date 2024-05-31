@@ -3,13 +3,15 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { authOptions } from "@/lib/authOptions"
 import { db } from "@/lib/db"
+import { formatDateSm } from "@/lib/utils"
+
 
 
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions)
     try {
         if (!session || session.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
-    
+
 
         const values = await req.json()
         const requiredProperties = [
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
             "levelHours",
             "certificateDate",
             "expeditionDate",
-           
+
             // "monthsToExpire",
             "coachName",
             "coachPosition",
@@ -43,7 +45,7 @@ export async function POST(req: Request) {
             return new NextResponse(`Missing property: ${missingProperty}`, { status: 400 });
         }
 
-        const {trainingRequestId,levelHours,  ...otherValues} = values
+        const { trainingRequestId, levelHours, ...otherValues } = values
         const levelHoursParse = parseInt(levelHours) ?? 8;
 
         const trainingRequestCollaborator = await db.trainingRequestCollaborator.findUnique({
@@ -79,12 +81,17 @@ export async function POST(req: Request) {
             }
         })
 
+        // Excluir campos innecesarios antes de guardar el evento
+        const certificateData = {
+            data: `colId:${certificate.collaboratorId} - name:${certificate.collaboratorFullname} - doc:${certificate.collaboratorTypeDoc}${certificate.collaboratorNumDoc} - ARL:${certificate.collaboratorArlName} - com:${certificate.companyName} -  NIT:${certificate.companyNit} - legRep:${certificate.legalRepresentative} - course:${certificate.courseName} - level:${certificate.levelName} - res:${certificate.resolution} -  hours:${certificate.levelHours} - start:${certificate.startDate ? formatDateSm(certificate.startDate) : ""} -  end: ${certificate.certificateDate ? formatDateSm(certificate.certificateDate) : ""} - exp:${certificate.expeditionDate ? formatDateSm(certificate.expeditionDate) : ""} - due:${certificate.dueDate ? formatDateSm(certificate.dueDate) : ""} - coach:${certificate.coachName} - pos:${certificate.coachPosition} - lic:${certificate.coachLicence}`,
+        };
+
         await db.certificateEvent.create({
             data: {
                 eventType: "CREATED",
                 adminId: session.user.id!,
                 certificateId: certificate.id,
-                certificateData: JSON.stringify(certificate),
+                certificateData: JSON.stringify(certificateData),
             }
         })
 

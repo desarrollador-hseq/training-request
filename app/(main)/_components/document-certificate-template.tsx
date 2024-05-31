@@ -60,6 +60,7 @@ interface CertificateTemplateProps {
   coachImgSignatureUrl?: string | null;
 
   endDate: string;
+  startDate?: string;
   expeditionDate: string | null;
   expireDate?: string | null;
   verifying?: boolean;
@@ -86,10 +87,11 @@ export const DocumentCertificateTemplate = ({
 
   expeditionDate,
   endDate,
+  startDate,
   expireDate,
   verifying = false,
 }: CertificateTemplateProps) => {
-
+  console.log({ startDate, endDate });
   return (
     <Document
       style={{ height: "100%" }}
@@ -114,13 +116,46 @@ export const DocumentCertificateTemplate = ({
             {/* 1column  */}
             <View style={styles.sideContent}>
               <View style={{ marginVertical: 2 }}></View>
-              <View style={styles.textMain}>
-                <Text style={{ fontWeight: "semibold" }}>
-                  {" "}
-                  CERTIFICACIÓN DE CAPACITACIÓN{" "}
-                </Text>
-                <Text style={{ fontWeight: "semibold" }}> Y ENTRENAMIENTO</Text>
-              </View>
+              {course === "Trabajo en altura" ? (
+                <View
+                  style={{
+                    width: "400px",
+                    height: "80px",
+                    backgroundColor: "#a30e0c",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    textAlign: "left",
+                    color: "white",
+                    transform: "rotate(-90deg)",
+                    padding: "18px",
+                    paddingTop: "10px",
+                    fontSize: 16,
+                    gap: 5,
+                  }}
+                >
+                  <Text style={{ fontWeight: "semibold" }}>
+                    {" "}
+                    CERTIFICADO DE CAPACITACIÓN{" "}
+                  </Text>
+                  <Text style={{ fontWeight: "semibold" }}>
+                    {" "}
+                    Y ENTRENAMIENTO PARA TRABAJO EN ALTURA
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.textMain}>
+                  <Text style={{ fontWeight: "semibold" }}>
+                    {" "}
+                    CERTIFICACIÓN DE CAPACITACIÓN{" "}
+                  </Text>
+                  <Text style={{ fontWeight: "semibold" }}>
+                    {" "}
+                    Y ENTRENAMIENTO
+                  </Text>
+                </View>
+              )}
+
               <View style={{ margin: 15 }}></View>
 
               <Image
@@ -217,8 +252,11 @@ export const DocumentCertificateTemplate = ({
                     fontSize: 14,
                     fontWeight: "bold",
                     marginBottom: 10,
-                    marginTop: (course !== "Trabajo en altura" &&
-                    course !== "Espacios confinados") ? 23 : 1
+                    marginTop:
+                      course !== "Trabajo en altura" &&
+                      course !== "Espacios confinados"
+                        ? 23
+                        : 1,
                   }}
                 >
                   CERTIFICA QUE
@@ -247,38 +285,45 @@ export const DocumentCertificateTemplate = ({
                   <Text style={{ fontWeight: "bold" }}>{numDoc}</Text>
                 </Text>
 
-                {(arlName &&
-                  companyName &&
-                  companyNit &&
-                  legalRepresentative) ? (
-                    <Text style={{  fontSize: 10,
+                {course?.toLowerCase() === "trabajo en altura" &&
+                arlName &&
+                companyName &&
+                companyNit &&
+                legalRepresentative ? (
+                  <Text
+                    style={{
+                      fontSize: 10,
                       marginBottom: 10,
                       color: "#444749",
-                      lineHeight: "1.3px", }}>
-                      Afiliado a la ARL{" "}
-                      <Text style={{ fontWeight: "semibold" }}>{arlName}</Text>{" "}
-                      contratado por{" "}
-                      <Text style={{ fontWeight: "semibold" }}>
-                        {companyName}
-                      </Text>{" "}
-                      registrada bajo NIT{" "}
-                      <Text style={{ fontWeight: "semibold" }}>
-                        {companyNit}
-                      </Text>
-                      , representante legal{" "}
-                      <Text style={{ fontWeight: "semibold" }}>
-                        {legalRepresentative}
-                      </Text>
-                      .
+                      lineHeight: "1.3px",
+                    }}
+                  >
+                    Afiliado a la ARL{" "}
+                    <Text style={{ fontWeight: "semibold" }}>{arlName}</Text>{" "}
+                    contratado por{" "}
+                    <Text style={{ fontWeight: "semibold" }}>
+                      {companyName}
+                    </Text>{" "}
+                    registrada bajo NIT{" "}
+                    <Text style={{ fontWeight: "semibold" }}>{companyNit}</Text>
+                    , representante legal{" "}
+                    <Text style={{ fontWeight: "semibold" }}>
+                      {legalRepresentative}
                     </Text>
-                  ) : <View />}
+                    .
+                  </Text>
+                ) : (
+                  <View />
+                )}
 
                 <Text style={{ ...styles.text, marginBottom: 5 }}>
                   Asistió y aprobó la acción de capacitación y entrenamiento en
-                  {(course === "Trabajo en altura" ||
-                  course === "Espacios confinados")
-                    ? " nivel"
-                    : <View />}
+                  {course === "Trabajo en altura" ||
+                  course === "Espacios confinados" ? (
+                    " nivel"
+                  ) : (
+                    <View />
+                  )}
                 </Text>
 
                 <View
@@ -299,7 +344,7 @@ export const DocumentCertificateTemplate = ({
                   >
                     {level}
                   </Text>
-                  {course != level ? (
+                  {course?.toLowerCase() != level?.toLowerCase() ? (
                     <Text
                       style={{
                         fontSize: 20,
@@ -309,14 +354,18 @@ export const DocumentCertificateTemplate = ({
                     >
                       {course}
                     </Text>
-                  ): <View />}
+                  ) : (
+                    <View />
+                  )}
                 </View>
 
                 {resolution ? (
                   <Text style={{ fontSize: 11, fontWeight: "semibold" }}>
                     {resolution}
                   </Text>
-                ): <View />}
+                ) : (
+                  <View />
+                )}
                 <View style={{ marginBottom: 5, marginTop: 12 }}>
                   <Text style={styles.text}>
                     Con una intensidad de{" "}
@@ -327,7 +376,18 @@ export const DocumentCertificateTemplate = ({
                 </View>
                 <Text style={styles.text}>
                   La presente capacitación y entrenamiento se realizó en
-                  Barranquilla el {endDate}
+                  Barranquilla
+                  {course === "Trabajo en altura" &&
+                  (level?.toLowerCase() === "autorizado" ||
+                    level?.toLowerCase() === "coordinador") &&
+                  startDate ? (
+                    <Text>
+                      {" "}
+                      del {startDate} hasta {endDate}
+                    </Text>
+                  ) : (
+                    <Text> el {endDate}</Text>
+                  )}
                 </Text>
                 <Text
                   style={{
@@ -355,54 +415,56 @@ export const DocumentCertificateTemplate = ({
                   marginTop: 50,
                 }}
               >
-                {((course === "Trabajo en altura" ||
+                {(course === "Trabajo en altura" ||
                   course === "Espacios confinados") &&
-                  coachName &&
-                  coachImgSignatureUrl &&
-                  coachPosition) ? (
-                    <DocumentSignatureCertificate
-                      licence={coachLicence}
-                      name={coachName}
-                      position={coachPosition}
-                      imageUrl={coachImgSignatureUrl}
-                    />
-                  ): <View style={{display: "none"}} />}
+                coachName &&
+                coachImgSignatureUrl &&
+                coachPosition ? (
+                  <DocumentSignatureCertificate
+                    licence={coachLicence}
+                    name={coachName}
+                    position={coachPosition}
+                    imageUrl={coachImgSignatureUrl}
+                  />
+                ) : (
+                  <View style={{ display: "none" }} />
+                )}
 
-             
-                  <View
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    position: "relative",
+                    paddingTop: 32,
+                  }}
+                >
+                  <Image
+                    src="/JAIME_R.png"
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      position: "relative",
-                      paddingTop: 32,
+                      width: 140,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      minWidth: 150,
+                      borderTop: "1px solid #a30e0c",
+                      fontSize: 10,
+                      fontWeight: "bold",
                     }}
                   >
-                    <Image
-                      src="/JAIME_R.png"
-                      style={{
-                        width: 140,
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        minWidth: 150,
-                        borderTop: "1px solid #a30e0c",
-                        fontSize: 10,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Jaime Rosales Rodríguez
-                    </Text>
-                    <Text style={{ fontSize: 10 }}>Representante legal</Text>
-                    {(course === "Trabajo en altura" ||
-                      course === "Espacios confinados") ? (
-                      <Text style={{ fontSize: 10 }}> </Text>
-                    ): <View />}
-                  </View>
-               
+                    Jaime Rosales Rodríguez
+                  </Text>
+                  <Text style={{ fontSize: 10 }}>Representante legal</Text>
+                  {course === "Trabajo en altura" ||
+                  course === "Espacios confinados" ? (
+                    <Text style={{ fontSize: 10 }}> </Text>
+                  ) : (
+                    <View />
+                  )}
+                </View>
 
                 <View
                   style={{
@@ -418,7 +480,9 @@ export const DocumentCertificateTemplate = ({
                         src={QRCode.toDataURL(fileUrl)}
                       />
                     </Link>
-                  ): <View />}
+                  ) : (
+                    <View />
+                  )}
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={{ fontSize: 7, textAlign: "right" }}>
                       Para verificar el presente documento, escanear el código

@@ -109,7 +109,7 @@ export const SendCertificate = ({
               )}
             </div>
           }
-          title="¿Eliminar certificado?"
+          title={certificate?.wasSent ? "¿Anulación de envío?" : "Enviar certificado a la empresa?"}
           onAcept={handleSend}
           btnClass={cn(
             "w-fit mr-5",

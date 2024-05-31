@@ -4,7 +4,15 @@ import React, { useState } from "react";
 import { Certificate, CertificateEvent, Company } from "@prisma/client";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Edit2, FilePlus2, Trash } from "lucide-react";
+import {
+  CircleSlash,
+  Edit2,
+  FilePlus2,
+  RefreshCcw,
+  Send,
+  SquareGanttIcon,
+  Trash,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatDateOf } from "@/lib/utils";
 
@@ -25,9 +33,15 @@ export const CertificateItemTimeline = ({
         {event.eventType === "CREATED" ? (
           <FilePlus2 />
         ) : event.eventType === "UPDATED" ? (
-          <Edit2 />
-        ) : (
+          <RefreshCcw />
+        ) : event.eventType === "SENT" ? (
+          <Send />
+        ) : event.eventType === "UNSEND" ? (
+          <CircleSlash />
+        ) : event.eventType === "DELETED" ? (
           <Trash />
+        ) : (
+          <SquareGanttIcon />
         )}
       </span>
 
@@ -49,33 +63,37 @@ export const CertificateItemTimeline = ({
                   event.eventType === "CREATED"
                     ? "bg-emerald-600"
                     : event.eventType === "UPDATED"
-                    ? "bg-slate-500"
-                    : "bg-red-600"
+                    ? "bg-blue-700"
+                    : event.eventType === "SENT"
+                    ? "bg-green-400"
+                    : event.eventType === "UNSEND"
+                    ? "bg-orange-400"
+                    : event.eventType === "DELETED"
+                    ? "bg-red-600"
+                    : "bg-slate-600"
                 )}
               >
                 {event.eventType === "CREATED"
                   ? "Creado"
                   : event.eventType === "UPDATED"
                   ? "Actualizado"
-                  : "Eliminado"}
+                  : event.eventType === "SENT"
+                  ? "Enviado"
+                  : event.eventType === "UNSEND"
+                  ? "Anulación de envio"
+                  : event.eventType === "DELETED"
+                  ? "Eliminado"
+                  : "Otro"}
               </span>
             </div>
           </div>
         </div>
 
         <div className="flex flex-col gap-1 text-xs">
-          <div className="grid grid-cols-7 place-content-center place-items-center h-full font-bold my-2 text-xs">
-            <span>Colaborador</span>
-            <span>documento</span>
-            <span>Arl</span>
-            <span>Curso</span>
-            <span>Nivel</span>
-            <span>Reentrenamiento</span>
-            <span>Creado</span>
-          </div>
+          <div className="grid grid-cols-7 place-content-center place-items-center h-full font-bold my-1 text-xs"></div>
           {!certificateData ? (
-            <div className="w-full flex justify-center mt-6">
-              <h4 className="italic text-slate-400">Sin datos</h4>
+            <div className="w-full flex justify-center mt-1">
+              {/* <span className="italic text-slate-400">Sin datos</span> */}
             </div>
           ) : (
             <Card
@@ -83,38 +101,68 @@ export const CertificateItemTimeline = ({
               className="overflow-hidden bg-blue-100 text-primary"
             >
               <CardContent className={cn("p-2")}>
-                <div
-                  className={cn(
-                    "grid grid-cols-7 place-content-center place-items-center h-full relative text-xs font-medium text-[10px]"
-                  )}
-                >
-                  <span className="leading-4">
-                    {certificateData?.collaboratorFullname}
-                  </span>
-                  <span className="leading-4">
-                    {certificateData?.collaboratorTypeDoc}{" "}
-                    {certificateData.collaboratorNumDoc}
-                  </span>
-                  <span className="leading-4">
-                    {certificateData?.collaboratorArlName}
-                  </span>
+                {certificateData.collaboratorFullname ? (
+                  <div
+                    className={cn(
+                      "flex flex-wrap h-full relative text-xs font-medium text-[10px] gap-1"
+                    )}
+                  >
+                    <span className="leading-4 flex flex-col border border-slate-500 p-1 rounded-sm">
+                      <span className="font-semibold">Colaborador</span>
+                      {certificateData?.collaboratorFullname}
+                    </span>
+                    <span className="leading-4 flex flex-col border border-slate-500 p-1 rounded-sm">
+                      <span className="font-semibold">documento</span>
+                      {certificateData?.collaboratorTypeDoc}{" "}
+                      {certificateData.collaboratorNumDoc}
+                    </span>
+                    <span className="leading-4 flex flex-col border border-slate-500 p-1 rounded-sm">
+                      <span className="font-semibold">Arl</span>
 
-                  <span className="flex gap-2">
-                    <span className="">{certificateData?.courseName}</span>
-                  </span>
+                      {certificateData?.collaboratorArlName}
+                    </span>
 
-                  <span className="flex gap-2">
-                    <span className="">{certificateData?.levelName}</span>
-                  </span>
+                    <span className="leading-4 flex flex-col border border-slate-500 p-1 rounded-sm">
+                      <span className="font-semibold">Curso</span>
+                      <span className="">{certificateData?.courseName}</span>
+                    </span>
 
-                  <span className="">
-                    {formatDateOf(certificateData.dueDate!)}
-                  </span>
+                    <span className="leading-4 flex flex-col border border-slate-500 p-1 rounded-sm">
+                      <span className="font-semibold">Nivel</span>
+                      <span className="">{certificateData?.levelName}</span>
+                    </span>
 
-                  <span className="">
-                    {formatDateOf(certificateData.createdAt!)}
-                  </span>
-                </div>
+                    <span className="leading-4 flex flex-col border border-slate-500 p-1 rounded-sm">
+                      <span className="font-semibold">Reentrenamiento</span>
+                      {certificateData.dueDate &&
+                        formatDateOf(certificateData.dueDate!)}
+                    </span>
+                    <span className="leading-4 flex flex-col border border-slate-500 p-1 rounded-sm">
+                      <span className="font-semibold">fin curso</span>
+                      {certificateData.certificateDate &&
+                        formatDateOf(certificateData.certificateDate!)}
+                    </span>
+                    <span className="leading-4 flex flex-col border border-slate-500 p-1 rounded-sm">
+                      <span className="font-semibold">inicio curso</span>
+                      {certificateData.startDate &&
+                        formatDateOf(certificateData.startDate!)}
+                    </span>
+
+                    <span className="leading-4 flex flex-col border border-slate-500 p-1 rounded-sm">
+                      <span className="font-semibold">Creado</span>
+                      {certificateData.createdAt &&
+                        formatDateOf(certificateData.createdAt!)}
+                    </span>
+                  </div>
+                ) : (
+                  <div
+                    className={cn(
+                      "flex flex-wrap h-full relative text-xs font-medium text-[10px] gap-1"
+                    )}
+                  >
+                    {JSON.stringify(certificateData)}
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}

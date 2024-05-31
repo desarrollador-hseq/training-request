@@ -222,6 +222,7 @@ model Certificate {
   coachImgSignatureUrl String?
 
   certificateDate DateTime?
+  startDate DateTime?
   expeditionDate  DateTime?
   dueDate         DateTime?
 

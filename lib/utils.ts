@@ -14,6 +14,10 @@ export const phoneRegex = new RegExp(
 export const formatDateOf = (date: Date) => {
   return format(date, "PPP", { locale: es });
 };
+
+export const formatDateSm = (date: Date) => {
+  return format(date, "P", { locale: es });
+};
 export const formatDateCert = (date: Date) => {
   let formattedDate = format(date, "d 'días' 'del mes de' MMMM 'de' yyyy", {
     locale: es,

@@ -84,6 +84,7 @@ const formSchema = z.object({
   certificateDate: z.date(),
   expeditionDate: z.date(),
   dueDate: z.date().optional(),
+  startDate: z.date().optional(),
 
   coachName: z.string(),
   coachPosition: z.string(),
@@ -137,6 +138,7 @@ export const AddCertificateForm = ({
       certificateDate: certificate?.certificateDate || undefined,
       expeditionDate: certificate?.expeditionDate || undefined,
       dueDate: certificate?.dueDate || undefined,
+      startDate: certificate?.startDate || undefined,
     },
   });
 
@@ -375,6 +377,20 @@ export const AddCertificateForm = ({
                     disabled={inputsDisabled}
                   />
                 </div>
+                {watch("courseName").toLocaleLowerCase() ===
+                  "trabajo en altura" &&
+                  (watch("levelName").toLowerCase() === "coordinador" ||
+                    watch("levelName").toLowerCase() === "autorizado") && (
+                    <div>
+                      <CalendarInputForm
+                        control={form.control}
+                        label="Fecha de inicio de la capacitación"
+                        name="startDate"
+                        disabled={inputsDisabled}
+                      />
+                      <span className="text-[10px] text-orange-600">Requerido para autorizados y coordinadores en alt.</span>
+                    </div>
+                  )}
                 <div>
                   <CalendarInputForm
                     control={form.control}
@@ -391,6 +407,8 @@ export const AddCertificateForm = ({
                     disabled={inputsDisabled}
                   />
                 </div>
+
+                
               </div>
             </div>
           </div>
@@ -449,7 +467,10 @@ export const AddCertificateForm = ({
         {isClient && certificate && canManagePermissions ? (
           <>
             <SubtitleSeparator text="Previsualización del certificado">
-              <ButtonDownloadCertificatePdf baseUrl={baseUrl} certificate={certificate} />
+              <ButtonDownloadCertificatePdf
+                baseUrl={baseUrl}
+                certificate={certificate}
+              />
             </SubtitleSeparator>
 
             <PDFViewer
@@ -495,6 +516,10 @@ export const AddCertificateForm = ({
                     watch("certificateDate") &&
                     formatDateOf(watch("certificateDate"))
                   }
+                  startDate={
+                    watch("certificateDate") &&
+                    formatDateOf(watch("certificateDate"))
+                  }
                   expeditionDate={
                     watch("expeditionDate") &&
                     formatDateCert(watch("expeditionDate"))
@@ -514,5 +539,3 @@ export const AddCertificateForm = ({
     </div>
   );
 };
-
-

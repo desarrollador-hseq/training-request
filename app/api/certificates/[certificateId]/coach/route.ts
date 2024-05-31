@@ -34,12 +34,18 @@ export async function PATCH(req: Request, { params }: { params: { certificateId:
 
         })
 
+        const certificateData = {
+            id: certificate.id,
+            data: `name:${certificate.coachName} - pos:${certificate.coachPosition} - lic:${certificate.coachLicence}`,
+        };
+
+
         await db.certificateEvent.create({
             data: {
                 eventType: "UPDATED",
                 adminId:  session.user.id!,
                 certificateId: certificate.id,
-                certificateData: JSON.stringify(certificate),
+                certificateData: JSON.stringify(certificateData),
             }
         })
 

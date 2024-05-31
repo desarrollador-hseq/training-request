@@ -388,7 +388,9 @@ export const AddCertificateForm = ({
                         name="startDate"
                         disabled={inputsDisabled}
                       />
-                      <span className="text-[10px] text-orange-600">Requerido para autorizados y coordinadores en alt.</span>
+                      <span className="text-[10px] text-blue-600">
+                        Requerido para autorizados y coordinadores en alt.
+                      </span>
                     </div>
                   )}
                 <div>
@@ -407,8 +409,6 @@ export const AddCertificateForm = ({
                     disabled={inputsDisabled}
                   />
                 </div>
-
-                
               </div>
             </div>
           </div>
@@ -517,8 +517,9 @@ export const AddCertificateForm = ({
                     formatDateOf(watch("certificateDate"))
                   }
                   startDate={
-                    watch("certificateDate") &&
-                    formatDateOf(watch("certificateDate"))
+                    watch("startDate") && watch("startDate")
+                      ? formatDateOf(watch("startDate")!)
+                      : undefined
                   }
                   expeditionDate={
                     watch("expeditionDate") &&

@@ -379,7 +379,7 @@ export const DocumentCertificateTemplate = ({
                   Barranquilla
                   {course === "Trabajo en altura" &&
                   (level?.toLowerCase() === "autorizado" ||
-                    level?.toLowerCase() === "coordinador") &&
+                    level?.toLowerCase() === "coordinador") && (startDate !== endDate) &&
                   startDate ? (
                     <Text>
                       {" "}

@@ -78,6 +78,7 @@ const GenerateCertificatePage = async ({
         collaborator={trainingCollaborator.collaborator}
         courseLevel={trainingCollaborator.courseLevel}
         endDate={trainingCollaborator.endDate}
+        startDate={trainingCollaborator.startDate}
         trainingRequestId={trainingCollaborator.trainingRequestId}
         coaches={coaches}
         baseUrl={`${baseUrl}`}

@@ -26,6 +26,7 @@ interface CertificatePreviewProps {
     | null
     | undefined;
   endDate: Date | null;
+  startDate: Date | null;
   trainingRequestId: string;
   baseUrl: string;
   companyContact?: string | null;
@@ -40,6 +41,7 @@ export const CertificatePreview = ({
   baseUrl,
   courseLevel,
   endDate,
+  startDate,
   trainingRequestId,
   certificateWasCreatedId,
   coaches,
@@ -75,6 +77,7 @@ export const CertificatePreview = ({
     resolution: courseLevel?.course?.resolution || "",
     levelHours: courseLevel?.hours || NaN,
     certificateDate: endDate || null,
+    startDate: startDate || null,
     expeditionDate: expeditionDate ? expeditionDate : new Date(),
     monthsToExpire: courseLevel?.monthsToExpire || null,
     dueDate: courseLevel?.monthsToExpire !== 0 ? addMonths(endDate!, courseLevel?.monthsToExpire!) : null,

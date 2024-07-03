@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Collaborator } from "@prisma/client";
@@ -28,11 +28,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Banner } from "@/components/banner";
 
 interface AddCollaboratorFormProps {
   collaborator?: Collaborator | null;
   companyId?: string | null;
+  setWasEdited?: Dispatch<SetStateAction<boolean>>;
 }
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = [
@@ -73,6 +73,7 @@ const formSchema = z.object({
 export const AddCollaboratorForm = ({
   collaborator,
   companyId,
+  setWasEdited,
 }: AddCollaboratorFormProps) => {
   const router = useRouter();
   const isEdit = useMemo(() => collaborator, [collaborator]);
@@ -99,13 +100,16 @@ export const AddCollaboratorForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       if (isEdit) {
-        await axios.patch(`/api/collaborators/${collaborator?.id}`, values);
+        await axios.patch(`/api/collaborators/${collaborator?.id}`, {...values, companyId});
         toast.success("Colaborador actualizado");
       } else {
         const postDat = companyId ? { ...values, companyId } : { ...values };
-        const { data } = await axios.post(`/api/collaborators/`, {  ...postDat} );
+        const { data } = await axios.post(`/api/collaborators/`, {
+          ...postDat,
+        });
         toast.success("Colaborador creado");
       }
+      setWasEdited && setWasEdited(false);
       // router.push(`/dashboard/entrenamiento/colaboradores`);
       router.refresh();
     } catch (error) {
@@ -132,7 +136,7 @@ export const AddCollaboratorForm = ({
         toast.error("Ocurrió un error inesperado");
       }
     } finally {
-      form.reset()
+      form.reset();
     }
   };
 

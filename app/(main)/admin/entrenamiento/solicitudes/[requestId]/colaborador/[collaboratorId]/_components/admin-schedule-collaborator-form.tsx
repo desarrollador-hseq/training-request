@@ -34,6 +34,21 @@ import { ArlForm } from "./arl-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { ValidateDocuments } from "./validate-documents";
+import { AddCollaboratorForm } from "@/app/(main)/dashboard/entrenamiento/colaboradores/_components/add-collaborator-form";
+import { SimpleModal } from "@/components/simple-modal";
+
+import {
+  AlertDialog,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Edit2, X } from "lucide-react";
 
 interface CourseLevelWithRequiredDocumentsAndCollaborators
   extends TrainingRequestCollaborator {
@@ -91,10 +106,11 @@ export const AdminScheduleCollaboratorForm = ({
   courseLevels,
   canManageRequests,
   canManagePermissions,
-  canManageCompanies
+  canManageCompanies,
 }: AdminScheduleCollaboratorFormProps) => {
   const router = useRouter();
   const { setLoadingApp } = useLoading();
+  const [open, setOpen] = useState(false);
 
   const [courseLevelId, setCourseLevelId] = useState<string | undefined>(
     trainingRequestCollaborator?.courseLevel?.id!
@@ -157,6 +173,10 @@ export const AdminScheduleCollaboratorForm = ({
     router.refresh();
     setLoadingApp(false);
   }, [courseLevelId, router]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -231,9 +251,7 @@ export const AdminScheduleCollaboratorForm = ({
           shortName={
             trainingRequestCollaborator?.courseLevel?.course?.shortName
           }
-          courseName={
-            trainingRequestCollaborator?.courseLevel?.course?.name
-          }
+          courseName={trainingRequestCollaborator?.courseLevel?.course?.name}
           levelName={trainingRequestCollaborator?.courseLevel?.name}
           isDisallowed={isDisallowed}
           scheduledDate={{
@@ -370,7 +388,48 @@ export const AdminScheduleCollaboratorForm = ({
         <CardHeader className="mb-3 p-0">
           <div className="p-0 overflow-hidden rounded-md bg-blue-50">
             <div className="p-0">
-              <SubtitleSeparator text="Datos del colaborador" />
+              <SubtitleSeparator text="Datos del colaborador">
+                {canManagePermissions && (
+                  <AlertDialog open={open} onOpenChange={setOpen}>
+                    <AlertDialogTrigger asChild>
+                      <Button className={cn("bg-accent")}>
+                        <Edit2 className="w-4 h-4s" />
+                      </Button>
+                    </AlertDialogTrigger>
+
+                    <AlertDialogContent
+                      className={`overflow-y-auto max-w-screen-lg min-h-[300px]  max-h-screen `}
+                    >
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-2xl">
+                          <div className="flex justify-between">
+                            Editar colaborador
+                            <Button
+                              className="w-fit h-fit flex rounded-md justify-center items-center p-1 hover:bg-slate-50"
+                              variant="outline"
+                              onClick={handleClose}
+                            >
+                              <X className="text-red-500" />
+                            </Button>
+                          </div>
+                        </AlertDialogTitle>
+                      </AlertDialogHeader>
+                      <AlertDialogDescription className="w-full"></AlertDialogDescription>
+                      <span className="w-full">
+                        <AddCollaboratorForm
+                          collaborator={
+                            trainingRequestCollaborator?.collaborator
+                          }
+                          companyId={
+                            trainingRequestCollaborator?.collaborator?.companyId
+                          }
+                          setWasEdited={setOpen}
+                        />
+                      </span>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </SubtitleSeparator>
             </div>
             <div>
               <div className="flex md:items-center md:justify-start h-full w-full">

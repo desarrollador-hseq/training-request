@@ -12,6 +12,29 @@ export async function PATCH(req: Request, { params }: { params: { collaboratorId
 
         if (!session) return new NextResponse("Unauthorized", { status: 401 })
 
+        console.log({first: values.companyId})
+
+        const userSaved = await db.collaborator.findUnique({
+            where: {
+                id: collaboratorId
+            }
+        })
+
+        if (!userSaved) return new NextResponse("Not found", { status: 404 })
+
+        if (values.numDoc) {
+            if (values.numDoc !== userSaved.numDoc) {
+                const result = await db.collaborator.findFirst({
+                    where: {
+                        numDoc: values.numDoc,
+                        companyId: values.companyId,
+                        active: true,
+                    }
+                })
+                if (result) return new NextResponse("N° documento ya se encuentra registrado", { status: 400 })
+            }
+        }
+
         const collaborator = await db.collaborator.update({
             where: {
                 id: collaboratorId,

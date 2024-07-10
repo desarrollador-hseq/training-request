@@ -19,9 +19,8 @@ export const ShowCertificate = ({
 
   useEffect(() => {
     setIsClient(true);
-    console.log({certificate})
+    console.log({ certificate });
   }, []);
-  
 
   return (
     <div className="w-full">
@@ -52,7 +51,6 @@ export const ShowCertificate = ({
                 certificate.expeditionDate &&
                 formatDateCert(certificate.expeditionDate!)
               }
-              
             />
           ) : (
             <DocumentCertificateTemplate
@@ -63,8 +61,16 @@ export const ShowCertificate = ({
               course={certificate.courseName}
               levelHours={"" + certificate.levelHours}
               resolution={certificate.resolution}
-              endDate={certificate.certificateDate ? formatDateOf(certificate.certificateDate!) : ""}
-              startDate={certificate.startDate ? formatDateOf(certificate.startDate!) : ""}
+              endDate={
+                certificate.certificateDate
+                  ? formatDateOf(certificate.certificateDate!)
+                  : ""
+              }
+              startDate={
+                certificate.startDate
+                  ? formatDateOf(certificate.startDate!)
+                  : ""
+              }
               legalRepresentative={certificate.legalRepresentative}
               companyNit={certificate.companyNit}
               companyName={certificate.companyName}
@@ -72,6 +78,7 @@ export const ShowCertificate = ({
               certificateId={certificate.id}
               fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
               expeditionDate={formatDateCert(certificate.expeditionDate!)}
+              createdDate={certificate.expeditionDate!}
               expireDate={
                 certificate.dueDate && formatDateOf(certificate.dueDate)
               }

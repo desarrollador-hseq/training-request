@@ -87,6 +87,10 @@ export const ButtonDownloadCertificatePdf = ({
                   certificate.expeditionDate &&
                   formatDateCert(certificate.expeditionDate)
                 }
+                createdDate={
+                  certificate.expeditionDate &&
+                  (certificate.expeditionDate)
+                }
                 coachName={certificate.coachName}
                 coachPosition={certificate.coachPosition}
                 coachLicence={certificate.coachLicence}

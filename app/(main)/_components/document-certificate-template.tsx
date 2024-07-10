@@ -12,6 +12,7 @@ import {
 } from "@react-pdf/renderer";
 import QRCode from "qrcode";
 import { DocumentSignatureCertificate } from "./document-signature-certificate";
+import { formatDateOf } from "@/lib/utils";
 
 Font.register({
   family: "Open Sans",
@@ -62,9 +63,34 @@ interface CertificateTemplateProps {
   endDate: string;
   startDate?: string;
   expeditionDate: string | null;
+  createdDate: Date | null;
   expireDate?: string | null;
   verifying?: boolean;
 }
+
+const getCertificationDatesText = (course: string | null, expeditionDate: Date) => {
+  const approvalDate = new Date('2018-06-02');
+  const expirationDate2024 = new Date('2024-06-01');
+  const expirationDate2027 = new Date('2027-06-01');
+  const formattedApprovalDate = formatDateOf(approvalDate);
+  const formattedExpirationDate2024 = formatDateOf(expirationDate2024);
+  const formattedExpirationDate2027 = formatDateOf(expirationDate2027);
+
+  if (!expeditionDate) return '';
+
+  
+  if (course === "Trabajo en altura") {
+    if (expeditionDate > expirationDate2024) {
+      return `, certificación NTC 6072 Icontec CS-CER602230 fecha de aprobación y vencimiento del ${formattedApprovalDate} al ${formattedExpirationDate2027} respectivamente y aprobación del `;
+    } else {
+      return `, certificación NTC 6072 Icontec CS-CER602230 fecha de aprobación y vencimiento del ${formattedApprovalDate} al ${formattedExpirationDate2024} respectivamente y aprobación del `;
+    }
+  } else if (course === "Espacios confinados") {
+    return ` y aprobación del ministerio O8SE2023220000000004039 de fecha 08 de febrero de 2023.`;
+  } else {
+    return `.`;
+  }
+};
 
 export const DocumentCertificateTemplate = ({
   fileUrl,
@@ -86,12 +112,16 @@ export const DocumentCertificateTemplate = ({
   coachImgSignatureUrl,
 
   expeditionDate,
+  createdDate,
   endDate,
   startDate,
   expireDate,
   verifying = false,
 }: CertificateTemplateProps) => {
-  console.log({ startDate, endDate });
+  const certificationDatesText = createdDate
+    ? getCertificationDatesText(course, createdDate)
+    : "";
+
   return (
     <Document
       style={{ height: "100%" }}
@@ -203,12 +233,7 @@ export const DocumentCertificateTemplate = ({
                       {course === "Trabajo en altura" ? (
                         // altura
                         <Text>
-                          <Text>
-                            , certificación NTC 6072 Icontec CS-CER602230 fecha
-                            de aprobación y vencimiento del 01 de junio de 2018
-                            al 31 de mayo de 2024 respectivamente y aprobación
-                            del
-                          </Text>
+                          <Text>{certificationDatesText}</Text>
                           <Text
                             style={{
                               color: "#525659",
@@ -379,7 +404,8 @@ export const DocumentCertificateTemplate = ({
                   Barranquilla
                   {course === "Trabajo en altura" &&
                   (level?.toLowerCase() === "autorizado" ||
-                    level?.toLowerCase() === "coordinador") && (startDate !== endDate) &&
+                    level?.toLowerCase() === "coordinador") &&
+                  startDate !== endDate &&
                   startDate ? (
                     <Text>
                       {" "}

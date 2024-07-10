@@ -99,6 +99,10 @@ export const ViewCertificatePdf = ({
                 certificate.expeditionDate &&
                 formatDateCert(certificate.expeditionDate!)
               }
+              createdDate={
+                certificate.expeditionDate &&
+                (certificate.expeditionDate!)
+              }
               expireDate={
                 certificate.dueDate && formatDateOf(certificate.dueDate)
               }

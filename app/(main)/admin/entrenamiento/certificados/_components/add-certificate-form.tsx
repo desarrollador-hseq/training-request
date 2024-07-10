@@ -16,10 +16,8 @@ import { Form } from "@/components/ui/form";
 import { CalendarInputForm } from "@/components/calendar-input-form";
 import { DocumentCertificateTemplate } from "../../../../_components/document-certificate-template";
 import {
-  cn,
   formatDateCert,
   formatDateOf,
-  removeSpecialChars,
 } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import {
@@ -511,6 +509,10 @@ export const AddCertificateForm = ({
                   certificateId={certificate.id}
                   expireDate={
                     watch("dueDate") && formatDateOf(watch("dueDate")!)
+                  }
+                  createdDate={
+                    watch("expeditionDate") &&
+                    watch("expeditionDate")
                   }
                   endDate={
                     watch("certificateDate") &&

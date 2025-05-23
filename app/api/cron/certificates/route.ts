@@ -18,10 +18,10 @@ export async function GET() {
             if (!email || sentEmails.has(email)) continue;
 
             try {
-                // await axios.post(`${baseUrl}/api/mail/certificate-toexpire-soon`, {
-                //     certificate,
-                //     email,
-                // });
+                await axios.post(`${baseUrl}/api/mail/certificate-toexpire-soon`, {
+                    certificate,
+                    email,
+                });
 
                 sentEmails.add(email);
                 emailsSent++;

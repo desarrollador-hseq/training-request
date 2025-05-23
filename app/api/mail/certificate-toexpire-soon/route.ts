@@ -21,7 +21,7 @@ const generateEmailContent = (certificate: CertificateWithCompanyEmail) => {
   const { collaboratorFullname, dueDate, collaborator } = certificate;
 
   const baseUrl = process.env.NEXTAUTH_URL;
-  const title = `Notificación de vencimiento de certificado para: ${collaboratorFullname}`;
+  const title = `[Grupo HSEQ] Certificado próximo a vencer - ${collaboratorFullname}`;
 
   const content = `
   <div class="u-row-container" style="padding: 0px;background-color: transparent">
@@ -159,7 +159,7 @@ export async function POST(req: Request) {
       to: email,
       // to: "kingj3su@gmail.com",
       ...generateEmailContent(certificate),
-      subject: `Notificación de vencimiento de certificado`,
+      subject: `[Grupo HSEQ] Certificado de un colaborador próximo a vencer - ${certificate.collaboratorFullname}`,
     });
     return NextResponse.json({ message: "ok", status: 200 });
   } catch (error) {

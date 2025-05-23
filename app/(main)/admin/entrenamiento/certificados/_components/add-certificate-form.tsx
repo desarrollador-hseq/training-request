@@ -15,10 +15,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { CalendarInputForm } from "@/components/calendar-input-form";
 import { DocumentCertificateTemplate } from "../../../../_components/document-certificate-template";
-import {
-  formatDateCert,
-  formatDateOf,
-} from "@/lib/utils";
+import { formatDateCert, formatDateOf } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -375,8 +372,9 @@ export const AddCertificateForm = ({
                     disabled={inputsDisabled}
                   />
                 </div>
-                {watch("courseName").toLocaleLowerCase() ===
-                  "trabajo en altura" &&
+                {!!watch("courseName") &&
+                  watch("courseName").toLocaleLowerCase() ===
+                    "trabajo en altura" &&
                   (watch("levelName").toLowerCase() === "coordinador" ||
                     watch("levelName").toLowerCase() === "autorizado") && (
                     <div>
@@ -511,8 +509,7 @@ export const AddCertificateForm = ({
                     watch("dueDate") && formatDateOf(watch("dueDate")!)
                   }
                   createdDate={
-                    watch("expeditionDate") &&
-                    watch("expeditionDate")
+                    watch("expeditionDate") && watch("expeditionDate")
                   }
                   endDate={
                     watch("certificateDate") &&

@@ -1,13 +1,12 @@
-import { Suspense } from "react";
-import type { Metadata } from "next";
+
 import { cookies } from "next/headers";
 import { Toaster } from "sonner";
+import type { Metadata } from "next";
 
 import "./globals.css";
 import { ClientCookiesProvider } from "@/components/providers/cookies-provider";
 import { NextAuthProvider } from "@/components/providers/nextauth-provider";
 import { LoadingProvider } from "@/components/providers/loading-provider";
-import { cronCertificateToExpireSoons } from "@/scripts/cron-jobs";
 
 export const metadata: Metadata = {
   title: {
@@ -23,8 +22,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // cron para enviar email antes de vencer certificado. 1mes
-  // cronCertificateToExpireSoons();
+
 
   return (
     <ClientCookiesProvider value={cookies().getAll()}>

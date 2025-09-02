@@ -104,6 +104,7 @@ export const AddCertificateForm = ({
   const [isClient, setIsClient] = useState(false);
   const [inputsDisabled, setInputsDisabled] = useState(!canManagePermissions);
   const [notifyCertificate, setNotifyCertificate] = useState(false);
+  
 
   if (!certificate) {
     router.replace("/admin/entrenamiento/certificados");
@@ -236,39 +237,6 @@ export const AddCertificateForm = ({
 
   return (
     <div className="max-w-[1500px] w-full h-full">
-      <div className="relative">
-        {isClient && certificate && canManagePermissions ? (
-          <>
-            <SubtitleSeparator text="Previsualización del certificado">
-              <ButtonDownloadCertificatePdf
-                baseUrl={baseUrl}
-                certificate={certificate}
-              />
-            </SubtitleSeparator>
-
-            <PDFViewer
-              showToolbar={false}
-              style={{ width: "100%", height: "856px" }}
-            >
-              {
-                certificate.expeditionDate && certificate.expeditionDate > new Date("2025-09-01") ? (
-                  <DocumentCertificateTemplateV2
-                    certificate={{ ...(watch() as any), id: certificate.id }}
-                    baseUrl={baseUrl}
-                  />
-                ) : (
-                  <DocumentCertificateTemplateV1
-                    certificate={{ ...(watch() as any), id: certificate.id }}
-                    baseUrl={baseUrl}
-                  />
-                )
-              }
-            </PDFViewer>
-          </>
-        ) : (
-          <span></span>
-        )}
-      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -494,6 +462,38 @@ export const AddCertificateForm = ({
           )}
         </form>
       </Form>
+      <div className="relative">
+        {isClient && certificate && canManagePermissions ? (
+          <>
+            <SubtitleSeparator text="Previsualización del certificado">
+              <ButtonDownloadCertificatePdf
+                baseUrl={baseUrl}
+                certificate={certificate}
+              />
+            </SubtitleSeparator>
+
+            <PDFViewer
+              showToolbar={false}
+              style={{ width: "100%", height: "856px" }}
+            >
+              {certificate.expeditionDate &&
+              certificate.expeditionDate > new Date("2025-09-01") ? (
+                <DocumentCertificateTemplateV2
+                  certificate={{ ...(watch() as any), id: certificate.id }}
+                  baseUrl={baseUrl}
+                />
+              ) : (
+                <DocumentCertificateTemplateV1
+                  certificate={{ ...(watch() as any), id: certificate.id }}
+                  baseUrl={baseUrl}
+                />
+              )}
+            </PDFViewer>
+          </>
+        ) : (
+          <span></span>
+        )}
+      </div>
     </div>
   );
 };

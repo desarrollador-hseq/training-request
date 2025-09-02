@@ -45,7 +45,7 @@ const EditCertificate = async ({
   });
 
   if (!certificate) {
-    redirect("/admin/entrenamiento/certificados/");
+    return <div>Certificado no encontrado. ID: {certificateId}</div>;
   }
 
   const certificateEvents = await db.certificateEvent.findMany({

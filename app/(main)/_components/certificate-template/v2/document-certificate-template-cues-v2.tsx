@@ -173,18 +173,6 @@ export const DocumentCertificateTemplateCuesV2 = ({
           {/* <Text style={styles.verificationNumber}>
             Nº único de verificación {certificateId || "2024-0054HSEQ"}
           </Text> */}
-
-          {/* Verification Instructions */}
-          <Text style={styles.verificationInstructions}>
-            La autenticidad de este certificado puede ser verificado al correo
-            info@grupohseq.com tel. 3851821-3145468721-3235824200 o en la Pag.
-            www.grupohseq.com
-          </Text>
-
-          {/* Company Address */}
-          <Text style={styles.companyAddress}>
-            Calle 30 #10-230 L. 1 y Bodega interna 33
-          </Text>
         </View>
 
         {/* Signatures Section */}
@@ -194,48 +182,83 @@ export const DocumentCertificateTemplateCuesV2 = ({
             position="Representante legal"
             licence="Grupo HSEQ"
             imageUrl="/JAIME_R.png"
+            imgStyle={{
+              top: 5,
+            }}
           />
           {/* Legal Representative Signature */}
         </View>
-        {fileUrl && (
-          <View style={styles.qrContainer}>
-            <Link src={fileUrl}>
-              <Image style={styles.qrCode} src={QRCode.toDataURL(fileUrl)} />
-            </Link>
-          </View>
-        )}
+
         {/* Bottom Elements */}
         <View style={styles.bottomElements}>
           {/* QR Code */}
-
+          <View style={styles.qrContainer}>
+            {fileUrl && (
+              <Link src={fileUrl}>
+                <Image style={styles.qrCode} src={QRCode.toDataURL(fileUrl)} />
+              </Link>
+            )}
+          </View>
           {/* Colcade Image */}
-
-          <Image
-            src="/cues-logo-v2.png"
+          {/* Verification Instructions */}
+          <View
             style={{
-              width: 60,
-              height: 60,
+              marginBottom: 5,
+              margin: "0 auto",
+
+              alignItems: "center",
+              justifyContent: "center",
+              width: "50%",
             }}
-          />
+          >
+            <Text style={styles.verificationInstructions}>
+              La autenticidad de este certificado puede ser verificado a traves
+              del código QR o en el sitio web del Ministerio de Transporte:
+              https://web.mintransporte.gov.co/sisconmp2/ConsultasCapacitaciones
+            </Text>
 
-          {/* Colombia Emblem */}
-
-          <Image
-            src="/flores-colombia.png"
+            {/* Company Address */}
+            <Text style={styles.companyAddress}>
+              Calle 30 #10-230 L. 1 y Bodega interna 33
+            </Text>
+          </View>
+          <View
             style={{
-              width: 50,
-              height: 50,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+              width: "25%",
             }}
-          />
+          >
+            <Image
+              src="/cues-logo-v2.png"
+              style={{
+                width: 60,
+                height: 60,
+              }}
+            />
 
-          {/* Coat of Arms */}
-          <Image
-            src="/escudo-colombia.png"
-            style={{
-              width: 50,
-              height: 50,
-            }}
-          />
+            {/* Colombia Emblem */}
+
+            <Image
+              src="/flores-colombia.png"
+              style={{
+                width: 50,
+                height: 50,
+              }}
+            />
+
+            {/* Coat of Arms */}
+            <Image
+              src="/escudo-colombia.png"
+              style={{
+                width: 50,
+                height: 50,
+              }}
+            />
+          </View>
         </View>
       </Page>
     </Document>
@@ -285,10 +308,11 @@ const styles = StyleSheet.create({
     height: 40,
   },
   companyName: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
     color: "#0F1729",
     textAlign: "center",
+    marginTop: 10,
     marginBottom: 5,
     lineHeight: 1.2,
   },
@@ -383,14 +407,13 @@ const styles = StyleSheet.create({
     color: "#0F1729",
   },
   verificationInstructions: {
-    fontSize: 10,
+    fontSize: 8,
     textAlign: "center",
     color: "#0F1729",
     lineHeight: 1.3,
-    maxWidth: "85%",
   },
   companyAddress: {
-    fontSize: 10,
+    fontSize: 8,
     textAlign: "center",
     color: "#0F1729",
   },
@@ -435,18 +458,17 @@ const styles = StyleSheet.create({
     lineHeight: 1,
   },
   bottomElements: {
+    display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 40,
-    position: "absolute",
-    bottom: 40,
-    right: 0,
+    width: "100%",
   },
   qrContainer: {
     alignItems: "center",
-    position: "absolute",
-    bottom: 40,
-    left: 85,
+    display: "flex",
+    justifyContent: "center",
+
+    width: "25%",
   },
   qrCode: {
     width: 70,

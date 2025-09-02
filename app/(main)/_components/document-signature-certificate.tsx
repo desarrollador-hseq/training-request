@@ -24,84 +24,61 @@ export const DocumentSignatureCertificate = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        width: "200px",
-        minHeight: "120px",
         position: "relative",
+        paddingTop: 32,
+        maxWidth: "170px",
+        width: "100%",
       }}
     >
-      {/* Fixed-size container for signature image with absolute positioning */}
-      <View
-        style={{
-          width: "150px",
-          height: "60px",
-          position: "relative",
-        }}
-      >
-        {imageUrl && (
-          <Image
-            src={imageUrl}
-            style={{
-              width: "100%",
-              height: "60px",
-              objectFit: "contain",
-              position: "absolute",
-              top: "20px", // Aumentado para posicionar la imagen mucho más arriba
-              left: "0",
-              bottom: "0",
-              ...imgStyle,
-            }}
-          />
-        )}
-      </View>
+      {imageUrl && (
+        <Image
+          src={imageUrl}
+          style={{
+            width: 110,
+            position: "absolute",
+            top: -25,
+            left: 25,
+            margin: "0 auto",
+            ...imgStyle,
+          }}
+        />
+      )}
 
-      {/* Horizontal line below signature */}
-      <View
-        style={{
-          width: "150px",
-          height: "1px",
-          backgroundColor: "#000",
-          marginBottom: "1px",
-        }}
-      />
-
-      {/* Position text */}
       <Text
         style={{
-          fontSize: "10px",
-          color: "#0F1729",
-          textAlign: "center",
-          marginBottom: "3px",
+          width: "100%",
+          fontSize: 10,
           lineHeight: 1,
+          paddingTop: 4,
+          borderTop: "1px solid #0F1729",
+          textAlign: "center",
         }}
       >
         {capitalize(position)}
       </Text>
-
-      {/* Name text - larger and bolder */}
       <Text
         style={{
-          fontSize: "12px",
+          minWidth: 150,
+          width: "100%",
+          fontSize: 10,
           fontWeight: "bold",
-          color: "#0F1729",
-          textAlign: "center",
-          marginBottom: "3px",
           lineHeight: 1,
+          textAlign: "center",
         }}
       >
         {capitalize(name)}
       </Text>
 
-      {/* Licence/Company text */}
       {licence && (
         <Text
           style={{
-            fontSize: "10px",
-            color: "#0F1729",
-            textAlign: "center",
+            fontSize: 10,
             lineHeight: 1,
+            width: "100%",
+            textAlign: "center",
           }}
         >
-          {capitalize(licence)}
+          {licence && capitalize(licence)}
         </Text>
       )}
     </View>

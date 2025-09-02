@@ -55,6 +55,32 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
     (cert) => cert.active === false
   );
 
+  // Certificados que se vencerán en el mes siguiente al mes actual
+  const certificatesExpiringNextMonth = certificates.filter((cer) => {
+    if (cer.dueDate && cer.active === true) {
+      const now = new Date();
+      // Mes y año actual
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      // Mes y año siguiente
+      let nextMonth = currentMonth + 1;
+      let nextMonthYear = currentYear;
+      if (nextMonth > 11) {
+        nextMonth = 0;
+        nextMonthYear += 1;
+      }
+
+      const dueDate = new Date(cer.dueDate);
+      const dueMonth = dueDate.getMonth();
+      const dueYear = dueDate.getFullYear();
+
+      return dueMonth === nextMonth && dueYear === nextMonthYear;
+    }
+    return false;
+  });
+
+
   return (
     <Tabs
       defaultValue="por-enviar"
@@ -76,6 +102,9 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
             </TabsTrigger>
             <TabsTrigger className="w-full" value="inactivos">
               Inactivos
+            </TabsTrigger>
+            <TabsTrigger className="w-full" value="vencimientos-proximos">
+              Vencimientos del mes siguiente
             </TabsTrigger>
           </TabsList>
         </CardHeader>
@@ -115,6 +144,16 @@ export const TabsCertificates = ({ certificates }: TabsCertificatesProps) => {
             <TableDefault
               columns={columnsAdminCertificatesTable}
               data={certificatesDeleted}
+            />
+          </TabsContent>
+          <TabsContent value="vencimientos-proximos">
+            <TableDefault
+              columns={columnsAdminCertificatesTable}
+              data={certificatesExpiringNextMonth}
+              editHref={{
+                btnText: `Ver`,
+                href: `/admin/entrenamiento/certificados`,
+              }}
             />
           </TabsContent>
         </CardContent>

@@ -50,24 +50,24 @@ const VerifyCertificate = async ({
     );
   }
 
-  if(certificate.dueDate && certificate.dueDate < new Date()) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <Card className="w-full max-w-md shadow-lg border-red-200">
-          <CardHeader className="text-center pb-4">
-            <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-              <FileX2 className="w-8 h-8 text-red-600" />
-            </div>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-xs text-slate-500">
-              Certificado no válido por vencimiento
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // if(certificate.dueDate && certificate.dueDate < new Date()) {
+  //   return (
+  //     <div className="min-h-[60vh] flex items-center justify-center">
+  //       <Card className="w-full max-w-md shadow-lg border-red-200">
+  //         <CardHeader className="text-center pb-4">
+  //           <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+  //             <FileX2 className="w-8 h-8 text-red-600" />
+  //           </div>
+  //         </CardHeader>
+  //         <CardContent className="text-center">
+  //           <p className="text-xs text-slate-500">
+  //             Certificado no válido por vencimiento
+  //           </p>
+  //         </CardContent>
+  //       </Card>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen px-4 mt-4">
@@ -82,7 +82,8 @@ const VerifyCertificate = async ({
             </p>
           </div>
           {/* Estado del Certificado */}
-          
+
+          {certificate.dueDate && certificate.dueDate > new Date() ? (
             <Card className="bg-green-50 border-green-200 p-2">
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
@@ -93,7 +94,18 @@ const VerifyCertificate = async ({
                 </div>
               </CardContent>
             </Card>
-         
+          ) : (
+            <Card className="bg-red-50 border-red-200 p-2">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  {/* <X className="w-4 h-4 text-red-600" /> */}
+                  <span className="text-red-800 font-medium">
+                    Reentrenamiento necesario
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {certificate ? (
@@ -216,12 +228,25 @@ const VerifyCertificate = async ({
                   Vista previa del certificado oficial en formato PDF
                 </p>
               </CardHeader>
-              <CardContent className="p-0 h-fit relative">
-                <div className="absolute top-0 left-0 w-full h-full bg-transparent z-20" />
-                <ViewCertificatePdf
-                  certificate={certificate}
-                  baseUrl={baseUrl || ""}
-                />
+              <CardContent className="p-0 h-fit">
+                <div className="relative w-fit">
+                  <div className="absolute bottom-0 left-0 w-full h-full flex justify-center items-start bg-white/30 z-20">
+                    {certificate.dueDate &&
+                      certificate.dueDate < new Date() && (
+                        <div className="bg-red-500/50 text-white  mt-5 rounded-lg w-fit p-4">
+                          <p className="text-xs">
+                            Es necesario reentrenamiento. (
+                            {format(certificate.dueDate, "PPP", { locale: es })}
+                            )
+                          </p>
+                        </div>
+                      )}
+                  </div>
+                  <ViewCertificatePdf
+                    certificate={certificate}
+                    baseUrl={baseUrl || ""}
+                  />
+                </div>
               </CardContent>
             </Card>
           </div>

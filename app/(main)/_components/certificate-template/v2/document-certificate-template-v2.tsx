@@ -273,6 +273,24 @@ export const DocumentCertificateTemplateV2 = ({
               </Text>{" "}
             </Text>
           </View>
+
+          <Text style={styles.issueDateText}>
+            La presente capacitación y entrenamiento se realizó en Barranquilla
+            {certificate.courseName === "Trabajo en altura" &&
+            (certificate.levelName?.toLowerCase() === "autorizado" ||
+              certificate.levelName?.toLowerCase() === "coordinador") &&
+            certificate.startDate !== certificate.certificateDate &&
+            certificate.startDate ? (
+              <Text>
+                {" "}
+                del {formatDateOf(certificate.startDate)} hasta{" "}
+                {formatDateOf(certificate.certificateDate)}
+              </Text>
+            ) : (
+              <Text> el {formatDateOf(certificate.certificateDate)}</Text>
+            )}
+          </Text>
+
           {/* Issue Date and Retraining */}
           <Text style={styles.issueDateText}>
             Se expide en Barranquilla a los{" "}
@@ -529,7 +547,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: 5,
     color: "0F1729",
   },
   verificationNumber: {
@@ -559,7 +577,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     margin: "0 auto",
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     gap: 2,
   },

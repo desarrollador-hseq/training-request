@@ -11,7 +11,7 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import QRCode from "qrcode";
-import { DocumentSignatureCertificate } from "./document-signature-certificate";
+
 
 Font.register({
   family: "Open Sans",
@@ -38,7 +38,7 @@ Font.register({
   ],
 });
 
-interface CertificateTemplateProps {
+interface CertificateTemplateCuesV1Props {
   fileUrl?: string | null;
   certificateId?: string | null;
   // consecutive: string | null;
@@ -61,7 +61,7 @@ export const DocumentCertificateTemplateCues = ({
   levelHours,
   expeditionDate,
   expireDate,
-}: CertificateTemplateProps) => {
+}: CertificateTemplateCuesV1Props) => {
   return (
     <Document
       style={{ height: "100%" }}

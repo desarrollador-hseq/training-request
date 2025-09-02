@@ -2,11 +2,9 @@ import {
   BarChart3,
   BookOpen,
   Building2,
-  KeyRound,
+  CreditCard,
   KeySquare,
-  Lock,
   PersonStanding,
-  PieChart,
   ScrollText,
 } from "lucide-react";
 import { db } from "@/lib/db";
@@ -16,10 +14,8 @@ import { AdminRequestsTable } from "./entrenamiento/solicitudes/_components/admi
 import { columnsAdminCollaboratorTableSimple } from "./entrenamiento/colaboradores/_components/admin-collaborators-table-columns-simple";
 import { AdminCollaboratorsProgrammingTable } from "./entrenamiento/colaboradores/_components/admin-collaborators-programming-table";
 import { KpiCard } from "@/components/kpi-card";
-import { Separator } from "@/components/ui/separator";
 import { adminRequestTablecolumns } from "./entrenamiento/solicitudes/_components/admin-requests-table-columns";
 import { RequestReport } from "./_components/request-report";
-import { ModalMoreReports } from "./_components/modal-more-reports";
 import { SimpleModal } from "@/components/simple-modal";
 
 const crumbs = [{ label: "inicio", path: "inicio" }];
@@ -133,8 +129,8 @@ const AdminPage = async () => {
   });
 
   return (
-    <div>
-      <TitleOnPage text="Panel" bcrumb={crumbs} />
+    <div className="flex flex-col gap-2">
+      <TitleOnPage text="Dashboard" bcrumb={crumbs} />
       <div className="flex items-center w-full">
         <div className="w-full my-2">
           <div className=" gap-2">
@@ -163,7 +159,7 @@ const AdminPage = async () => {
                   <SimpleModal
                     textBtn={<BarChart3 />}
                     title="Estadisticas"
-                    btnClass=" px-3 w-fit"
+                    btnClass="px-3 w-fit bg-slate-50 border border-slate-400 text-slate-600 hover:bg-slate-100/80 p-1 h-fit shadow-sm"
                   >
                     <RequestReport requests={requests} />
                   </SimpleModal>
@@ -171,7 +167,7 @@ const AdminPage = async () => {
               />
               <KpiCard
                 color="blue"
-                icon={<ScrollText className="text-blue-500 w-8 h-8" />}
+                icon={<CreditCard className="text-blue-500 w-8 h-8" />}
                 title="Certificados"
                 number={certificates.length}
               />
@@ -203,16 +199,16 @@ const AdminPage = async () => {
         </div>
       </div>
 
-      <Separator className="my-3 border-4 border-secondary/70 rounded-full" />
+      {/* <Separator className="my-3 border-4 border-slate-500 rounded-full" /> */}
 
       <div className="flex flex-col gap-2">
-        <Card className="bg-emerald-50">
-          <CardHeader>
-            <h3 className="text-3xl font-bold text-emerald-900 text-center">
+        <Card className="bg-emerald-50 border-emerald-500">
+          <CardHeader className="p-1">
+            <h3 className="text-3xl font-extrabold text-emerald-900 text-center mt-3">
               Solicitudes activas
             </h3>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3">
             <AdminRequestsTable
               columns={adminRequestTablecolumns}
               data={requestsActives.filter(
@@ -221,14 +217,14 @@ const AdminPage = async () => {
             />
           </CardContent>
         </Card>
-        <Separator className="my-3 border-4 border-secondary/70 rounded-full" />
-        <Card className="bg-yellow-50">
-          <CardHeader>
-            <h3 className="text-3xl font-bold text-yellow-900 text-center">
+        {/* <Separator className="my-3 border-4 border-secondary/70 rounded-full" /> */}
+        <Card className="bg-slate-100 border-slate-500">
+          <CardHeader className="p-1">
+            <h3 className="text-3xl font-bold text-slate-800 text-center">
               Colaboradores por programar
             </h3>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3">
             <AdminCollaboratorsProgrammingTable
               columns={columnsAdminCollaboratorTableSimple}
               data={trainingRequestCollaborator.filter(

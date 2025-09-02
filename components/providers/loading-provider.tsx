@@ -13,7 +13,6 @@ import React, {
 import { cn } from "@/lib/utils";
 import { LoaderFullpage } from "../loader-fullpage";
 
-
 const roboto = Roboto({
   weight: "400",
   subsets: ["latin"],
@@ -34,23 +33,29 @@ export const LoadingContext = createContext<LoadingProps>({
 });
 
 export const LoadingProvider = ({ children }: Props) => {
+  const [isclient, setIsclient] = useState(false);
   const [loadingApp, setLoadingApp] = useState<boolean | undefined>(true);
 
   useEffect(() => {
+    setIsclient(true);
+  }, []);
+
+  useEffect(() => {
     try {
-      setLoadingApp(false);
+      if (isclient) {
+        setLoadingApp(false);
+      }
     } catch (error) {
       setLoadingApp(false);
     } finally {
       setLoadingApp(false);
     }
-  }, []);
+  }, [isclient]);
 
   return (
     <LoadingContext.Provider value={{ setLoadingApp, loadingApp }}>
       <body
         className={cn(
-          roboto.className,
           loadingApp && "overflow-hidden",
           "bg-blue-100/40 relative"
         )}

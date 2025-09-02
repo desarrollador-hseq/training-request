@@ -57,7 +57,8 @@ export const SheetCollaboratorsCart = ({
       <Sheet open={open} onOpenChange={setOpen}>
         <Button
           onClick={() => setOpen(true)}
-          className="relative rounded-full p-2 h-auto border-2 border-white"
+          className="relative rounded-full p-1.5 h-auto shadow-sm "
+          variant="primary"
         >
           <Send className="text-primary-foreground " />
           {items > 0 && (

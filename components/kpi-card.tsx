@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { Card, CardHeader } from "./ui/card";
 
 interface KpiCardProps {
@@ -12,29 +12,29 @@ interface KpiCardProps {
 }
 
 export const KpiCard = ({ number, title, color, icon: Icon, btnStatistics }: KpiCardProps) => {
-  
   return (
-    <Card className="p-1 flex flex-col justify-center  border-secondary rounded-xl relative overflow-hidden">
-      <CardHeader className="p-2">
-        <div className="grid grid-cols-3 grid-rows-2 gap-2 place-content-center place-items-center">
+    <Card className="p-4 border border-secondary/50 shadow-sm hover:shadow-md transition-shadow duration-200 rounded-md relative">
+      <CardHeader className="p-0 space-y-4">
+        <div className="flex items-start justify-between">
           <div
-            className={`row-span-2 rounded-xl bg-${color}-50 p-1 flex justify-center items-center w-20 h-20`}
+            className={`rounded-lg bg-${color}-50 p-3 flex justify-center items-center`}
           >
             {Icon}
           </div>
-
-          <div className="text-gray-700 font-bold text-xl md:text-2xl col-span-2 row-span-2 flex flex-col ">
-            {title}
-            <div className="flex flex-col justify-around  h-14">
-              <div className="text-3xl font-bold text-secondary text-center">
-                {number}
-              </div>
-
-              <div className="absolute bottom-0 right-0">
+          {btnStatistics && (
+            <div className="text-gray-500 hover:text-gray-700 transition-colors">
               {btnStatistics}
-              </div>
             </div>
-          </div>
+          )}
+        </div>
+        
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+            {title}
+          </p>
+          <p className="text-3xl font-bold text-gray-900">
+            {number}
+          </p>
         </div>
       </CardHeader>
     </Card>

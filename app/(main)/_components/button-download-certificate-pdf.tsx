@@ -1,18 +1,15 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import {
   cn,
-  formatDateCert,
-  formatDateOf,
   removeSpecialChars,
 } from "@/lib/utils";
 import { Certificate } from "@prisma/client";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { DocumentCertificateTemplateCues } from "./document-certificate-template-cues";
-import { DocumentCertificateTemplate } from "./document-certificate-template";
 import { Download, Loader2 } from "lucide-react";
+import { DocumentCertificateTemplateV1, DocumentCertificateTemplateV2 } from "./certificate-template";
 import { buttonVariants } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 
 // Button Download Certificate
 export const ButtonDownloadCertificatePdf = ({
@@ -30,71 +27,28 @@ export const ButtonDownloadCertificatePdf = ({
   }, []);
 
   useEffect(() => {
-    if(!certificate.collaboratorFullname || !certificate.collaboratorNumDoc) return
-    const nameClean = removeSpecialChars(certificate.collaboratorFullname)
-    setName(`${
-      certificate.collaboratorNumDoc
-    }-${nameClean.replace(/\s/g, "-")}`);
-    
-  }, [certificate?.collaboratorFullname, certificate.collaboratorNumDoc])
-  
+    if (!certificate.collaboratorFullname || !certificate.collaboratorNumDoc)
+      return;
+    const nameClean = removeSpecialChars(certificate.collaboratorFullname);
+    setName(
+      `${certificate.collaboratorNumDoc}-${nameClean.replace(/\s/g, "-")}`
+    );
+  }, [certificate?.collaboratorFullname, certificate.collaboratorNumDoc]);
+
   return (
     <>
       {isClient ? (
         <PDFDownloadLink
           document={
-            certificate.courseName === "Mercancías peligrosas" ? (
-              <DocumentCertificateTemplateCues
-                course={certificate.courseName}
-                fullname={certificate.collaboratorFullname}
-                numDoc={certificate.collaboratorNumDoc}
-                typeDoc={certificate.collaboratorTypeDoc}
-                levelHours={`${certificate.levelHours}`}
-                fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-                certificateId={certificate.id}
-                expireDate={
-                  certificate.dueDate && formatDateOf(certificate.dueDate!)
-                }
-                expeditionDate={
-                  certificate.expeditionDate &&
-                  formatDateCert(certificate.expeditionDate)
-                }
+            certificate.expeditionDate && certificate.expeditionDate > new Date("2025-09-01") ? (
+              <DocumentCertificateTemplateV2
+                certificate={{ ...certificate, id: certificate.id }}
+                baseUrl={baseUrl}
               />
             ) : (
-              <DocumentCertificateTemplate
-                course={certificate.courseName}
-                fullname={certificate.collaboratorFullname}
-                numDoc={certificate.collaboratorNumDoc}
-                typeDoc={certificate.collaboratorTypeDoc}
-                level={certificate.levelName}
-                levelHours={`${certificate.levelHours}`}
-                resolution={certificate.resolution}
-                companyName={certificate.companyName}
-                companyNit={certificate.companyNit}
-                legalRepresentative={certificate.legalRepresentative}
-                arlName={certificate.collaboratorArlName}
-                fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-                certificateId={certificate.id}
-                expireDate={
-                  certificate.dueDate && formatDateOf(certificate.dueDate!)
-                }
-                endDate={
-                  certificate.certificateDate
-                    ? formatDateOf(certificate.certificateDate)
-                    : ""
-                }
-                expeditionDate={
-                  certificate.expeditionDate &&
-                  formatDateCert(certificate.expeditionDate)
-                }
-                createdDate={
-                  certificate.expeditionDate &&
-                  (certificate.expeditionDate)
-                }
-                coachName={certificate.coachName}
-                coachPosition={certificate.coachPosition}
-                coachLicence={certificate.coachLicence}
-                coachImgSignatureUrl={certificate.coachImgSignatureUrl}
+              <DocumentCertificateTemplateV1
+              certificate={{ ...certificate, id: certificate.id }}
+              baseUrl={baseUrl}
               />
             )
           }
@@ -111,7 +65,8 @@ export const ButtonDownloadCertificatePdf = ({
                   <div
                     className={cn(
                       buttonVariants({
-                        className: "bg-primary hover:bg-primary font-normal text-sm",
+                        className:
+                          "bg-primary hover:bg-primary font-normal text-sm",
                       }),
                       "px-3 py-3 text-lg"
                     )}

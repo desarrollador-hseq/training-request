@@ -3,19 +3,21 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import { PDFViewer } from "@react-pdf/renderer";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Certificate, Coach } from "@prisma/client";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Download, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { InputForm } from "@/components/input-form";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { CalendarInputForm } from "@/components/calendar-input-form";
-import { DocumentCertificateTemplate } from "../../../../_components/document-certificate-template";
-import { formatDateCert, formatDateOf } from "@/lib/utils";
+import {
+  DocumentCertificateTemplateV1,
+  DocumentCertificateTemplateV2,
+} from "@/app/(main)/_components/certificate-template";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -27,7 +29,6 @@ import {
 import { SubtitleSeparator } from "@/components/subtitle-separator";
 import { SimpleModal } from "@/components/simple-modal";
 import { useLoading } from "@/components/providers/loading-provider";
-import { DocumentCertificateTemplateCues } from "@/app/(main)/_components/document-certificate-template-cues";
 import { ButtonCreateCertificate } from "../generar/[collaboratorId]/[requestId]/_components/button-create-certificate";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ButtonDownloadCertificatePdf } from "@/app/(main)/_components/button-download-certificate-pdf";
@@ -231,8 +232,43 @@ export const AddCertificateForm = ({
     }
   };
 
+  console.log({ certificate });
+
   return (
     <div className="max-w-[1500px] w-full h-full">
+      <div className="relative">
+        {isClient && certificate && canManagePermissions ? (
+          <>
+            <SubtitleSeparator text="Previsualización del certificado">
+              <ButtonDownloadCertificatePdf
+                baseUrl={baseUrl}
+                certificate={certificate}
+              />
+            </SubtitleSeparator>
+
+            <PDFViewer
+              showToolbar={false}
+              style={{ width: "100%", height: "856px" }}
+            >
+              {
+                certificate.expeditionDate && certificate.expeditionDate > new Date("2025-09-01") ? (
+                  <DocumentCertificateTemplateV2
+                    certificate={{ ...(watch() as any), id: certificate.id }}
+                    baseUrl={baseUrl}
+                  />
+                ) : (
+                  <DocumentCertificateTemplateV1
+                    certificate={{ ...(watch() as any), id: certificate.id }}
+                    baseUrl={baseUrl}
+                  />
+                )
+              }
+            </PDFViewer>
+          </>
+        ) : (
+          <span></span>
+        )}
+      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -441,7 +477,7 @@ export const AddCertificateForm = ({
             <ButtonCreateCertificate
               companyContact={companyContact}
               companyEmail={companyEmail}
-              values={{ ...getValues() }}
+              values={{ ...getValues(), id: certificate?.id }}
               expeditionDate={watch("expeditionDate")}
               fullname={watch("collaboratorFullname")}
               btnDisabled={isSubmitting || !isValid}
@@ -458,84 +494,6 @@ export const AddCertificateForm = ({
           )}
         </form>
       </Form>
-
-      <div className="relative">
-        {isClient && certificate && canManagePermissions ? (
-          <>
-            <SubtitleSeparator text="Previsualización del certificado">
-              <ButtonDownloadCertificatePdf
-                baseUrl={baseUrl}
-                certificate={certificate}
-              />
-            </SubtitleSeparator>
-
-            <PDFViewer
-              showToolbar={false}
-              style={{ width: "100%", height: "856px" }}
-            >
-              {watch("courseName") === "Mercancías peligrosas" ? (
-                <DocumentCertificateTemplateCues
-                  course={watch("courseName")}
-                  fullname={watch("collaboratorFullname")}
-                  numDoc={watch("collaboratorNumDoc")}
-                  typeDoc={watch("collaboratorTypeDoc")}
-                  levelHours={`${watch("levelHours")}`}
-                  fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-                  certificateId={certificate.id}
-                  expireDate={
-                    watch("dueDate") && formatDateOf(watch("dueDate")!)
-                  }
-                  expeditionDate={
-                    watch("expeditionDate") &&
-                    formatDateCert(watch("expeditionDate"))
-                  }
-                />
-              ) : (
-                <DocumentCertificateTemplate
-                  course={watch("courseName")}
-                  fullname={watch("collaboratorFullname")}
-                  numDoc={watch("collaboratorNumDoc")}
-                  typeDoc={watch("collaboratorTypeDoc")}
-                  level={watch("levelName")}
-                  levelHours={`${watch("levelHours")}`}
-                  resolution={watch("resolution")}
-                  companyName={watch("companyName")}
-                  companyNit={watch("companyNit")}
-                  legalRepresentative={watch("legalRepresentative")}
-                  arlName={watch("collaboratorArlName")}
-                  fileUrl={`${baseUrl}/verificar-certificado/${certificate.id}`}
-                  certificateId={certificate.id}
-                  expireDate={
-                    watch("dueDate") && formatDateOf(watch("dueDate")!)
-                  }
-                  createdDate={
-                    watch("expeditionDate") && watch("expeditionDate")
-                  }
-                  endDate={
-                    watch("certificateDate") &&
-                    formatDateOf(watch("certificateDate"))
-                  }
-                  startDate={
-                    watch("startDate") && watch("startDate")
-                      ? formatDateOf(watch("startDate")!)
-                      : undefined
-                  }
-                  expeditionDate={
-                    watch("expeditionDate") &&
-                    formatDateCert(watch("expeditionDate"))
-                  }
-                  coachName={getValues("coachName")}
-                  coachPosition={getValues("coachPosition")}
-                  coachLicence={getValues("coachLicence")}
-                  coachImgSignatureUrl={getValues("coachImgSignatureUrl")}
-                />
-              )}
-            </PDFViewer>
-          </>
-        ) : (
-          <span></span>
-        )}
-      </div>
     </div>
   );
 };

@@ -50,7 +50,7 @@ export const DashboardNavbar = ({
           </div>
 
           <div className="flex gap-5 items-center">
-            {isAdmin && <span>Administrador</span>}
+            {isAdmin && <span className="text-xs">Administración</span>}
             {isAdmin && (
               <SheetCollaboratorsCart
                 canManagePermissions={canManagePermissions}

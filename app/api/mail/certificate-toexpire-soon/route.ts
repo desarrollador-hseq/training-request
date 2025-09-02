@@ -157,13 +157,13 @@ export async function POST(req: Request) {
     await transporter.sendMail({
       ...mailOptions,
       to: email,
-      // to: "kingj3su@gmail.com",
+  
       ...generateEmailContent(certificate),
       subject: `[Grupo HSEQ] Certificado de un colaborador próximo a vencer - ${certificate.collaboratorFullname}`,
     });
     return NextResponse.json({ message: "ok", status: 200 });
   } catch (error) {
     console.log("[SEND-CERTIFICATE-TOEXPIRE-SOON", error);
-    return new NextResponse("Internal Errorr", { status: 500 });
+    return new NextResponse("Internal Errorr" + error, { status: 500 });
   }
 }

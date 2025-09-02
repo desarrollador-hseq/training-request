@@ -11,8 +11,7 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import QRCode from "qrcode";
-import { DocumentSignatureCertificate } from "./document-signature-certificate";
-import { formatDateOf } from "@/lib/utils";
+import { capitalize, formatDateOf } from "@/lib/utils";
 
 Font.register({
   family: "Open Sans",
@@ -68,17 +67,19 @@ interface CertificateTemplateProps {
   verifying?: boolean;
 }
 
-const getCertificationDatesText = (course: string | null, expeditionDate: Date) => {
-  const approvalDate = new Date('2018-06-02');
-  const expirationDate2024 = new Date('2024-06-01');
-  const expirationDate2027 = new Date('2027-06-01');
+const getCertificationDatesText = (
+  course: string | null,
+  expeditionDate: Date
+) => {
+  const approvalDate = new Date("2018-06-02");
+  const expirationDate2024 = new Date("2024-06-01");
+  const expirationDate2027 = new Date("2027-06-01");
   const formattedApprovalDate = formatDateOf(approvalDate);
   const formattedExpirationDate2024 = formatDateOf(expirationDate2024);
   const formattedExpirationDate2027 = formatDateOf(expirationDate2027);
 
-  if (!expeditionDate) return '';
+  if (!expeditionDate) return "";
 
-  
   if (course === "Trabajo en altura") {
     if (expeditionDate > expirationDate2024) {
       return `, certificación NTC 6072 Icontec CS-CER602230 fecha de aprobación y vencimiento del ${formattedApprovalDate} al ${formattedExpirationDate2027} respectivamente y aprobación del `;
@@ -122,6 +123,372 @@ export const DocumentCertificateTemplate = ({
     ? getCertificationDatesText(course, createdDate)
     : "";
 
+  // Función para renderizar el contenido condicional basado en el curso
+  const renderCertificateContent = () => {
+    // Si es Mercancías peligrosas, renderizar el layout de CUES
+    if (course === "Mercancías peligrosas") {
+      return (
+        <View style={styles.container}>
+          {/* 2 column para CUES */}
+          <View style={styles.textContent}>
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  width: "50%",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  marginBottom: 30,
+                }}
+              >
+                <Image
+                  style={{
+                    width: 140,
+                    height: 56,
+                  }}
+                  source={`/hseq-sin-b.png`}
+                />
+                <Image
+                  style={{
+                    width: 170,
+                    height: 80,
+                  }}
+                  source={`/cues-logo.png`}
+                />
+              </View>
+              <View
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  textAlign: "center",
+                  marginBottom: 15,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
+                <Text style={{}}>EL GRUPO HSEQ EN ALIANZA CON</Text>{" "}
+                <Text>
+                  LA CORPORACIÓN UNIVERSITARIA EMPRESARIAL DE SALAMANCA
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginBottom: 20,
+                  color: "#a30e0c",
+                }}
+              >
+                CERTIFICADO
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginBottom: 20,
+                }}
+              >
+                DE CAPACITACIÓN Y ENTRENAMIENTO
+              </Text>
+              <View
+                style={{
+                  fontSize: 16,
+                  textAlign: "center",
+                  marginBottom: 20,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 5,
+                }}
+              >
+                <Text style={{ fontWeight: "bold" }}>
+                  Se certifica que:
+                </Text>
+                <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                  {fullname}
+                </Text>
+                <Text>
+                  identificado con {typeDoc} No. {numDoc}
+                </Text>
+                <Text style={{ fontWeight: "bold" }}>
+                  Ha completado satisfactoriamente el curso de:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    color: "#a30e0c",
+                  }}
+                >
+                  {course}
+                </Text>
+                <Text>con una intensidad horaria de {levelHours} horas.</Text>
+                {expeditionDate && (
+                  <Text>
+                    Fecha de expedición: {expeditionDate}
+                  </Text>
+                )}
+                {expireDate && (
+                  <Text>
+                    Fecha de vencimiento: {expireDate}
+                  </Text>
+                )}
+              </View>
+
+              {/* QR Code */}
+              {fileUrl && (
+                <View style={{ marginTop: 20, alignItems: "center" }}>
+                  <Text style={{ fontSize: 12, marginBottom: 5 }}>
+                    Verificar certificado:
+                  </Text>
+                  <Image
+                    style={{ width: 80, height: 80 }}
+                    source={{
+                      uri: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
+                        fileUrl
+                      )}`,
+                    }}
+                  />
+                </View>
+              )}
+            </View>
+          </View>
+        </View>
+      );
+    }
+
+    // Layout estándar para otros cursos
+    return (
+      <View style={styles.container}>
+        {/* 1column */}
+        <View style={styles.sideContent}>
+          <View style={{ marginVertical: 2 }}></View>
+          {course === "Trabajo en altura" ? (
+            <View
+              style={{
+                width: "400px",
+                height: "80px",
+                backgroundColor: "#a30e0c",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                textAlign: "left",
+                color: "white",
+                transform: "rotate(-90deg)",
+                padding: "18px",
+                paddingTop: "10px",
+                fontSize: 16,
+                gap: 5,
+              }}
+            >
+              <Text style={{ fontWeight: "semibold" }}>
+                {" "}
+                CERTIFICADO DE CAPACITACIÓN{" "}
+              </Text>
+              <Text style={{ fontWeight: "semibold" }}>
+                {" "}
+                Y ENTRENAMIENTO PARA TRABAJO EN ALTURA
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.textMain}>
+              <Text style={{ fontWeight: "semibold" }}>
+                {" "}
+                CERTIFICACIÓN DE CAPACITACIÓN{" "}
+              </Text>
+              <Text style={{ fontWeight: "semibold" }}>
+                {" "}
+                Y ENTRENAMIENTO
+              </Text>
+            </View>
+          )}
+
+          <View style={{ margin: 15 }}></View>
+
+          <Image
+            style={{ width: 100, height: 40 }}
+            source={`/hseq-sin-b.png`}
+          />
+        </View>
+        {/* 2 column */}
+        <View style={styles.textContent}>
+          <View style={{ height: "100%" }}>
+            <View
+              style={{
+                height: 38,
+                width: 150,
+                marginTop: 23,
+                marginBottom: 5,
+              }}
+            >
+              <Image
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                source={`/hseq-entrenamiento.png`}
+              />
+            </View>
+            <View
+              style={{
+                marginBottom: 10,
+              }}
+            >
+              <Text style={styles.title}>CERTIFICADO</Text>
+            </View>
+            <View style={styles.textContent}>
+              <Text style={styles.text}>
+                Se certifica que{" "}
+                <Text style={{ fontWeight: "bold" }}>{fullname}</Text>{" "}
+                identificado(a) con {typeDoc} No. {numDoc}, ha completado
+                satisfactoriamente el curso de{" "}
+                <Text style={{ fontWeight: "bold" }}>{course}</Text>
+                {level && (
+                  <>
+                    {" "}
+                    nivel <Text style={{ fontWeight: "bold" }}>{level}</Text>
+                  </>
+                )}
+                , con una intensidad horaria de{" "}
+                <Text style={{ fontWeight: "bold" }}>{levelHours}</Text> horas.
+              </Text>
+            </View>
+
+            {startDate && endDate && (
+              <View style={styles.textContent}>
+                <Text style={styles.text}>
+                  Realizado entre las fechas{" "}
+                  <Text style={{ fontWeight: "bold" }}>{startDate}</Text> y{" "}
+                  <Text style={{ fontWeight: "bold" }}>{endDate}</Text>.
+                </Text>
+              </View>
+            )}
+
+            {resolution && (
+              <View style={styles.textContent}>
+                <Text style={styles.text}>
+                  Resolución{" "}
+                  <Text style={{ fontWeight: "bold" }}>{resolution}</Text>
+                  {certificationDatesText}
+                </Text>
+              </View>
+            )}
+
+            {companyName && (
+              <View style={styles.textContent}>
+                <Text style={styles.text}>
+                  Capacitación realizada para{" "}
+                  <Text style={{ fontWeight: "bold" }}>{companyName}</Text>
+                  {companyNit && (
+                    <>
+                      {" "}
+                      con NIT <Text style={{ fontWeight: "bold" }}>{companyNit}</Text>
+                    </>
+                  )}
+                  {legalRepresentative && (
+                    <>
+                      {" "}
+                      representada legalmente por{" "}
+                      <Text style={{ fontWeight: "bold" }}>{legalRepresentative}</Text>
+                    </>
+                  )}
+                  .
+                </Text>
+              </View>
+            )}
+
+            {arlName && (
+              <View style={styles.textContent}>
+                <Text style={styles.text}>
+                  ARL: <Text style={{ fontWeight: "bold" }}>{arlName}</Text>.
+                </Text>
+              </View>
+            )}
+
+            <View style={styles.textContent}>
+              <Text style={styles.text}>
+                {expeditionDate && (
+                  <>
+                    Fecha de expedición:{" "}
+                    <Text style={{ fontWeight: "bold" }}>{expeditionDate}</Text>.
+                  </>
+                )}
+                {expireDate && (
+                  <>
+                    {" "}
+                    Fecha de vencimiento:{" "}
+                    <Text style={{ fontWeight: "bold" }}>{expireDate}</Text>.
+                  </>
+                )}
+              </Text>
+            </View>
+
+            {/* QR Code */}
+            {fileUrl && (
+              <View style={{ marginTop: 20, alignItems: "center" }}>
+                <Text style={{ fontSize: 12, marginBottom: 5 }}>
+                  Verificar certificado:
+                </Text>
+                <Image
+                  style={{ width: 80, height: 80 }}
+                  source={{
+                    uri: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
+                      fileUrl
+                    )}`,
+                  }}
+                />
+              </View>
+            )}
+
+            {/* Firma del entrenador */}
+            {(coachName || coachPosition || coachLicence || coachImgSignatureUrl) && (
+              <View style={{ marginTop: 30, alignItems: "center" }}>
+                <Text style={{ fontSize: 12, marginBottom: 10 }}>
+                  Firma del entrenador:
+                </Text>
+                <View style={{ alignItems: "center", gap: 5 }}>
+                  {coachImgSignatureUrl && (
+                    <Image
+                      style={{ width: 120, height: 60 }}
+                      source={{ uri: coachImgSignatureUrl }}
+                    />
+                  )}
+                  {coachName && (
+                    <Text style={{ fontSize: 14, fontWeight: "bold" }}>
+                      {coachName}
+                    </Text>
+                  )}
+                  {coachPosition && (
+                    <Text style={{ fontSize: 12 }}>
+                      {coachPosition}
+                    </Text>
+                  )}
+                  {coachLicence && (
+                    <Text style={{ fontSize: 12 }}>
+                      Licencia: {coachLicence}
+                    </Text>
+                  )}
+                </View>
+              </View>
+            )}
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <Document
       style={{ height: "100%" }}
@@ -142,10 +509,10 @@ export const DocumentCertificateTemplate = ({
             alignItems: "center",
           }}
         >
-          <View style={styles.container}>
-            {/* 1column  */}
-            <View style={styles.sideContent}>
-              <View style={{ marginVertical: 2 }}></View>
+          {renderCertificateContent()}
+
+
+
               {course === "Trabajo en altura" ? (
                 <View
                   style={{
@@ -446,12 +813,42 @@ export const DocumentCertificateTemplate = ({
                 coachName &&
                 coachImgSignatureUrl &&
                 coachPosition ? (
-                  <DocumentSignatureCertificate
-                    licence={coachLicence}
-                    name={coachName}
-                    position={coachPosition}
-                    imageUrl={coachImgSignatureUrl}
-                  />
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      position: "relative",
+                      paddingTop: 32,
+                    }}
+                  >
+                    {coachImgSignatureUrl && (
+                      <Image
+                        src={coachImgSignatureUrl}
+                        style={{
+                          width: 110,
+                          position: "absolute",
+                          top: -25,
+                          left: 15,
+                        }}
+                      />
+                    )}
+                    <Text
+                      style={{
+                        minWidth: 150,
+                        borderTop: "1px solid #a30e0c",
+                        fontSize: 10,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {capitalize(coachName)}
+                    </Text>
+                    <Text style={{ fontSize: 10 }}>{capitalize(coachPosition)}</Text>
+                    {coachLicence && (
+                      <Text style={{ fontSize: 10 }}>
+                        {coachLicence && capitalize(coachLicence)}
+                      </Text>
+                    )}
+                  </View>
                 ) : (
                   <View style={{ display: "none" }} />
                 )}

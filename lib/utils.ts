@@ -11,14 +11,17 @@ export const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
 );
 
-export const formatDateOf = (date: Date) => {
+export const formatDateOf = (date: Date | null) => {
+  if (!date) return "";
   return format(date, "PPP", { locale: es });
 };
 
-export const formatDateSm = (date: Date) => {
+export const formatDateSm = (date: Date | null) => {
+  if (!date) return "";
   return format(date, "P", { locale: es });
 };
-export const formatDateCert = (date: Date) => {
+export const formatDateCert = (date: Date | null) => {
+  if (!date) return "";
   let formattedDate = format(date, "d 'días' 'del mes de' MMMM 'de' yyyy", {
     locale: es,
   });
@@ -29,6 +32,7 @@ export const formatDateCert = (date: Date) => {
   return formattedDate;
 };
 export const capitalize = (sentence: string) => {
+  if (!sentence) return "";
   // Verificar si la oración contiene más de una palabra
   if (sentence.includes(" ")) {
     const words = sentence.split(" ");

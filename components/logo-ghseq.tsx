@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 export const LogoGHseq = ({
   goRoot,
   className,
-  height = 100,
-  width = 110,
+  height = 80,
+  width = 80,
 }: {
   goRoot?: boolean;
   height?: number;

@@ -445,7 +445,7 @@ export const AddCertificateForm = ({
             <ButtonCreateCertificate
               companyContact={companyContact}
               companyEmail={companyEmail}
-              values={{ ...getValues(), id: certificate?.id }}
+              values={{ ...getValues() }}
               expeditionDate={watch("expeditionDate")}
               fullname={watch("collaboratorFullname")}
               btnDisabled={isSubmitting || !isValid}
